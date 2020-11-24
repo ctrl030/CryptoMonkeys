@@ -1,0 +1,198 @@
+/*
+@keyframes templateForAnimation {
+  0% {
+
+  }
+
+  10% {
+
+  }
+
+  20% {
+
+  }
+
+  30% {
+
+  }
+
+  40% {
+
+  }
+
+  50% {
+
+  }
+
+  60% {
+
+  }
+
+  70% {
+
+  }
+
+  80% {
+
+  }
+
+  90% {
+
+  }
+
+  100% {
+
+  }
+
+}
+*/
+
+.growingAndShrinkingClass {
+  animation: growingAndShrinking 3s infinite;
+}
+
+@keyframes growingAndShrinking {
+  0% {
+    transform: translateX(-50%) scale(1);
+  }
+
+  50% {
+    transform: translateX(-50%) scale(1.2);
+  }
+
+  100% {
+    transform: translateX(-50%) scale(1);
+  }
+}
+
+.jumpingClass {
+  animation: jumping 1s infinite;
+}
+
+@keyframes jumping {
+  0% {
+    transform: translateX(-50%) translateY(0px);
+  }
+
+  50% {
+    transform: translateX(-50%) translateY(-20px);
+  }
+
+  100% {
+    transform: translateX(-50%) translateY(0px);
+  }
+}
+
+.wigglingClass {
+  animation: wiggling 3s infinite;
+}
+
+@keyframes wiggling {
+  0% {
+    transform: translateX(-50%) translateY(0px);
+  }
+
+  30% {
+    transform: translateX(-50%) rotate(12deg);
+  }
+
+  60% {
+    transform: translateX(-50%) rotate(-12deg);
+  }
+
+  100% {
+    transform: translateX(-50%) translateY(0px);
+  }
+}
+
+.fadingClass {
+  animation: fading 3s infinite;
+}
+
+@keyframes fading {
+  0% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+.over9000Class {
+  background: #f7931b !important;
+}
+
+.movingLeftArmClass {
+  animation: liftingLeftArm 3s infinite;
+}
+
+@keyframes liftingLeftArm {
+  0% {
+    right: 16px;
+    transform: rotate(-9deg);
+    transform-origin: center top;
+  }
+
+  50% {
+    right: 16px;
+    transform: rotate(30deg);
+    transform-origin: center top;
+  }
+
+  100% {
+    right: 16px;
+    transform: rotate(-9deg);
+    transform-origin: center top;
+  }
+}
+
+.movingRightArmClass {
+  animation: liftingRightArm 3s infinite;
+}
+
+@keyframes liftingRightArm {
+  0% {
+    left: 16px;
+    transform: rotate(9deg);
+    transform-origin: center top;
+  }
+
+  50% {
+    left: 16px;
+    transform: rotate(-30deg);
+    transform-origin: center top;
+  }
+
+  100% {
+    left: 16px;
+    transform: rotate(9deg);
+    transform-origin: center top;
+  }
+}
+
+.leftArmUpClass {
+  right: 16px;
+  transform: rotate(150deg);
+  transform-origin: center top;
+}
+
+.rightArmUpClass {
+  left: 16px;
+  transform: rotate(-150deg);
+  transform-origin: center top;
+}
+
+.leftArmPosition {
+  right: 16px;
+  transform: rotate(-9deg);
+}
+
+.rightArmPosition {
+  left: 16px;
+  transform: rotate(9deg);
+}
