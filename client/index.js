@@ -46,7 +46,7 @@ $(document).ready(function () {
               
           );
         })
-        .on("error", console.log(error));
+        .on("error", function(error){console.log(error)});
     });
   });
 });
