@@ -107,6 +107,16 @@ body {
   justify-content: center;
 }
 
+#monkeyCreatedDiv {
+  margin-top: 8px;
+  margin-bottom: 8px;
+  height: 260px;
+  border-radius: 10px;
+  justify-content: center;
+  font-size: 16px !important;
+  font-weight: bold !important;
+}
+
 #buttonHolderDiv {
   width: 1000px;
   align-self: center;
