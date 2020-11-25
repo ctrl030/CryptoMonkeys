@@ -40,7 +40,7 @@ $(document).ready(function () {
             "Crypto Monkey created successfully! Here are the details: " 
             + " owner: " + owner 
             + " tokenId: " + tokenId 
-            + " parent1Id: " + parent1Id 
+            + " parent1Id: " + parent1Id
             + " parent2Id: " + parent2Id 
             + " genes: " + genes
               
