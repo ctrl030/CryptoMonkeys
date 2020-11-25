@@ -20,7 +20,7 @@ $(document).ready(function () {
         .createGen0Monkey(dnaStr)
         .send({}, function (error, txHash) {
           if (error) {
-            console.log(err);
+            console.log(error);
           } else {
             console.log(txHash);
           }
