@@ -1,16 +1,28 @@
 // Audio
 var monkeyAudio = $("#monkeyAudio")[0];
+var monkeyAudio2 = $("#monkeyAudio2")[0];
 
 function playAudio() {
+  monkeyAudio2.pause();
   monkeyAudio.play();
+}
+
+function playAudio2() {
+  monkeyAudio.pause();
+  monkeyAudio2.play();
 }
 
 function pauseAudio() {
   monkeyAudio.pause();
+  monkeyAudio2.pause();
 }
 
 $("#playAudioButton").click(() => {
   playAudio();
+});
+
+$("#playAudioButton2").click(() => {
+  playAudio2();
 });
 
 $("#pauseAudioButton").click(() => {

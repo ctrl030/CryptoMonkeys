@@ -69,12 +69,12 @@ contract MonkeyContract is IERC721, Ownable {
     _owners2MappingOfMonkeyIds2CryptoMonkeyMapping[_owner][_tokenId] = monkeys[_tokenId];
   }
 
-
+/*
   //- work on XXX
   function findAllMyMonkeys () public view returns () {
 
   }
-
+*/
 
 
 
