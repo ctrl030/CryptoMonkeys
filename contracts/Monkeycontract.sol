@@ -64,10 +64,19 @@ contract MonkeyContract is IERC721, Ownable {
   // must get transferable features 
   mapping (address => mapping(uint256 => CryptoMonkey)) public _owners2MappingOfMonkeyIds2CryptoMonkeyMapping;
 
+  // here we map the owners to a mapping, in which we map the tokenId they own to the position of that tokenId in the owner's array
+  mapping (address => mapping(uint256 => uint256)) public _owners2MappingOfMonkeyIds2positionInOwnersArrayMapping;
+
+  // maps owner to an array that holds all their tokenIds - must be updated (at transfers etc.), tokenId positions are saved in another mapping (_owners2MappingOfMonkeyIds2positionInOwnersArrayMapping)
+  mapping (address => uint256 []) public _owners2tokenIdArrayMapping;
+
 
   function addMonkeyToOwnersCollection(address _owner,  uint256 _tokenId) internal {
     _owners2MappingOfMonkeyIds2CryptoMonkeyMapping[_owner][_tokenId] = monkeys[_tokenId];
   }
+
+
+
 
 /*
   //- work on XXX
@@ -75,6 +84,9 @@ contract MonkeyContract is IERC721, Ownable {
 
   }
 */
+
+
+
 
 
 
