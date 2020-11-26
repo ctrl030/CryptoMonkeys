@@ -52,6 +52,43 @@ contract MonkeyContract is IERC721, Ownable {
   mapping (uint256 => address) private _CMO2AllowedAddressMapping;
   
 
+
+
+
+
+
+  // mapping each owner address to a mapping, that holds all their tokenIds as keys, (so that they can be called or deleted / transfered) 
+  // and CryptoMonkey structs als values, so that each tokenId points to one CryptoMonkey struct
+  // - will be queried by ownerOf function - work on XXX
+  // trying to use CryptoMonkey as a data type
+  // must get transferable features 
+  mapping (address => mapping(uint256 => CryptoMonkey)) public _owners2MappingOfMonkeyIds2CryptoMonkeyMapping;
+
+
+  function addMonkeyToOwnersCollection(address _owner,  uint256 _tokenId) internal {
+    _owners2MappingOfMonkeyIds2CryptoMonkeyMapping[_owner][_tokenId] = monkeys[_tokenId];
+  }
+
+
+  //- work on XXX
+  function findAllMyMonkeys () public view returns () {
+
+  }
+
+
+
+
+/* older, now probably better 
+ // mapping each owner address to an array, that holds all their tokenIds - will be queried by ownerOf function - work on
+  mapping (address => uint256[]) private _owners2monkeyIdsArrayMapping;
+
+
+  function add(uint256 _tokenId) public {
+    _owners2monkeyIdsArray[id].push(Foo(_tokenId));
+  }
+*/
+
+
   // Events
 
   // Transfer event, emit after successful transfer with these parameters  - seems done - why indexed? what does it mean, do I need that?
@@ -109,8 +146,12 @@ contract MonkeyContract is IERC721, Ownable {
 
     _transferCallfromInside(address(0), _owner, newMonkeyId);
 
-    return newMonkeyId;
+    
 
+    // under construction XXX
+    addMonkeyToOwnersCollection(_owner, newMonkeyId);
+
+    return newMonkeyId;
   }
  
   function findMonkey(uint256 tokenId) public view returns (
@@ -132,6 +173,8 @@ contract MonkeyContract is IERC721, Ownable {
     _CMO2AllowedAddressMapping[tokenId]
     );
   }
+
+  
 
 
   // allows another address to take / move your CMO
@@ -203,12 +246,7 @@ contract MonkeyContract is IERC721, Ownable {
     if (_from != address(0)) {
       _numberOfCMOsOfAddressMapping[_from].sub(1);
     }
-        
-    // what is with try and catch? XXX
-    //catch (err) {
-    //  console.log("Error is: " + err);
-    //}
-
+   
     emit Transfer (_from, _to, _tokenId);
   }
 }
