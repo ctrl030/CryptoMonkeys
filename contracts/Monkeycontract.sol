@@ -57,12 +57,11 @@ contract MonkeyContract is IERC721, Ownable {
 
 
 
-  // mapping each owner address to a mapping, that holds all their tokenIds as keys, (so that they can be called or deleted / transfered) 
-  // and CryptoMonkey structs als values, so that each tokenId points to one CryptoMonkey struct
+  // each tokenId points to one CryptoMonkey struct
   // - will be queried by ownerOf function - work on XXX
   // trying to use CryptoMonkey as a data type
   // must get transferable features 
-  mapping (address => mapping(uint256 => CryptoMonkey)) public _owners2MappingOfMonkeyIds2CryptoMonkeyMapping;
+  mapping(uint256 => CryptoMonkey) public _MonkeyIds2CryptoMonkeyMapping;
 
   // here we map the owners to a mapping, in which we map the tokenId they own to the position of that tokenId in the owner's array
   mapping (address => mapping(uint256 => uint256)) public _owners2MappingOfMonkeyIds2positionInOwnersArrayMapping;
@@ -78,19 +77,19 @@ contract MonkeyContract is IERC721, Ownable {
 
 
 
-/*
+  /*
   //- work on XXX
   function findAllMyMonkeys () public view returns () {
 
   }
-*/
+  */
 
 
 
 
 
 
-/* older, now probably better 
+  /* older, now probably better 
  // mapping each owner address to an array, that holds all their tokenIds - will be queried by ownerOf function - work on
   mapping (address => uint256[]) private _owners2monkeyIdsArrayMapping;
 
@@ -98,7 +97,7 @@ contract MonkeyContract is IERC721, Ownable {
   function add(uint256 _tokenId) public {
     _owners2monkeyIdsArray[id].push(Foo(_tokenId));
   }
-*/
+  */
 
 
   // Events
