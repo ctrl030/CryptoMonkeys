@@ -275,12 +275,14 @@ contract MonkeyContract is IERC721, Ownable {
         _monkeyIdsAndTheirOwnersMapping[_tokenId] = _to;
 
         // updating "balance" of address in _numberOfCMOsOfAddressMapping, 'to' address has 1 CMO more
-        _numberOfCMOsOfAddressMapping[_to].add(1);
+        _numberOfCMOsOfAddressMapping[_to] = _numberOfCMOsOfAddressMapping[_to]
+            .add(1);
 
         // updating "balance" of address in _numberOfCMOsOfAddressMapping, sender has 1 CMO less
 
         if (_from != address(0)) {
-            _numberOfCMOsOfAddressMapping[_from].sub(1);
+            _numberOfCMOsOfAddressMapping[_from] = _numberOfCMOsOfAddressMapping[_from]
+                .sub(1);
         }
 
         // saving tokenId to new owner's array in the mapping for all owners
