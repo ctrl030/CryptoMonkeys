@@ -2,7 +2,7 @@ var web3 = new Web3(Web3.givenProvider);
 
 var instance;
 var user;
-var contractAddress = "0xF9c78cdEc35af7feF8FDf0fd92878e2c3EBb7668";
+var contractAddress = "0x69557EaaDB4C47FFE0Aef35f4B4e5dDDFba7Ef09";
 
 $(document).ready(async function () {
   // creating a box
@@ -33,7 +33,7 @@ $(document).ready(async function () {
   // let dnaStr = getDna();
 
   let myMonkeyArray = await instance.methods
-    .findAllMyMonkeys()
+    .findAllMyMonkeys(user)
     .call((error, result) => {
       if (error) {
         console.log("error: " + error);
@@ -164,7 +164,7 @@ $(document).ready(async function () {
     );
   }*/
 
-  /*
+  /* just as example for syntax
   $("#monkeyBox1").html(`DNA: <a href=''> ${} </a> `);
   $("#monkeyBox1DNA").html(`DNA: <a href=''> ${usdFormatter.format(Math.round(firstRowDataOutput.data.total_market_cap.usd))} </a> `);
   */

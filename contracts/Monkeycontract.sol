@@ -74,8 +74,9 @@ contract MonkeyContract is IERC721, Ownable {
   */
 
     //- work on XXX
-    function findAllMyMonkeys() public view returns (uint256[] memory) {
-        return _owners2tokenIdArrayMapping[msg.sender];
+    function findAllMyMonkeys(address sender) public view returns (uint256[] memory) {
+        require (sender == msg.sender);
+        return _owners2tokenIdArrayMapping[sender];
     }
 
     /* older, now probably better 
