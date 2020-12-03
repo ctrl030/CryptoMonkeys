@@ -1,0 +1,73 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gallery Jungle</title>
+    <script type="text/javascript" src="assets/js/jquery-3.4.1.js"></script>
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css" />
+    <script src="assets/bootstrap/js/popper.js"></script>
+    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="assets/js/web3.min.js"></script>
+    <script src="./abi.js"></script>
+
+    <link rel="stylesheet" href="assets/css/mystyle.css" />
+    <link rel="stylesheet" href="assets/css/monkeys.css" />
+    <link rel="stylesheet" href="assets/css/colors.css" />
+    <link rel="stylesheet" href="assets/css/factory.css" />
+    <link rel="stylesheet" href="assets/css/frontend.css" />
+    <link rel="stylesheet" href="assets/css/animations.css" />
+  </head>
+
+  <body>
+    <audio loop id="monkeyAudio">
+      <source src="assets/audio/jungleIsland.mp3" type="audio/mpeg" />
+    </audio>
+
+    <audio loop id="monkeyAudio2">
+      <source src="assets/audio/monkeySong.mp3" type="audio/mpeg" />
+    </audio>
+
+    <div class="container" id="jungleIslandContainer">
+      <div class="m-2 light-b-shadow" id="jungleIslandTextDiv">
+        <h1 class="textOverBoxes">Jungle Gallery</h1>
+        <h3 class="textOverBoxes">Check on your Crypto Monkeys</h3>
+      </div>
+
+      <div class="m-2 light-b-shadow" id="audioButtonHolderArea">
+        <div id="audioButtonHolderDiv">
+          <button type="button" class="btn btn-success" id="playAudioButton">
+            Monkey Feeling
+          </button>
+
+          <button type="button" class="btn btn-success" id="playAudioButton2">
+            Banana Vibes
+          </button>
+
+          <button type="button" class="btn btn-success" id="pauseAudioButton">
+            Silence
+          </button>
+
+          <button
+            type="button"
+            class="btn btn-warning"
+            id="switchToGalleryButton"
+          >
+            Jungle Factory
+          </button>
+        </div>
+      </div>
+
+      <div class="row" id="galleryRow"></div>
+
+      <div class="m-2 light-b-shadow" id="jungleIslandFooter">
+        <p>Done by ctrl030 during Ivan on Tech Academy Bootcamp, Q4 2020</p>
+      </div>
+    </div>
+
+    <script src="./index.js"></script>
+    <script src="./gallery.js"></script>
+    <script src="assets/js/monkeyFactory.js"></script>
+    <script src="assets/js/colors.js"></script>
+    <script src="assets/js/frontPageLogic.js"></script>
+  </body>
+</html>

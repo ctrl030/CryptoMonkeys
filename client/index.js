@@ -2,7 +2,7 @@ var web3 = new Web3(Web3.givenProvider);
 
 var instance;
 var user;
-var contractAddress = "0x438B9f1Ee8C46e50fCD0d3Cf8bF21E55f2303147";
+var contractAddress = "0xF9c78cdEc35af7feF8FDf0fd92878e2c3EBb7668";
 
 $(document).ready(async function () {
   var accounts = await window.ethereum.enable();
@@ -13,11 +13,9 @@ $(document).ready(async function () {
 
   user = accounts[0];
 
-  console.log("instance: ");
+  console.log("indexjs instance: ");
   console.log(instance);
-
   console.log("user: " + user);
-
   console.log("accounts[0]: " + accounts[0]);
 });
 

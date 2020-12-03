@@ -23,6 +23,10 @@ body {
 
 #jungleIslandContainer {
   margin-top: 2vh;
+  width: 1260px !important;
+  max-width: 1260px !important;
+  padding-right: 0px !important;
+  padding-left: 0px !important;
 }
 
 #jungleIslandTextDiv {
@@ -30,6 +34,9 @@ body {
   padding: 16px;
   background-color: #ededed;
   border-radius: 10px;
+  margin-right: 0px !important;
+  margin-left: 0px !important;
+  opacity: 0.95;
 }
 
 #audioButtonHolderArea {
@@ -40,6 +47,9 @@ body {
   background-color: #ededed;
   display: flex;
   justify-content: center;
+  margin-right: 0px !important;
+  margin-left: 0px !important;
+  opacity: 0.95;
 }
 
 #audioButtonHolderDiv {
@@ -47,6 +57,10 @@ body {
   align-self: center;
   display: flex;
   justify-content: space-around;
+}
+
+#switchToGalleryButton {
+  font-weight: bold;
 }
 
 #monkeyRow {
@@ -61,6 +75,7 @@ body {
   background-color: #ededed;
   border-radius: 10px;
   z-index: 0;
+  opacity: 0.95;
 }
 
 #sliderButtonHolderDiv {
@@ -107,6 +122,9 @@ body {
   background-color: #ededed;
   display: flex;
   justify-content: center;
+  margin-right: 0px !important;
+  margin-left: 0px !important;
+  opacity: 0.95;
 }
 
 #monkeyCreatedDiv {
@@ -135,6 +153,9 @@ body {
   text-align: center;
   padding-top: 30px;
   padding-bottom: 30px;
+  margin-right: 0px !important;
+  margin-left: 0px !important;
+  opacity: 0.95;
 }
 
 #jungleIslandFooter p {
