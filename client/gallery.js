@@ -53,24 +53,17 @@ $(document).ready(async function () {
       }
     });
 
-  /*
-  createGen0Monkey(dnaStr).send({}, function (error, txHash) {
-    if (error) {
-      console.log(error);
-    } else {
-      console.log(txHash);
-    }
-  });
-*/
-  instance.events
-    .MonkeyCreated()
+  instance
+    .getPastEvents(MonkeyCreated, function (error, events) {
+      console.log(events);
+    })
     .on("data", function (event) {
       console.log(event);
-      let owner = event.returnValues.owner;
+      /*let owner = event.returnValues.owner;
       let tokenId = event.returnValues.tokenId;
       let parent1Id = event.returnValues.parent1Id;
       let parent2Id = event.returnValues.parent2Id;
-      let genes = event.returnValues.genes;
+      let genes = event.returnValues.genes
       $("#monkeyCreatedDiv").css("display", "flex");
       $("#monkeyCreatedDiv").text(
         "Crypto Monkey created successfully! Here are the details: " +
@@ -84,7 +77,7 @@ $(document).ready(async function () {
           parent2Id +
           " genes: " +
           genes
-      );
+      );*/
     })
     .on("error", function (error) {
       console.log(error);
