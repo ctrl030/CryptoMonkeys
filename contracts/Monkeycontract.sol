@@ -75,7 +75,7 @@ contract MonkeyContract is IERC721, Ownable {
 
     //- work on XXX
     function findAllMyMonkeys(address sender) public view returns (uint256[] memory) {
-        require (sender == msg.sender);
+       
         return _owners2tokenIdArrayMapping[sender];
     }
 
@@ -154,6 +154,8 @@ contract MonkeyContract is IERC721, Ownable {
         gen0amountTotal++;
 
         _createMonkey(0, 0, 0, _genes, msg.sender);
+
+        _totalSupply++;
     }
 
     // this function is going to be used for creating gen0 monkeys and also for creating monkeys from combining monkeys, returns monkey ID (tokenId?) - connect / fix / finish
@@ -304,8 +306,12 @@ contract MonkeyContract is IERC721, Ownable {
             MonkeyIdPositionsMapping[_to][_tokenId]
         );
 
+        
         // deleting the tokenId from the old owners array of monkeys
-        delete _owners2tokenIdArrayMapping[_from][MonkeyIdPositionsMapping[_from][_tokenId]];
+        if ((_owners2tokenIdArrayMapping[_from]).length <0 ){
+            delete _owners2tokenIdArrayMapping[_from][MonkeyIdPositionsMapping[_from][_tokenId]];
+        }        
+        
 
         // deleting the saved index position, since old address is not longer owner
         delete MonkeyIdPositionsMapping[_from][_tokenId];

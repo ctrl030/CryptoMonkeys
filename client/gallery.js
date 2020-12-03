@@ -2,7 +2,7 @@ var web3 = new Web3(Web3.givenProvider);
 
 var instance;
 var user;
-var contractAddress = "0x69557EaaDB4C47FFE0Aef35f4B4e5dDDFba7Ef09";
+var contractAddress = "0x2721FD7ea24650b7d604c1Aff0734d396bbF3151";
 
 $(document).ready(async function () {
   // creating a box
@@ -23,14 +23,7 @@ $(document).ready(async function () {
   console.log("user: " + user);
   console.log("accounts[0]: " + accounts[0]);
 
-  //XXX
-  var usersMonkeys = [];
-
-  //XXX
-  //await;
-
-  //XXX
-  // let dnaStr = getDna();
+  // var usersMonkeys = [];
 
   let myMonkeyArray = await instance.methods
     .findAllMyMonkeys(user)
@@ -41,20 +34,11 @@ $(document).ready(async function () {
         console.log("myMonkeyArray: ");
         console.log(result);
       }
-    });
+  });
 
-  let getSomeMonkeys = await instance.methods
-    .createGen0Monkey(1234567)
-    .send({}, function (error, txHash) {
-      if (error) {
-        console.log(error);
-      } else {
-        console.log(txHash);
-      }
-    });
-
+  
   instance
-    .getPastEvents(MonkeyCreated, function (error, events) {
+    .getPastEvents("MonkeyCreated", function (error, events) {
       console.log(events);
     })
     .on("data", function (event) {
@@ -81,7 +65,9 @@ $(document).ready(async function () {
     })
     .on("error", function (error) {
       console.log(error);
-    });
+  });
+
+
   /*
   function displayAllMonkeys(dnaString) {
     $("#galleryRow").append(
