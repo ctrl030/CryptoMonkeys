@@ -2,7 +2,7 @@ var web3 = new Web3(Web3.givenProvider);
 
 var instance;
 var user;
-var contractAddress = "0x2721FD7ea24650b7d604c1Aff0734d396bbF3151";
+var contractAddress = "0x26757a7Da1601a47453b18992c1040D92c260e25";
 
 $(document).ready(async function () {
   // creating a box
@@ -25,16 +25,11 @@ $(document).ready(async function () {
 
   // var usersMonkeys = [];
 
-  let myMonkeyArray = await instance.methods
-    .findAllMyMonkeys(user)
-    .call((error, result) => {
-      if (error) {
-        console.log("error: " + error);
-      } else {
-        console.log("myMonkeyArray: ");
-        console.log(result);
-      }
-  });
+  let myMonkeyArray = await instance.methods.findAllMyMonkeys(user).call();       
+  console.log("myMonkeyArray: ");
+  console.log(myMonkeyArray);
+      
+  
 
   
   instance

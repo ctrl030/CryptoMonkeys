@@ -870,12 +870,12 @@
     "5777": {
       "events": {},
       "links": {},
-      "address": "0x6D2cf6A66444f60263660D1f411b7D7EaF5Fc311",
-      "transactionHash": "0xb51222c8317f8c3cfae6292d6d8d2ac65819a5bea7a2246f96c8d7b5b1657c97"
+      "address": "0x2c825cD3A03B7365BB4B2e5D1bb6fa049B65d07D",
+      "transactionHash": "0x08cd6c1b321482002e29d69c14e70e53c8ea8a2e88794a2a2d4a7226b3bd1ccb"
     }
   },
   "schemaVersion": "3.2.0",
-  "updatedAt": "2020-12-03T21:49:16.968Z",
+  "updatedAt": "2020-12-04T13:20:47.764Z",
   "networkType": "ethereum",
   "devdoc": {
     "methods": {}

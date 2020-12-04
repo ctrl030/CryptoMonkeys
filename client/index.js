@@ -2,7 +2,7 @@ var web3 = new Web3(Web3.givenProvider);
 
 var instance;
 var user;
-var contractAddress = "0x2721FD7ea24650b7d604c1Aff0734d396bbF3151";
+var contractAddress = "0x26757a7Da1601a47453b18992c1040D92c260e25";
 
 $(document).ready(async function () {
   var accounts = await window.ethereum.enable();
@@ -40,18 +40,18 @@ $("#mintMonkey").click(() => {
       let parent2Id = event.returnValues.parent2Id;
       let genes = event.returnValues.genes;
       $("#monkeyCreatedDiv").css("display", "flex");
-      $("#monkeyCreatedDiv").text(
-        "Crypto Monkey created successfully! Here are the details: " +
-          " owner: " +
-          owner +
-          " tokenId: " +
-          tokenId +
-          " parent1Id: " +
-          parent1Id +
-          " parent2Id: " +
-          parent2Id +
-          " genes: " +
-          genes
+      $("#monkeyCreatedDiv").append(
+        `
+          <ul>
+            <li>`Crypto Monkey created successfully! `</li>
+            <li>`Here are the details: `</li>
+            <li>`owner: ` + owner </li> 
+            <li>`tokenId: ` + tokenId </li>  
+            <li>`parent1Id: ` + parent1Id </li>
+            <li>`parent2Id: ` + parent2Id </li>
+            <li>`genes: ` + genes </li>
+          </ul>
+        `
       );
     })
     .on("error", function (error) {
