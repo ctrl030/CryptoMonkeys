@@ -29,13 +29,15 @@ contract MonkeyContract is IERC721, Ownable {
     uint256 private _totalSupply;
 
     // this struct is the blueprint for new CMOs. They will be created from it
-    struct CryptoMonkey {
-        uint256 genes;
-        uint256 birthtime;
+    struct CryptoMonkey {        
         uint256 parent1Id;
         uint256 parent2Id;
         uint256 generation;
+        uint256 genes;
+        uint256 birthtime;
     }
+
+
 
     // a mapping to store each address's number of Crypto Monkeys - will be queried by balanceOf function
     // - must update at minting (seems done) and transfer (seems done)
@@ -51,6 +53,7 @@ contract MonkeyContract is IERC721, Ownable {
     // they never get deleted here, array only grows and keeps track of them all.
     CryptoMonkey[] public allMonkeysArray;
 
+    // XXX not implemented yet
     // each tokenId points to one CryptoMonkey struct
     // - will be queried by ownerOf function - work on XXX
     // trying to use CryptoMonkey as a data type
@@ -59,35 +62,24 @@ contract MonkeyContract is IERC721, Ownable {
 
     // here we map the owners to a mapping, in which we map the tokenId they own to the position of that tokenId in the owner's array
     // owner 2 tokenid 2 position in this array: _owners2tokenIdArrayMapping
-    mapping(address => mapping(uint256 => uint256))
-        public MonkeyIdPositionsMapping;
+    mapping(address => mapping(uint256 => uint256)) public MonkeyIdPositionsMapping;
 
     // maps owner to an array that holds all their tokenIds - must be updated (at transfers etc.),
     // tokenId positions are saved in another mapping (MonkeyIdPositionsMapping)
     mapping(address => uint256[]) public _owners2tokenIdArrayMapping;
 
     /*
-  // retrieves the correct CryptoMonkey struct from the monkeys Array and adds it to 
-  function addMonkeyToOwnersCollection(address _owner,  uint256 _tokenId) internal {
-    _owners2MappingOfMonkeyIds2CryptoMonkeyMapping[_owner][_tokenId] = allMonkeysArray[_tokenId];
-  }
-  */
+    // retrieves the correct CryptoMonkey struct from the monkeys Array and adds it to 
+    function addMonkeyToOwnersCollection(address _owner,  uint256 _tokenId) internal {
+        _owners2MappingOfMonkeyIds2CryptoMonkeyMapping[_owner][_tokenId] = allMonkeysArray[_tokenId];
+    }
+    */
 
     //- work on XXX
-    function findAllMyMonkeys(address sender) public view returns (uint256[] memory) {
-       
+    function findAllMyMonkeyIds(address sender) public view returns (uint256[] memory) {  
+
         return _owners2tokenIdArrayMapping[sender];
     }
-
-    /* older, now probably better 
- // mapping each owner address to an array, that holds all their tokenIds - will be queried by ownerOf function - work on
-  mapping (address => uint256[]) private _owners2monkeyIdsArrayMapping;
-
-
-  function add(uint256 _tokenId) public {
-    _owners2monkeyIdsArray[id].push(Foo(_tokenId));
-  }
-  */
 
     // Events
 
@@ -129,21 +121,20 @@ contract MonkeyContract is IERC721, Ownable {
         uint256 positionInOldOwnersArray
     );
 
-    /*
- // XXX tokenId, oldOwner, oldOwnerArrayUpdated , oldMonkeyPositionSetTo
-    emit OldOwnerArrayUpdated(_tokenId, _from, _owners2tokenIdArrayMapping[_from], MonkeyIdPositionsMapping[_from][_tokenId]);
-  
-
-  
-    // XXX tokenId, newOwner, newOwnerArrayUpdated, newMonkeyPositionSetTo
-    emit NewOwnerArrayUpdated (_tokenId, _to, _owners2tokenIdArrayMapping[_to], MonkeyIdPositionsMapping[_to][_tokenId]);
-*/
 
     // Constructor function, is setting _name, and _symbol - seems done
 
     constructor() public {
         _name = "Crypto Monkeys";
         _symbol = "CMO";
+
+        _createMonkey(0, 0, 0, uint256(-1), address(this));
+
+        _createMonkey(0, 0, 0, uint256(-1), address(this));
+
+        _createMonkey(0, 0, 0, uint256(-1), address(this));
+
+        _createMonkey(0, 0, 0, uint256(-1), address(this));
     }
 
     // Functions
@@ -167,7 +158,7 @@ contract MonkeyContract is IERC721, Ownable {
         address _owner
     ) private returns (uint256) {
         // uses the CryptoMonkey struct as template and creates a newMonkey from it
-        CryptoMonkey memory newMonkey = CryptoMonkey({
+            CryptoMonkey memory newMonkey = CryptoMonkey({                
             parent1Id: uint256(_parent1Id),
             parent2Id: uint256(_parent2Id),
             generation: uint256(_generation),
@@ -191,6 +182,8 @@ contract MonkeyContract is IERC721, Ownable {
 
         return newMonkeyId;
     }
+
+
 
     function getMonkeyDetails(uint256 tokenId)
         public

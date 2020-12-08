@@ -2,13 +2,10 @@ var web3 = new Web3(Web3.givenProvider);
 
 var instance;
 var user;
-var contractAddress = "0x26757a7Da1601a47453b18992c1040D92c260e25";
+var contractAddress = "0x5046d36207613E66e3cB14BCE29c8f2cF3e37Ab4";
 
 $(document).ready(async function () {
-  // creating a box
-  // querying the DNA from the blockchain, from an array, start with position 1 , think about how to fill position zero
-  // running the DNA string as arguments to showing the monkey in the box
-  // now add this all to the html
+ 
 
   var accounts = await window.ethereum.enable();
 
@@ -23,132 +20,215 @@ $(document).ready(async function () {
   console.log("user: " + user);
   console.log("accounts[0]: " + accounts[0]);
 
-  // var usersMonkeys = [];
+  var userBalance = await instance.methods.balanceOf(user).call();
+  console.log(`user has ${userBalance} Crypto Monkeys`);
 
-  let myMonkeyArray = await instance.methods.findAllMyMonkeys(user).call();       
-  console.log("myMonkeyArray: ");
-  console.log(myMonkeyArray);
+  // return a new array, where you get all the tokenIds
+  let myMonkeyIdsArray = await instance.methods.findAllMyMonkeyIds(user).call();       
+  console.log("myMonkeyIdsArray: ");
+  console.log(myMonkeyIdsArray);
+  console.log("myMonkeyIdsArray[0]: ");
+  console.log(myMonkeyIdsArray[0]);
+
+
       
-  
-
-  
-  instance
-    .getPastEvents("MonkeyCreated", function (error, events) {
-      console.log(events);
-    })
-    .on("data", function (event) {
-      console.log(event);
-      /*let owner = event.returnValues.owner;
-      let tokenId = event.returnValues.tokenId;
-      let parent1Id = event.returnValues.parent1Id;
-      let parent2Id = event.returnValues.parent2Id;
-      let genes = event.returnValues.genes
-      $("#monkeyCreatedDiv").css("display", "flex");
-      $("#monkeyCreatedDiv").text(
-        "Crypto Monkey created successfully! Here are the details: " +
-          " owner: " +
-          owner +
-          " tokenId: " +
-          tokenId +
-          " parent1Id: " +
-          parent1Id +
-          " parent2Id: " +
-          parent2Id +
-          " genes: " +
-          genes
-      );*/
-    })
-    .on("error", function (error) {
-      console.log(error);
+  const events = await instance.getPastEvents("MonkeyCreated", {
+    fromBlock: 0,
+    toBlock:"latest",
   });
 
+  console.log("MonkeyCreated Events emitted: ");
+  console.log(events);
+
+
+  
+  // DONE implement: return a new array, where you get all the tokenIds : let myMonkeyIdsArray = await instance.methods.findAllMyMonkeyIds(user).call();     
+  // and run tokenIds through the global variable that holds the monkey structs, and get the whole monkey
+  // and from these create the new array, and return THAT
 
   /*
-  function displayAllMonkeys(dnaString) {
-    $("#galleryRow").append(
-      `
-        <div class="monkeyBox m-2 light-b-shadow">       
-          <div id="monkey">
-            <div id="mbody">
-              <div id="mHead">
-                <div id="earsArea">
-                  <div class="ears" id="ear-left"></div>
-                  <div class="ears" id="ear-right"></div>
-                </div>
+    getMonkeyDetails(uint256 tokenId)
+    uint256 genes,
+    uint256 birthtime,
+    uint256 parent1Id,
+    uint256 parent2Id,
+    uint256 generation,
+    address owner,
+    address approvedAddress  
+  */
 
-                <div id="mHeadTop">
-                  <div id="eyesArea">
-                    <div class="aroundEyes">
-                      <div class="eyes" id="leftEye">
-                        <span><div class="pupil"></div></span>
-                      </div>
-                    </div>
+           
+  for (let j = 0; j < userBalance; j++) {
+    const tokenIdtemp = myMonkeyIdsArray[j];
+    let myCryptoMonkey = await instance.methods.getMonkeyDetails(tokenIdtemp).call(); 
+    console.log("for loop is running");
+    console.log("myMonkeyIdsArray Position" + j);
+    console.log(myCryptoMonkey);
 
-                    <div class="aroundEyes">
-                      <div class="eyes" id="rightEye">
-                        <span><div class="pupil"></div></span>
-                      </div>
+    console.log("Token ID: " + myMonkeyIdsArray[j]); 
+
+    console.log("approvedAddress " + myCryptoMonkey.approvedAddress);
+
+    console.log("birthtime " + myCryptoMonkey.birthtime);
+
+    console.log("generation " + myCryptoMonkey.generation);
+
+    console.log("genes " + myCryptoMonkey.genes);
+
+    console.log("owner " + myCryptoMonkey.owner);
+
+    console.log("parent1Id " + myCryptoMonkey.parent1Id);
+
+    console.log("parent2Id " + myCryptoMonkey.parent2Id);
+
+  };
+
+});
+
+
+
+/*
+ // creating a box
+  // querying the DNA from the blockchain, from an array, start with position 1 , think about how to fill position zero
+  // running the DNA string as arguments to showing the monkey in the box
+  // now add this all to the html
+
+  // var usersMonkeys = [];
+
+
+
+    instance
+      .getPastEvents("MonkeyCreated", function (error, events) {
+        console.log(events);
+      })
+      .on("data", function (event) {
+        console.log(event);
+        let owner = event.returnValues.owner;
+        let tokenId = event.returnValues.tokenId;
+        let parent1Id = event.returnValues.parent1Id;
+        let parent2Id = event.returnValues.parent2Id;
+        let genes = event.returnValues.genes
+        $("#monkeyCreatedDiv").css("display", "flex");
+        $("#monkeyCreatedDiv").text(
+          "Crypto Monkey created successfully! Here are the details: " +
+            " owner: " +
+            owner +
+            " tokenId: " +
+            tokenId +
+            " parent1Id: " +
+            parent1Id +
+            " parent2Id: " +
+            parent2Id +
+            " genes: " +
+            genes
+        );
+      })
+      .on("error", function (error) {
+        console.log(error);
+    });
+  */
+
+  
+  /*
+  for (let index = 0; index < myMonkeyIdsArray.length; index++) {
+
+    let monkey = myMonkeyIdsArray[index];    
+
+    $("#monkeyList").append(buildMonkeyBoxes(monkey));
+        
+  }
+
+  
+  
+  function buildMonkeyBoxes(tokenId) {    
+    return   
+    `
+      <div id="cryptoMonkey${tokenId}" class="monkeyBox${tokenId} m-2 light-b-shadow">       
+        <div id="monkey${tokenId}">
+          <div id="mbody${tokenId}">
+            <div id="mHead${tokenId}">
+              <div id="earsArea${tokenId}">
+                <div class="ears" id="ear-left${tokenId}"></div>
+                <div class="ears" id="ear-right${tokenId}"></div>
+              </div>
+
+              <div id="mHeadTop${tokenId}">
+                <div id="eyesArea${tokenId}">
+
+                  <div class="aroundEyesClass">
+                    <div class="eyes" id="leftEye${tokenId}">
+                      <span><div class="pupil${tokenId}"></div></span>
                     </div>
                   </div>
-                </div>
 
-                <div id="mHeadLower">
-                  <div id="noseArea">
-                    <div id="leftNostril"></div>
-                    <div id="rightNostril"></div>
-                  </div>
-                  <div id="mouthArea">
-                    <div id="mouth"></div>
+                  <div class="aroundEyesClass">
+                    <div class="eyes" id="rightEye${tokenId}">
+                      <span><div class="pupil${tokenId}"></div></span>
+                    </div>
+
                   </div>
                 </div>
               </div>
 
-              <div id="armsArea">
-                <div class="arms leftArmPosition" id="leftArm">
-                  <div class="hand"></div>
+              <div id="mHeadLower${tokenId}">
+                <div id="noseArea${tokenId}">
+                  <div id="leftNostril${tokenId}"></div>
+                  <div id="rightNostril${tokenId}"></div>
                 </div>
-                <div class="arms rightArmPosition" id="rightArm">
-                  <div class="hand"></div>
+                <div id="mouthArea${tokenId}">
+                  <div id="mouth${tokenId}"></div>
                 </div>
-              </div>
-
-              <div id="feetArea">
-                <div class="feet" id="leftFoot"></div>
-                <div class="feet" id="rightFoot"></div>
               </div>
             </div>
+
+            <div id="armsArea${tokenId}">
+              <div class="arms leftArmPosition" id="leftArm${tokenId}">
+                
+              </div>
+              <div class="arms rightArmPosition" id="rightArm${tokenId}">
+                
+              </div>
+            </div>
+
+            <div id="feetArea${tokenId}">
+              <div class="feet" id="leftFoot${tokenId}"></div>
+              <div class="feet" id="rightFoot${tokenId}"></div>
+            </div>
           </div>
-
-          <br />
-
-          <div class="dnaDiv" id="monkeyDNA">
-            <b>
-              DNA:
-              <!-- Colors -->
-              <span id="dnabody"></span>
-              <span id="dnamouth"></span>
-              <span id="dnaeyes"></span>
-              <span id="dnaears"></span>
-
-              <!-- monkeyAttributes -->
-              <span id="dnaEyeShape"></span>
-              <span id="dnaMouthShape"></span>
-              <span id="dnaEyeBackgroundColor"></span>
-              <span id="dnaLowerHeadColor"></span>
-              <span id="dnaAnimation"></span>
-              <span id="dnaspecial"></span>
-            </b>
-          </div>      
-              
         </div>
-      `
-    );
-  }*/
 
-  /* just as example for syntax
-  $("#monkeyBox1").html(`DNA: <a href=''> ${} </a> `);
-  $("#monkeyBox1DNA").html(`DNA: <a href=''> ${usdFormatter.format(Math.round(firstRowDataOutput.data.total_market_cap.usd))} </a> `);
-  */
+        <br />
+
+        <div class="dnaDiv" id="monkeyDNA${tokenId}">
+          <b>
+            DNA:
+            <!-- Colors -->
+            <span id="dnabody${tokenId}"></span>
+            <span id="dnamouth${tokenId}"></span>
+            <span id="dnaeyes${tokenId}"></span>
+            <span id="dnaears${tokenId}"></span>
+
+            <!-- monkeyAttributes -->
+            <span id="dnaEyeShape${tokenId}"></span>
+            <span id="dnaMouthShape${tokenId}"></span>
+            <span id="dnaEyeBackgroundColor${tokenId}"></span>
+            <span id="dnaLowerHeadColor${tokenId}"></span>
+            <span id="dnaAnimation${tokenId}"></span>
+            <span id="dnaspecial${tokenId}"></span>
+          </b>
+        </div>      
+            
+      </div>
+    `     
+   
+    // need to create a for loop here, to cycle through all tokenIds from myMonkeyIdsArray
+
+    // displayAllMonkeys 
+
+    // $("#monkeyList").append( displayAllMonkeys(tokenId)   );
+
+  } 
   // and create the next box right next to it..
   // until all boxes are displayed
-});
+
+*/

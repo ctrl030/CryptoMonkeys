@@ -55,4 +55,3 @@ $("#buttonItsOver9000Monkey").click(() => {
   console.log("IT'S OVER 9000");
 });
 
-$("#mintMonkey").click(() => {});

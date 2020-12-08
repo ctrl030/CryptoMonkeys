@@ -71,6 +71,7 @@ body {
 }
 
 .monkeyAttributes {
+  position:relative;
   padding: 25px;
   background-color: #ededed;
   border-radius: 10px;
@@ -83,8 +84,7 @@ body {
   align-self: center;
   display: flex;
   justify-content: space-around;
-  margin-bottom: 50px;
-  margin-top: 25px;
+  margin-bottom: 20px;
 }
 
 .attributesSliders {
@@ -128,15 +128,13 @@ body {
 }
 
 #monkeyCreatedDiv {
-  margin-top: 8px;
-  margin-bottom: 8px;
-  height: 260px;
-  border-radius: 10px;
+  position:absolute;
+  width: 90%;
   justify-content: center;
+  border-radius: 10px;
   font-size: 16px !important;
-  font-weight: bold !important;
-  margin-right: 0px !important;
-  margin-left: 0px !important;
+  font-weight: bold !important;     
+  bottom:20px; 
 }
 
 #buttonHolderDiv {

@@ -208,16 +208,6 @@ var abi = [
     "outputs": [
       {
         "internalType": "uint256",
-        "name": "genes",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "birthtime",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
         "name": "parent1Id",
         "type": "uint256"
       },
@@ -229,6 +219,16 @@ var abi = [
       {
         "internalType": "uint256",
         "name": "generation",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "genes",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "birthtime",
         "type": "uint256"
       }
     ],
@@ -275,16 +275,6 @@ var abi = [
     "outputs": [
       {
         "internalType": "uint256",
-        "name": "genes",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "birthtime",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
         "name": "parent1Id",
         "type": "uint256"
       },
@@ -296,6 +286,16 @@ var abi = [
       {
         "internalType": "uint256",
         "name": "generation",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "genes",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "birthtime",
         "type": "uint256"
       }
     ],
@@ -342,7 +342,7 @@ var abi = [
         "type": "address"
       }
     ],
-    "name": "findAllMyMonkeys",
+    "name": "findAllMyMonkeyIds",
     "outputs": [
       {
         "internalType": "uint256[]",
