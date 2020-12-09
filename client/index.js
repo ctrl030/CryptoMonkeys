@@ -18,8 +18,8 @@ $(document).ready(async function () {
 
   user = accounts[0];
 
-  console.log("indexjs instance: ");
-  console.log(instance);
+  // console.log("indexjs instance: ");
+  // console.log(instance);
   console.log("user: " + user);
   console.log("accounts[0]: " + accounts[0]);
 
@@ -79,26 +79,27 @@ $("#mintMonkey").click(() => {
 
 function generateHtmlStructure(htmlname) {
   return `
-  <div class="monkeyBox monkeyBox${htmlname} m-2 light-b-shadow">
+  <div class="monkeyBox m-2 light-b-shadow" id="monkeyBox${htmlname}" >
           <div id="monkey${htmlname}">
             <div id="mbody${htmlname}">
               <div id="mHead${htmlname}">
                 <div id="earsArea${htmlname}">
-                  <div class="ears${htmlname}" id="ear-left${htmlname}"></div>
-                  <div class="ears${htmlname}" id="ear-right${htmlname}"></div>
+                  <div class="ears" id="ear-left${htmlname}"></div>
+                  <div class="ears" id="ear-right${htmlname}"></div>
                 </div>
 
                 <div id="mHeadTop${htmlname}">
                   <div id="eyesArea${htmlname}">
-                    <div class="aroundEyesClass${htmlname}">
-                      <div class="eyes${htmlname}" id="leftEye${htmlname}">
-                        <span><div class="pupil${htmlname}"></div></span>
+
+                    <div class="aroundEyesClass" id="aroundEyes${htmlname}>
+                      <div class="eyes" id="leftEye${htmlname}">
+                        <span><div class="pupil"></div></span>
                       </div>
                     </div>
 
-                    <div class="aroundEyesClass${htmlname}">
-                      <div class="eyes${htmlname}" id="rightEye${htmlname}">
-                        <span><div class="pupil${htmlname}"></div></span>
+                    <div class="aroundEyesClass">
+                      <div class="eyes" id="rightEye${htmlname}">
+                        <span><div class="pupil"></div></span>
                       </div>
                     </div>
                   </div>
@@ -116,22 +117,22 @@ function generateHtmlStructure(htmlname) {
               </div>
 
               <div id="armsArea${htmlname}">
-                <div class="arms${htmlname} leftArmPosition${htmlname}" id="leftArm${htmlname}">
+                <div class="arms leftArmPosition" id="leftArm${htmlname}">
                   
                 </div>
-                <div class="arms${htmlname} rightArmPosition${htmlname}" id="rightArm${htmlname}">
+                <div class="arms rightArmPosition" id="rightArm${htmlname}">
                   
                 </div>
               </div>
 
               <div id="feetArea${htmlname}">
-                <div class="feet${htmlname}" id="leftFoot${htmlname}"></div>
-                <div class="feet${htmlname}" id="rightFoot${htmlname}"></div>
+                <div class="feet" id="leftFoot${htmlname}"></div>
+                <div class="feet" id="rightFoot${htmlname}"></div>
               </div>
             </div>
           </div>
 
-          <div class="dnaDiv${htmlname}" id="monkeyDNA${htmlname}">
+          <div class="dnaDiv" id="monkeyDNA${htmlname}">
             <b>
               DNA:
               // Colors 
