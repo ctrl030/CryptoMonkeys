@@ -80,6 +80,8 @@ $(document).ready(function () {
   renderMonkey(defaultDNA);
 });
 
+
+
 function getDna() {
   var dna = "";
   dna += $("#dnabody").html();
@@ -96,6 +98,10 @@ function getDna() {
   return dna;
 }
 
+
+// This is creating the monkey from a DNA , which is a 10 line block of code, see defaultDNA for ex.
+// first line is calling the function that applies the CSS
+// second line is setting the slider to the correct value
 function renderMonkey(dna) {
   firstGroupColor(colors[dna.headcolor], dna.headcolor);
   $("#headColorSlider").val(dna.headcolor);
@@ -125,7 +131,9 @@ function renderMonkey(dna) {
   $("#dnaAnimationSlider").val(dna.animation);
 }
 
-// Changing monkey colors
+// Sliders are listenening, on change monkey colors and shapes are modified
+// First line is listening, second is getting the new modification from the slider and saving it into a variable
+// Third is implementing the change, calling the function with this variable  
 $("#headColorSlider").change(() => {
   var colorVal = $("#headColorSlider").val();
   firstGroupColor(colors[colorVal], colorVal);

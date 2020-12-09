@@ -2,7 +2,7 @@ var web3 = new Web3(Web3.givenProvider);
 
 var instance;
 var user;
-var contractAddress = "0x5046d36207613E66e3cB14BCE29c8f2cF3e37Ab4";
+var contractAddress = "0xA19Acd4a962B2DF3190De393CE44424a97ae5065";
 
 $(document).ready(async function () {
  
