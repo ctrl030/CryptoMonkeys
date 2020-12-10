@@ -61,11 +61,13 @@ body {
 
 #switchToGalleryButton {
   font-weight: bold;
+  width: 132px;
 }
 
 #switchToCreationButton {
   font-weight: bold;
   display: none;
+ 
 }
 
 #monkeyRowCreation {

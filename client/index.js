@@ -18,9 +18,6 @@ $(document).ready(async function () {
   console.log("user: " + user);
   // console.log("accounts[0]: " + accounts[0]);
 
-  var userBalance = await instance.methods.balanceOf(user).call();
-  console.log(`user has ${userBalance} Crypto Monkeys`);
-
   // on pageload we subscribe to the MonkeyCreated event. From now on, whenever it is emitted (by anybody?), 
   // we get data sent and the css of the div will be emptied and then appended with 
   instance.events
@@ -71,19 +68,111 @@ $("#mintMonkey").click(() => {
 });
 
 // Gallery Part
-
-
-
-$("#switchToGalleryButton").click(() => {
-  $("#switchToGalleryButton").hide();
-  $("#switchToCreationButton").show();  
-});
-
 $("#switchToCreationButton").click(() => {
   $("#switchToCreationButton").hide();  
-  $("#switchToGalleryButton").show();
-  
+  $("#switchToGalleryButton").show();  
 });
+
+
+$("#switchToGalleryButton").click(async () => {
+  $("#switchToGalleryButton").hide();
+  $("#switchToCreationButton").show(); 
+
+  // console.log("indexjs instance: ");
+  // console.log(instance);
+  console.log("user: " + user);
+  // console.log("accounts[0]: " + accounts[0]);
+
+  var userBalance = await instance.methods.balanceOf(user).call();
+  console.log(`user has ${userBalance} Crypto Monkeys`);
+
+  let myMonkeyIdsArray = await instance.methods.findAllMyMonkeyIds(user).call();       
+  console.log("myMonkeyIdsArray: ");
+  console.log(myMonkeyIdsArray);
+  
+  for (let j = 0; j < userBalance; j++) {
+    const tokenId = myMonkeyIdsArray[j];
+    let myCryptoMonkey = await instance.methods.getMonkeyDetails(tokenId).call(); 
+    
+    console.log("for loop is running");
+    console.log("myMonkeyIdsArray Position" + j);
+    console.log(myCryptoMonkey);
+    
+  
+    console.log("Token ID: " + tokenId); 
+  
+    console.log("approvedAddress " + myCryptoMonkey.approvedAddress);
+  
+    console.log("birthtime " + myCryptoMonkey.birthtime);
+  
+    console.log("generation " + myCryptoMonkey.generation);
+  
+    console.log("genes " + myCryptoMonkey.genes);
+  
+    console.log("owner " + myCryptoMonkey.owner);
+  
+    console.log("parent1Id " + myCryptoMonkey.parent1Id);
+  
+    console.log("parent2Id " + myCryptoMonkey.parent2Id);
+  
+    let tokenIdGenes = myCryptoMonkey.genes.toString();
+  
+    console.log("tokenIdGenes " + tokenIdGenes);
+  
+    var tokenIdHeadcolor = Number(tokenIdGenes.charAt(0)+tokenIdGenes.charAt(1));
+    var tokenIdmouthcolor = Number(tokenIdGenes.charAt(2)+tokenIdGenes.charAt(3));
+    var tokenIdeyescolor = Number(tokenIdGenes.charAt(4)+tokenIdGenes.charAt(5));
+    var tokenIdearscolor = Number(tokenIdGenes.charAt(6)+tokenIdGenes.charAt(7));
+  
+    var tokenIdeyesShape = Number(tokenIdGenes.charAt(8));
+    var tokenIdmouthShape = Number(tokenIdGenes.charAt(9));
+  
+    var tokenIdeyeBackgroundColor = Number(tokenIdGenes.charAt(10)+tokenIdGenes.charAt(11));
+    var tokenIdlowerHeadColor = Number(tokenIdGenes.charAt(12)+tokenIdGenes.charAt(13));
+  
+    var tokenIdanimation = Number(tokenIdGenes.charAt(14));
+    var tokenIdlastNum = Number(tokenIdGenes.charAt(15));
+  
+    var tokenIdDNA = {
+      headcolor: tokenIdHeadcolor,
+      mouthcolor: tokenIdmouthcolor,
+      eyescolor: tokenIdeyescolor,
+      earscolor: tokenIdearscolor,
+    
+      eyesShape: tokenIdeyesShape,
+      mouthShape: tokenIdmouthShape,
+      eyeBackgroundColor: tokenIdeyeBackgroundColor,
+      lowerHeadColor: tokenIdlowerHeadColor,
+      animation: tokenIdanimation,
+      lastNum: tokenIdlastNum,
+    };
+    console.log("tokenIdDNA ");
+    console.log(tokenIdDNA);
+    
+    
+  
+  
+    /*
+    $("#monkeyList").append(buildMonkeyBoxes(tokenId));
+  
+    console.log("apppend should have fired here")
+  
+    renderMonkey(tokenIdDNA);*/
+    
+  };
+
+
+
+
+
+
+
+
+  
+
+
+});
+
 
 /*
 // return a new array, where you get all the tokenIds
