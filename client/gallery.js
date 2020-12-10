@@ -2,7 +2,7 @@ var web3 = new Web3(Web3.givenProvider);
 
 var instance;
 var user;
-var contractAddress = "0xA19Acd4a962B2DF3190De393CE44424a97ae5065";
+var contractAddress = "0xaa6830FF4Ef08d3ee2085fd0342A1acAB6FA1F8a";
 
 $(document).ready(async function () {
  
@@ -157,88 +157,13 @@ function defineTokenIdMonkey(tokenId) {
 // read the genes and from these
 // save values to own set of css 
 
-
+/*
 function buildMonkeyBoxes(tokenId) {    
   return `
-  <div id="cryptoMonkey cryptoMonkey${tokenId}" class="monkeyBox monkeyBox${tokenId} m-2 light-b-shadow">       
-    <div id="monkey monkey${tokenId}">
-      <div id="mbody mbody${tokenId}">
-        <div id="mHead mHead${tokenId}">
-          <div id="earsArea earsArea${tokenId}">
-            <div class="ears ears${tokenId}" id="ear-left ear-left${tokenId}"></div>
-            <div class="ears ears${tokenId}" id="ear-right ear-right${tokenId}"></div>
-          </div>
-
-          <div id="mHeadTop mHeadTop${tokenId}">
-            <div id="eyesArea eyesArea${tokenId}">
-
-              <div class="aroundEyesClass aroundEyesClass${tokenId}">
-                <div class="eyes eyes${tokenId}" id="leftEye leftEye${tokenId}">
-                  <span><div class="pupil pupil${tokenId}"></div></span>
-                </div>
-              </div>
-
-              <div class="aroundEyesClass aroundEyesClass${tokenId}">
-                <div class="eyes" id="rightEye rightEye${tokenId}">
-                  <span><div class="pupil pupil${tokenId}"></div></span>
-                </div>
-
-              </div>
-            </div>
-          </div>
-
-          <div id="mHeadLower mHeadLower${tokenId}">
-            <div id="noseArea noseArea${tokenId}">
-              <div id="leftNostril leftNostril${tokenId}"></div>
-              <div id="rightNostril rightNostril${tokenId}"></div>
-            </div>
-            <div id="mouthArea mouthArea${tokenId}">
-              <div id="mouth mouth${tokenId}"></div>
-            </div>
-          </div>
-        </div>
-
-        <div id="armsArea armsArea${tokenId}">
-          <div class="arms arms${tokenId} leftArmPosition leftArmPosition${tokenId}" id="leftArm leftArm${tokenId}">
-            
-          </div>
-          <div class="arms arms${tokenId} rightArmPosition rightArmPosition${tokenId}" id="rightArm$ rightArm${tokenId}">
-            
-          </div>
-        </div>
-
-        <div id="feetArea feetArea${tokenId}">
-          <div class="feet feet${tokenId}" id="leftFoot leftFoot${tokenId}"></div>
-          <div class="feet feet${tokenId}" id="rightFoot rightFoot${tokenId}"></div>
-        </div>
-      </div>
-    </div>
-
-    <br />
-
-    <div class="dnaDiv "dnaDiv${tokenId}" id="monkeyDNA monkeyDNA${tokenId}">
-      <b>
-        DNA:
-        <!-- Colors -->
-        <span id="dnabody dnabody${tokenId}"></span>
-        <span id="dnamouth dnamouth${tokenId}"></span>
-        <span id="dnaeyes dnaeyes${tokenId}"></span>
-        <span id="dnaears dnaears${tokenId}"></span>
-
-        <!-- monkeyAttributes -->
-        <span id="dnaEyeShape dnaEyeShape${tokenId}"></span>
-        <span id="dnaMouthShape dnaMouthShape${tokenId}"></span>
-        <span id="dnaEyeBackgroundColor dnaEyeBackgroundColor${tokenId}"></span>
-        <span id="dnaLowerHeadColor dnaLowerHeadColor${tokenId}"></span>
-        <span id="dnaAnimation dnaAnimation${tokenId}"></span>
-        <span id="dnaspecial dnaspecial${tokenId}"></span>
-      </b>
-    </div>      
-        
-  </div>
+  
   `     
 }  
-
+*/
 
 
 /*

@@ -65,35 +65,35 @@ function createRandomMonkey() {
 
 // when page load
 $(document).ready(function () {
-  $("#dnabody").html(defaultDNA.headcolor);
-  $("#dnamouth").html(defaultDNA.mouthcolor);
-  $("#dnaeyes").html(defaultDNA.eyesColor);
-  $("#dnaears").html(defaultDNA.earsColor);
+  $(`#dnaFirstGroupCreation`).html(defaultDNA.headcolor);
+  $(`#dnaSecondGroupCreation`).html(defaultDNA.mouthcolor);
+  $(`#dnaThirdGroupCreation`).html(defaultDNA.eyesColor);
+  $(`#dnaFourthGroupCreation`).html(defaultDNA.earsColor);
 
-  $("#dnaEyeShape").html(defaultDNA.eyesShape);
-  $("#dnaMouthShape").html(defaultDNA.mouthShape);
-  $("#dnaEyeBackgroundColor").html(defaultDNA.eyeBackgroundColor);
-  $("#dnaLowerHeadColor").html(defaultDNA.lowerHeadColor);
-  $("#dnaAnimation").html(defaultDNA.animation);
-  $("#dnaspecial").html(defaultDNA.lastNum);
+  $(`#dnaEyeShapeCreation`).html(defaultDNA.eyesShape);
+  $(`#dnaMouthShapeCreation`).html(defaultDNA.mouthShape);
+  $(`#dnaEyeBackgroundColorCreation`).html(defaultDNA.eyeBackgroundColor);
+  $(`#dnaLowerHeadColorCreation`).html(defaultDNA.lowerHeadColor);
+  $(`#dnaAnimationCreation`).html(defaultDNA.animation);
+  $(`#dnaspecialCreation`).html(defaultDNA.lastNum);
 
   renderMonkey(defaultDNA);
 });
 
 
 
-function getDna() {
-  var dna = "";
-  dna += $("#dnabody").html();
-  dna += $("#dnamouth").html();
-  dna += $("#dnaeyes").html();
-  dna += $("#dnaears").html();
-  dna += $("#dnaEyeShape").html();
-  dna += $("#dnaMouthShape").html();
-  dna += $("#dnaEyeBackgroundColor").html();
-  dna += $("#dnaLowerHeadColor").html();
-  dna += $("#dnaAnimation").html();
-  dna += $("#dnaspecial").html();
+function getDna(htmlname=`Creation`) {
+  var dna = ``;
+  dna += $(`#dnaFirstGroup${htmlname}`).html();
+  dna += $(`#dnaSecondGroup${htmlname}`).html();
+  dna += $(`#dnaThirdGroup${htmlname}`).html();
+  dna += $(`#dnaFourthGroup${htmlname}`).html();
+  dna += $(`#dnaEyeShape${htmlname}`).html();
+  dna += $(`#dnaMouthShape${htmlname}`).html();
+  dna += $(`#dnaEyeBackgroundColor${htmlname}`).html();
+  dna += $(`#dnaLowerHeadColor${htmlname}`).html();
+  dna += $(`#dnaAnimation${htmlname}`).html();
+  dna += $(`#dnaspecial${htmlname}`).html();
 
   return dna;
 }
@@ -104,77 +104,77 @@ function getDna() {
 // second line is setting the slider to the correct value
 function renderMonkey(dna) {
   firstGroupColor(colors[dna.headcolor], dna.headcolor);
-  $("#headColorSlider").val(dna.headcolor);
+  $(`#headColorSlider`).val(dna.headcolor);
 
   secondGroupColor(colors[dna.mouthcolor], dna.mouthcolor);
-  $("#mouthColorSlider").val(dna.mouthcolor);
+  $(`#mouthColorSlider`).val(dna.mouthcolor);
 
   thirdGroupColor(colors[dna.eyescolor], dna.eyescolor);
-  $("#eyesColorSlider").val(dna.eyescolor);
+  $(`#eyesColorSlider`).val(dna.eyescolor);
 
   fourthGroupColor(colors[dna.earscolor], dna.earscolor);
-  $("#earsColorSlider").val(dna.earscolor);
+  $(`#earsColorSlider`).val(dna.earscolor);
 
   eyeVariation(dna.eyesShape);
-  $("#dnaEyeShapeSlider").val(dna.eyesShape);
+  $(`#dnaEyeShapeSlider`).val(dna.eyesShape);
 
   mouthVariation(dna.eyesShape);
-  $("#dnaMouthShapeSlider").val(dna.mouthShape);
+  $(`#dnaMouthShapeSlider`).val(dna.mouthShape);
 
   dnaEyeBackgroundColor(colors[dna.eyeBackgroundColor], dna.eyeBackgroundColor);
-  $("#eyeBackgroundColorSlider").val(dna.eyeBackgroundColor);
+  $(`#eyeBackgroundColorSlider`).val(dna.eyeBackgroundColor);
 
   dnaLowerHeadColor(colors[dna.lowerHeadColor], dna.lowerHeadColor);
-  $("#lowerHeadColorSlider").val(dna.lowerHeadColor);
+  $(`#lowerHeadColorSlider`).val(dna.lowerHeadColor);
 
   animationForMonkey(dna.animation);
-  $("#dnaAnimationSlider").val(dna.animation);
+  $(`#dnaAnimationSlider`).val(dna.animation);
 }
 
 // Sliders are listenening, on change monkey colors and shapes are modified
 // First line is listening, second is getting the new modification from the slider and saving it into a variable
 // Third is implementing the change, calling the function with this variable  
-$("#headColorSlider").change(() => {
-  var colorVal = $("#headColorSlider").val();
+$(`#headColorSlider`).change(() => {
+  var colorVal = $(`#headColorSlider`).val();
   firstGroupColor(colors[colorVal], colorVal);
 });
 
-$("#mouthColorSlider").change(() => {
-  var colorVal = $("#mouthColorSlider").val();
+$(`#mouthColorSlider`).change(() => {
+  var colorVal = $(`#mouthColorSlider`).val();
   secondGroupColor(colors[colorVal], colorVal);
 });
 
-$("#eyesColorSlider").change(() => {
-  var colorVal = $("#eyesColorSlider").val();
+$(`#eyesColorSlider`).change(() => {
+  var colorVal = $(`#eyesColorSlider`).val();
   thirdGroupColor(colors[colorVal], colorVal);
 });
 
-$("#earsColorSlider").change(() => {
-  var colorVal = $("#earsColorSlider").val();
+$(`#earsColorSlider`).change(() => {
+  var colorVal = $(`#earsColorSlider`).val();
   fourthGroupColor(colors[colorVal], colorVal);
 });
 
-$("#dnaEyeShapeSlider").change(() => {
-  var eyeShape = parseInt($("#dnaEyeShapeSlider").val());
+$(`#dnaEyeShapeSlider`).change(() => {
+  var eyeShape = parseInt($(`#dnaEyeShapeSlider`).val());
   eyeVariation(eyeShape);
 });
 
-$("#dnaMouthShapeSlider").change(() => {
-  var mouthShape = parseInt($("#dnaMouthShapeSlider").val());
+$(`#dnaMouthShapeSlider`).change(() => {
+  var mouthShape = parseInt($(`#dnaMouthShapeSlider`).val());
   mouthVariation(mouthShape);
 });
 
-$("#eyeBackgroundColorSlider").change(() => {
-  var colorVal = $("#eyeBackgroundColorSlider").val();
+$(`#eyeBackgroundColorSlider`).change(() => {
+  var colorVal = $(`#eyeBackgroundColorSlider`).val();
   dnaEyeBackgroundColor(colors[colorVal], colorVal);
 });
 
-$("#lowerHeadColorSlider").change(() => {
-  var colorVal = $("#lowerHeadColorSlider").val();
+$(`#lowerHeadColorSlider`).change(() => {
+  var colorVal = $(`#lowerHeadColorSlider`).val();
   dnaLowerHeadColor(colors[colorVal], colorVal);
 });
 
-$("#dnaAnimationSlider").change(() => {
-  var animationVal = parseInt($("#dnaAnimationSlider").val());
+$(`#dnaAnimationSlider`).change(() => {
+  var animationVal = parseInt($(`#dnaAnimationSlider`).val());
   animationForMonkey(animationVal);
 });

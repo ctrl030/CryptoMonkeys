@@ -63,14 +63,14 @@ body {
   font-weight: bold;
 }
 
-#monkeyRow {
+#monkeyRowCreation {
   color: #4f3222 !important;
   margin-right: 0px !important;
   margin-left: 0px !important;
   justify-content: space-around;
 }
 
-.monkeyAttributes {
+.monkeySliderArea {
   position:relative;
   padding: 25px;
   background-color: #ededed;
