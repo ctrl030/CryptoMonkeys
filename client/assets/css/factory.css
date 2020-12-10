@@ -138,7 +138,7 @@ body {
 }
 
 #buttonHolderDiv {
-  width: 1260px;
+  width: 1000px;
   align-self: center;
   display: flex;
   justify-content: space-around;

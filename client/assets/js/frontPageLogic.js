@@ -40,11 +40,10 @@ $("#showAttributesSlidersButton").click(() => {
   $(".attributesSliders").show();
 });
 
-// Buttons to generate monkeys
+// Buttons to generate and mint monkeys
 
 $("#buttonCalcDefaultMonkey").click(() => {
-  let nameForDefault = "Factory";
-  renderMonkey(defaultDNA, nameForDefault);
+  renderMonkey(defaultDNA);
 });
 
 $("#buttonCalcRandomMonkey").click(() => {
@@ -52,9 +51,7 @@ $("#buttonCalcRandomMonkey").click(() => {
 });
 
 $("#buttonItsOver9000Monkey").click(() => {
-  console.log("IT'S OVER 9000");
-  let nameFor9000 = "Factory";
-  renderMonkey(itsOver9000DNA, nameFor9000);
+  renderMonkey(itsOver9000DNA);
   console.log("IT'S OVER 9000");
 });
 
