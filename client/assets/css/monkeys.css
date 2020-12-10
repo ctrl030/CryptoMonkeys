@@ -56,7 +56,6 @@
 }
 
 #eyesArea {
-  background-color: rgb(199, 130, 71);
   height: 100px;
   width: 100px;
   position: absolute;
@@ -69,7 +68,6 @@
 
 .eyes {
   position: relative;
-  background-color: white;
   top: 10px;
   height: 60px;
   width: 40px;

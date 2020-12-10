@@ -48,7 +48,7 @@
 */
 
 .growingAndShrinkingClass {
-  animation: growingAndShrinking 3s infinite;
+  animation: growingAndShrinking 2s infinite;
 }
 
 @keyframes growingAndShrinking {

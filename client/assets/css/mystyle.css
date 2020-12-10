@@ -1,7 +1,11 @@
-
 @font-face {
   font-family: "Poppins";
   src        : url("Poppins-Light.ttf");
+}
+
+@font-face {
+  font-family: "Kavoon";
+  src        : url("Kavoon-Regular.ttf");
 }
 
 body {
@@ -10,6 +14,10 @@ body {
   letter-spacing: 1px; 
 }
 
+#jungleIslandTextDiv {
+  font-family: 'Kavoon';  
+  font-weight: bold;
+}
 
 .navbar-light {
   background: #ffffff;

@@ -12,6 +12,8 @@ html {
 body {
   background: #ede15f;
   line-height: 1 !important;
+  background-image: url(https://img.elo7.com.br/product/zoom/22381A1/painel-de-festa-praia-por-do-sol-02-banner.jpg);
+  background-size: cover;
 }
 
 .textOverBoxes {
@@ -21,6 +23,10 @@ body {
 
 #jungleIslandContainer {
   margin-top: 2vh;
+  width: 1260px !important;
+  max-width: 1260px !important;
+  padding-right: 0px !important;
+  padding-left: 0px !important;
 }
 
 #jungleIslandTextDiv {
@@ -28,6 +34,9 @@ body {
   padding: 16px;
   background-color: #ededed;
   border-radius: 10px;
+  margin-right: 0px !important;
+  margin-left: 0px !important;
+  opacity: 0.95;
 }
 
 #audioButtonHolderArea {
@@ -38,6 +47,9 @@ body {
   background-color: #ededed;
   display: flex;
   justify-content: center;
+  margin-right: 0px !important;
+  margin-left: 0px !important;
+  opacity: 0.95;
 }
 
 #audioButtonHolderDiv {
@@ -47,18 +59,31 @@ body {
   justify-content: space-around;
 }
 
-#monkeyRow {
+#switchToGalleryButton {
+  font-weight: bold;
+ 
+}
+
+#switchToCreationButton {
+  font-weight: bold;
+  display: none;
+ 
+} 
+
+#monkeyRowCreation {
   color: #4f3222 !important;
   margin-right: 0px !important;
   margin-left: 0px !important;
   justify-content: space-around;
 }
 
-.monkeyAttributes {
+.monkeySliderArea {
+  position:relative;
   padding: 25px;
   background-color: #ededed;
   border-radius: 10px;
   z-index: 0;
+  opacity: 0.95;
 }
 
 #sliderButtonHolderDiv {
@@ -66,8 +91,7 @@ body {
   align-self: center;
   display: flex;
   justify-content: space-around;
-  margin-bottom: 50px;
-  margin-top: 25px;
+  margin-bottom: 20px;
 }
 
 .attributesSliders {
@@ -105,16 +129,19 @@ body {
   background-color: #ededed;
   display: flex;
   justify-content: center;
+  margin-right: 0px !important;
+  margin-left: 0px !important;
+  opacity: 0.95;
 }
 
 #monkeyCreatedDiv {
-  margin-top: 8px;
-  margin-bottom: 8px;
-  height: 260px;
-  border-radius: 10px;
+  position:absolute;
+  width: 90%;
   justify-content: center;
+  border-radius: 10px;
   font-size: 16px !important;
-  font-weight: bold !important;
+  font-weight: bold !important;     
+  bottom:20px; 
 }
 
 #buttonHolderDiv {
@@ -133,6 +160,9 @@ body {
   text-align: center;
   padding-top: 30px;
   padding-bottom: 30px;
+  margin-right: 0px !important;
+  margin-left: 0px !important;
+  opacity: 0.95;
 }
 
 #jungleIslandFooter p {
