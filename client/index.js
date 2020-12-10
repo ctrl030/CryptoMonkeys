@@ -65,7 +65,7 @@ $("#mintMonkey").click(() => {
   });
 
   
-});
+}); 
 
 // Gallery Part
 $("#switchToCreationButton").click(() => {
