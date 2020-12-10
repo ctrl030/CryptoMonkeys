@@ -60,14 +60,12 @@ body {
 }
 
 #switchToGalleryButton {
-  font-weight: bold;
- 
+  font-weight: bold; 
 }
 
 #switchToCreationButton {
   font-weight: bold;
-  display: none;
- 
+  display: none; 
 } 
 
 #monkeyRowCreation {

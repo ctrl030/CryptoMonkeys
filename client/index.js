@@ -72,7 +72,14 @@ $("#switchToCreationButton").click(() => {
   $("#switchToCreationButton").hide();
   $("#monkeyRowCreation").show();
   $("#buttonHolderArea").show();  
-  $("#switchToGalleryButton").show();  
+  $("#switchToGalleryButton").show();
+
+  $("#monkeyRowCreation").show();
+  $("#buttonHolderArea").show();
+
+  $("#monkeyRowGallery").empty();
+  
+  
 });
 
 
