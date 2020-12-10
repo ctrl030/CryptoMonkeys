@@ -63,6 +63,11 @@ body {
   font-weight: bold;
 }
 
+#switchToCreationButton {
+  font-weight: bold;
+  display: none;
+}
+
 #monkeyRowCreation {
   color: #4f3222 !important;
   margin-right: 0px !important;
