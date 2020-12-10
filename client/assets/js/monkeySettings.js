@@ -102,32 +102,32 @@ function getDna(htmlname=`Creation`) {
 // This is creating the monkey from a DNA , which is a 10 line block of code, see defaultDNA for ex.
 // first line is calling the function that applies the CSS
 // second line is setting the slider to the correct value
-function renderMonkey(dna) {
-  firstGroupColor(colors[dna.headcolor], dna.headcolor);
+function renderMonkey(dna, htmlname) {
+  firstGroupColor(colors[dna.headcolor], dna.headcolor, htmlname);
   $(`#headColorSlider`).val(dna.headcolor);
 
-  secondGroupColor(colors[dna.mouthcolor], dna.mouthcolor);
+  secondGroupColor(colors[dna.mouthcolor], dna.mouthcolor, htmlname);
   $(`#mouthColorSlider`).val(dna.mouthcolor);
 
-  thirdGroupColor(colors[dna.eyescolor], dna.eyescolor);
+  thirdGroupColor(colors[dna.eyescolor], dna.eyescolor, htmlname);
   $(`#eyesColorSlider`).val(dna.eyescolor);
 
-  fourthGroupColor(colors[dna.earscolor], dna.earscolor);
+  fourthGroupColor(colors[dna.earscolor], dna.earscolor, htmlname);
   $(`#earsColorSlider`).val(dna.earscolor);
 
-  eyeVariation(dna.eyesShape);
+  eyeVariation(dna.eyesShape, htmlname);
   $(`#dnaEyeShapeSlider`).val(dna.eyesShape);
 
-  mouthVariation(dna.eyesShape);
+  mouthVariation(dna.eyesShape, htmlname);
   $(`#dnaMouthShapeSlider`).val(dna.mouthShape);
 
-  dnaEyeBackgroundColor(colors[dna.eyeBackgroundColor], dna.eyeBackgroundColor);
+  dnaEyeBackgroundColor(colors[dna.eyeBackgroundColor], dna.eyeBackgroundColor, htmlname);
   $(`#eyeBackgroundColorSlider`).val(dna.eyeBackgroundColor);
 
-  dnaLowerHeadColor(colors[dna.lowerHeadColor], dna.lowerHeadColor);
+  dnaLowerHeadColor(colors[dna.lowerHeadColor], dna.lowerHeadColor, htmlname);
   $(`#lowerHeadColorSlider`).val(dna.lowerHeadColor);
 
-  animationForMonkey(dna.animation);
+  animationForMonkey(dna.animation, htmlname);
   $(`#dnaAnimationSlider`).val(dna.animation);
 }
 
