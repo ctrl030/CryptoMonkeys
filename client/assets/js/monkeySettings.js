@@ -118,7 +118,7 @@ function renderMonkey(dna, htmlname) {
   eyeVariation(dna.eyesShape, htmlname);
   $(`#dnaEyeShapeSlider`).val(dna.eyesShape);
 
-  mouthVariation(dna.eyesShape, htmlname);
+  mouthVariation(dna.mouthShape, htmlname);
   $(`#dnaMouthShapeSlider`).val(dna.mouthShape);
 
   dnaEyeBackgroundColor(colors[dna.eyeBackgroundColor], dna.eyeBackgroundColor, htmlname);

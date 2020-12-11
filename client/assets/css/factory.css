@@ -72,6 +72,13 @@ body {
   display: none; 
 } 
 
+#monkeyRowGallery {
+  color: #4f3222 !important;
+  margin-right: 0px !important;
+  margin-left: 0px !important;
+  justify-content: space-around;
+}
+
 #monkeyRowCreation {
   color: #4f3222 !important;
   margin-right: 0px !important;
@@ -154,14 +161,13 @@ body {
 }
 
 #jungleIslandFooter {
-  height: 80px !important;
+  height: 40px !important;
   margin-top: 8px;
   margin-bottom: 8px;
   border-radius: 10px;
   background-color: #ededed;
   text-align: center;
-  padding-top: 30px;
-  padding-bottom: 30px;
+  padding-top: 12px;  
   margin-right: 0px !important;
   margin-left: 0px !important;
   opacity: 0.95;

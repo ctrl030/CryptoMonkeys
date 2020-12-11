@@ -13,10 +13,8 @@ $(document).ready(async function () {
 
   user = accounts[0];
 
-  // console.log("indexjs instance: ");
-  // console.log(instance);
   console.log("user: " + user);
-  // console.log("accounts[0]: " + accounts[0]);
+ 
 
   // on pageload we subscribe to the MonkeyCreated event. From now on, whenever it is emitted (by anybody?), 
   // we get data sent and the css of the div will be emptied and then appended with 
@@ -88,13 +86,8 @@ $("#switchToGalleryButton").click(async () => {
   $("#switchToCreationButton").show(); 
 
   $("#monkeyRowCreation").hide();
-  $("#buttonHolderArea").hide();
-  
+  $("#buttonHolderArea").hide();  
 
-  // console.log("indexjs instance: ");
-  // console.log(instance);
-  console.log("user: " + user);
-  // console.log("accounts[0]: " + accounts[0]);
 
   var userBalance = await instance.methods.balanceOf(user).call();
   console.log(`user has ${userBalance} Crypto Monkeys`);
@@ -106,10 +99,9 @@ $("#switchToGalleryButton").click(async () => {
   for (let j = 0; j < userBalance; j++) {
     const tokenId = myMonkeyIdsArray[j];
     let myCryptoMonkey = await instance.methods.getMonkeyDetails(tokenId).call(); 
-    
-    console.log("for loop is running");
-    console.log("myMonkeyIdsArray Position" + j);
-    console.log(myCryptoMonkey);
+        
+    //console.log("myMonkeyIdsArray Position" + j);
+    //console.log(myCryptoMonkey);
     
   
     console.log("Token ID: " + tokenId); 
