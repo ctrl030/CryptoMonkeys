@@ -1,20 +1,18 @@
-//Random color
-function getColor() {
-  var randomColor = Math.floor(Math.random() * 16777215).toString(16);
-  return randomColor;
-}
+// Styling monkeys, i.e. applying CSS to correct HTML structure
+// First 4 functions do "basic color styling" to various parts of the monkey ("main colors" section & sliders)
+// dnaEyeBackgroundColor and dnaLowerHeadColor do "advanced color styling" ("attributes" section & sliders)
+// eyeVariation and mouthVariation change CSS shapes
+// animationForMonkey create animantions (check animations.css)
 
-function genColors() {
-  var colors = [];
-  for (var i = 10; i < 99; i++) {
-    var color = getColor();
-    colors[i] = color;
-  }
-  return colors;
-}
+// Note: All of these functions need a tokenId when called, to apply to correct HTML structure,
+// which is unique via the containing #monkeyBox div id !
+// If no tokenId is given, the htmlname variable will revert to its default "Creation", 
+// therefore applying to the monkeyBox in creation mode
 
-//${htmlname}
+// color is an incoming Hex color code
+// code is a 2-digit code between 10 and 98 - both variables relate to colors.js and are sent in when called
 
+// As the function groups are described above, each group works the same, see first example of them to understand structure of all
 
 function firstGroupColor(color, code, htmlname="Creation") {
   $(`#monkeyBox${htmlname} #mHeadTop, #monkeyBox${htmlname} .feet`).css(`background`, `#` + color); //This changes the color of the monkey
@@ -26,9 +24,9 @@ function secondGroupColor(color, code, htmlname="Creation") {
   $(`#monkeyBox${htmlname} #eyesArea, 
     #monkeyBox${htmlname} #mouthArea, 
     #monkeyBox${htmlname} #mbody`)
-    .css(`background`, `#` + color); //This changes the color of the monkey
-  $(`#secondGroupColorCode`).html(`code: ` + code); //This updates text of the badge next to the slider
-  $(`#dnaSecondGroup${htmlname}`).html(code); //This updates DNA that is displayed below the monkey
+    .css(`background`, `#` + color); 
+  $(`#secondGroupColorCode`).html(`code: ` + code); 
+  $(`#dnaSecondGroup${htmlname}`).html(code); 
 }
 
 function thirdGroupColor(color, code, htmlname="Creation") {
@@ -38,45 +36,41 @@ function thirdGroupColor(color, code, htmlname="Creation") {
     #monkeyBox${htmlname} #rightNostril`).css(
     `background`,
     `#` + color
-  ); //This changes the color of the monkey
-  $(`#thirdGroupColorCode`).html(`code: ` + code); //This updates text of the badge next to the slider
-  $(`#dnaThirdGroup${htmlname}`).html(code); //This updates DNA that is displayed below the monkey
+  ); 
+  $(`#thirdGroupColorCode`).html(`code: ` + code); 
+  $(`#dnaThirdGroup${htmlname}`).html(code); 
 }
 
 function fourthGroupColor(color, code, htmlname="Creation") {
-  $(`#monkeyBox${htmlname} .ears`).css(`background`, `#` + color); //This changes the color of the monkey
-  $(`#fourthGroupColorCode`).html(`code: ` + code); //This updates text of the badge next to the slider
-  $(`#dnaFourthGroup${htmlname}`).html(code); //This updates DNA that is displayed below the monkey
+  $(`#monkeyBox${htmlname} .ears`).css(`background`, `#` + color); 
+  $(`#fourthGroupColorCode`).html(`code: ` + code); 
+  $(`#dnaFourthGroup${htmlname}`).html(code); 
 }
 
 function dnaEyeBackgroundColor(color, code, htmlname="Creation") {
-  $(`#monkeyBox${htmlname} .eyes`).css(`background`, `#` + color); //This changes the color of the monkey
-  $(`#eyeBackgroundColorCode`).html(`code: ` + code); //This updates text of the badge next to the slider
-  $(`#dnaEyeBackgroundColor${htmlname}`).html(code); //This updates DNA that is displayed below the monkey
+  $(`#monkeyBox${htmlname} .eyes`).css(`background`, `#` + color); 
+  $(`#eyeBackgroundColorCode`).html(`code: ` + code); 
+  $(`#dnaEyeBackgroundColor${htmlname}`).html(code); 
 }
 
 function dnaLowerHeadColor(color, code, htmlname="Creation") {
-  $(`#monkeyBox${htmlname} #mHeadLower`).css(`background`, `#` + color); //This changes the color of the monkey
-  $(`#lowerHeadColorCode`).html(`code: ` + code); //This updates text of the badge next to the slider
-  $(`#dnaLowerHeadColor${htmlname}`).html(code); //This updates DNA that is displayed below the monkey
+  $(`#monkeyBox${htmlname} #mHeadLower`).css(`background`, `#` + color); 
+  $(`#lowerHeadColorCode`).html(`code: ` + code); 
+  $(`#dnaLowerHeadColor${htmlname}`).html(code); 
 }
 
-//#monkeyBox${htmlname} 
-
 // Eye shape styling
-// first line "$(`#dnaEyeShape${htmlname}`).html(num);" updates DNA that is displayed below the monkey
-
-function eyeVariation(num, htmlname="Creation") {
-  $(`#dnaEyeShape${htmlname}`).html(num);
+function eyeVariation(num, htmlname="Creation") { // num is a 2-digit code that relates to colors.js and represents this part of the DNA string
+  $(`#dnaEyeShape${htmlname}`).html(num); // updating DNA-HTML that is displayed below the monkey
   switch (num) {
     case 1:
-      normalEyes(htmlname);
+      normalEyes(htmlname); 
       $(`#dnaEyeShapeCode`).html(`Basic`);
       break;
     case 2:
-      normalEyes(htmlname);
-      $(`#dnaEyeShapeCode`).html(`Down`);
-      eyesType2(htmlname);
+      normalEyes(htmlname); // Setting to normal first, taking out previous styling
+      $(`#dnaEyeShapeCode`).html(`Down`); // Updating badge text next to the slider
+      eyesType2(htmlname); // Applying new styling
       break;
     case 3:
       normalEyes(htmlname);

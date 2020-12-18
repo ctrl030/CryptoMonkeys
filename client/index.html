@@ -1,22 +1,39 @@
 <html lang="en">
   <head>
+    <!-- Standard HTML config -->
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Page Title -->
     <title>Crypto Monkeys</title>
-    <script type="text/javascript" src="assets/js/jquery-3.4.1.js"></script>
-    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css" />
+
+    <!-- Connecting JavaScript libraries -->
+
+    <!-- jQuery library -->
+    <script type="text/javascript" src="assets/js/jquery-3.4.1.js"></script>  
+    
+    <!-- bootstrap libraries -->
     <script src="assets/bootstrap/js/popper.js"></script>
     <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+
+    <!-- web3 library  -->
     <script src="assets/js/web3.min.js"></script>
+
+    <!-- connecting to the smart contract abi -->
     <script src="./abi.js"></script>
 
+    
+    <!-- Connecting CSS libraries -->
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css" />
     <link rel="stylesheet" href="assets/css/mystyle.css" />
     <link rel="stylesheet" href="assets/css/monkeys.css" />
     <link rel="stylesheet" href="assets/css/colors.css" />
     <link rel="stylesheet" href="assets/css/factory.css" />
     <link rel="stylesheet" href="assets/css/frontend.css" />
     <link rel="stylesheet" href="assets/css/animations.css" />
+    
 
+    <!-- Favicon files -->
     <link rel="apple-touch-icon" sizes="180x180" href="assets/icons/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="assets/icons/favicon-16x16.png">
@@ -26,6 +43,7 @@
 
   <body>
 
+    <!-- Connecting Audio -->
     <audio loop id="monkeyAudio">
       <source src="assets/audio/jungleIsland.mp3" type="audio/mpeg" />
     </audio>
@@ -34,12 +52,16 @@
       <source src="assets/audio/monkeySong.mp3" type="audio/mpeg" />
     </audio>
 
+    <!-- This container holds everything on the page -->
     <div class="container" id="jungleIslandContainer">
+
+      <!-- Welcoming text -->
       <div class="m-2 light-b-shadow" id="jungleIslandTextDiv">
         <h1 class="textOverBoxes">Jungle Island</h1>
         <h3 class="textOverBoxes">Create your Crypto Monkey</h3>
       </div>
 
+      <!-- Holding three audio buttons and two for switching between factory and gallery (these look identical and hide and show)-->
       <div class="m-2 light-b-shadow" id="audioButtonHolderArea">
         <div id="audioButtonHolderDiv">
           <button type="button" class="btn btn-success" id="playAudioButton">
@@ -58,17 +80,20 @@
            Switch Gallery / Creation
           </button>
 
+          <!-- Hidden on page load -->
           <button type="button" class="btn btn-warning" id="switchToCreationButton"> 
             Switch Gallery / Creation 
           </button>
-
-
         </div>
       </div>
 
-      <div class="row" id="monkeyRowGallery">
-        
+      <!-- The gallery - here we later append all procedurally created monkeyBoxes  -->
+      <div class="row" id="monkeyRowGallery">        
       </div>
+
+      <!-- The factory - this code is just for the new "factory" monkey, that is being configured -->
+      <!-- Later, the CSS is applied to the correct box - note the id for the monkeyBox ! It is "Creation" here for factory -->
+      <!-- "Gallery - MonkeyBoxes" are created elsewhere -->
 
       <div class="row" id="monkeyRowCreation">
         <div class="monkeyBox m-2 light-b-shadow" id="monkeyBoxCreation">
@@ -123,16 +148,17 @@
             </div>
           </div>
 
+          <!-- DNA / genes for the monkey in creation -->
           <div class="dnaDiv" id="monkeyDNA">
             <b>
               DNA:
-              <!-- Colors -->
+              <!-- These variables hold the color-related codes for the monkey in creation -->
               <span id="dnaFirstGroupCreation"></span>
               <span id="dnaSecondGroupCreation"></span>
               <span id="dnaThirdGroupCreation"></span>
               <span id="dnaFourthGroupCreation"></span>
 
-              <!-- monkeyAttributes -->
+              <!-- These variables hold shape-, animation- and more color-related codes for the monkey in creation -->
               <span id="dnaEyeShapeCreation"></span>
               <span id="dnaMouthShapeCreation"></span>
               <span id="dnaEyeBackgroundColorCreation"></span>
@@ -143,11 +169,13 @@
           </div>
         </div>
 
+        <!-- Holding all configuration and minting GUI elements  -->
         <div class="col-lg-7 monkeySliderArea m-2 light-b-shadow">
-          <!-- Monkey Sliders -->
-          <div id="monkeySliders">
-            <!-- Buttons for switching between Sliders -->
 
+          <!-- Monkey sliders -->
+          <div id="monkeySliders">
+
+            <!-- Buttons for switching between sliders -->
             <div id="sliderButtonHolderDiv">
               <button
                 type="button"
@@ -323,35 +351,26 @@
             </div>
           </div>
 
+          <!-- This div will be displayed when a monkey is created, appended with relevant info  -->
           <div class="alert alert-success m-2 light-b-shadow" role="alert" id="monkeyCreatedDiv" style="display: none">
           </div>
 
         </div>
       </div>
 
+      <!-- Three configuration buttons and one for minting -->
       <div class="m-2 light-b-shadow" id="buttonHolderArea">
         <div class="" id="buttonHolderDiv">
-          <button
-            type="button"
-            class="btn btn-success"
-            id="buttonCalcDefaultMonkey"
-          >
+          <button type="button" class="btn btn-success" id="buttonCalcDefaultMonkey">
             Default Crypto Monkey
           </button>
 
           <button
-            type="button"
-            class="btn btn-success"
-            id="buttonCalcRandomMonkey"
-          >
+            type="button" class="btn btn-success" id="buttonCalcRandomMonkey">
             Random Crypto Monkey
           </button>
 
-          <button
-            type="button"
-            class="btn btn-success"
-            id="buttonItsOver9000Monkey"
-          >
+          <button type="button" class="btn btn-success" id="buttonItsOver9000Monkey">
             IT'S OVER 9000
           </button>
 
@@ -362,12 +381,13 @@
       </div>
 
       
-
+      <!-- The footer, outside of the factory and gallery row, will always be displayed -->
       <div class="m-2 light-b-shadow" id="jungleIslandFooter">
         <p>Done by ctrl030 during Ivan on Tech Academy Bootcamp, Q4 2020</p>
       </div>
     </div>
 
+    <!-- Connecting and running JavaScript from these files -->
     <script src="./index.js"></script>
     <script src="assets/js/colors.js"></script>
     <script src="assets/js/monkeySettings.js"></script>

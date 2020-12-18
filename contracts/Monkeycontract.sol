@@ -1,34 +1,37 @@
 pragma solidity 0.5.12;
 
-// preparing for some functions to be restricted   - not used?
+// preparing for some functions to be restricted 
 import "./Ownable.sol";
 
-// using safemath to rule out over- and underflow and such  - seems done
+// preparing safemath to rule out over- and underflow  
 import "./Safemath.sol";
 
-// importing ERC721 token standard interface, all functions need to be fully created  - seems done?
+// importing ERC721 token standard interface
 import "./IERC721.sol";
 
 contract MonkeyContract is IERC721, Ownable {
-    // using safemath, now should use uint256 for all numbers  - seems done
+
+    // using safemath for all uint256 numbers, 
+    // use uint256 and (.add) and (.sub)
     using SafeMath for uint256;
+
 
     // State variables
 
+    // Only 12 monkeys can be created from scratch (generation 0)
     uint256 public GEN0_Limit = 12;
     uint256 public gen0amountTotal;
 
-    // 1 name to store - will be queried by name function  - seems done
+    // name will be set to "Crypto Monkeys"
     string private _name;
 
-    // 1 symbol to store - will be queried by symbol function - seems done
+    // ticker symbol will be set to "CMO"
     string private _symbol;
 
-    // storing the totalSupply - will be queried by totalSupply function
-    // - needs to be updated via a real mint function later (connect to Monkey Factory) - seems done for now
+    // amount of CMOs total in existence - can be queried by totalSupply function    
     uint256 private _totalSupply;
 
-    // this struct is the blueprint for new CMOs. They will be created from it
+    // this struct is the blueprint for new CMOs, they will be created from it
     struct CryptoMonkey {        
         uint256 parent1Id;
         uint256 parent2Id;
@@ -37,67 +40,60 @@ contract MonkeyContract is IERC721, Ownable {
         uint256 birthtime;
     }
 
-
-
-    // a mapping to store each address's number of Crypto Monkeys - will be queried by balanceOf function
-    // - must update at minting (seems done) and transfer (seems done)
+    // a mapping to store each address's number of Crypto Monkeys 
+    // can be queried by balanceOf function
     mapping(address => uint256) private _numberOfCMOsOfAddressMapping;
 
-    // mapping of all the tokenIds and their ownerssss - will be queried by ownerOf function - seems done
+    // mapping of all the tokenIds and their ownerssss 
+    // can be queried by ownerOf function 
     mapping(uint256 => address) private _monkeyIdsAndTheirOwnersMapping;
 
-    // mapping of the allowed addresses for a piece - entry must be deleted when CMO is transfered - seems done
+    // mapping of the allowed addresses for a piece 
     mapping(uint256 => address) private _CMO2AllowedAddressMapping;
 
-    // This array holds all CryptoMonkeys that exist in an array. Their position in that array IS their tokenId.
+    // This is an array that holds all CryptoMonkeys. 
+    // Their position in that array IS their tokenId.
     // they never get deleted here, array only grows and keeps track of them all.
     CryptoMonkey[] public allMonkeysArray;
 
-    // XXX not implemented yet
-    // each tokenId points to one CryptoMonkey struct
-    // - will be queried by ownerOf function - work on XXX
-    // trying to use CryptoMonkey as a data type
-    // must get transferable features
-    mapping(uint256 => CryptoMonkey) public _MonkeyIds2CryptoMonkeyMapping;
-
-    // here we map the owners to a mapping, in which we map the tokenId they own to the position of that tokenId in the owner's array
-    // owner 2 tokenid 2 position in this array: _owners2tokenIdArrayMapping
-    mapping(address => mapping(uint256 => uint256)) public MonkeyIdPositionsMapping;
-
-    // maps owner to an array that holds all their tokenIds - must be updated (at transfers etc.),
-    // tokenId positions are saved in another mapping (MonkeyIdPositionsMapping)
-    mapping(address => uint256[]) public _owners2tokenIdArrayMapping;
-
-    /*
-    // retrieves the correct CryptoMonkey struct from the monkeys Array and adds it to 
-    function addMonkeyToOwnersCollection(address _owner,  uint256 _tokenId) internal {
-        _owners2MappingOfMonkeyIds2CryptoMonkeyMapping[_owner][_tokenId] = allMonkeysArray[_tokenId];
-    }
+    /* 
+        not implemented, thinking about how a mapping would work,
+       providing same functionality as allMonkeysArray    
+       mapping(uint256 => CryptoMonkey) public _MonkeyIds2CryptoMonkeyMapping;
     */
 
-    //- work on XXX
-    function findAllMyMonkeyIds(address sender) public view returns (uint256[] memory) {  
+    // used to keep track of owners and their crypto monkeys (see below)
+    // owner to tokenid to position in this array: _owners2tokenIdArrayMapping
+    mapping(address => mapping(uint256 => uint256)) public MonkeyIdPositionsMapping;
 
+    // maps owner to an array that holds all their tokenIds (see above)
+    // tokenId positions are saved in this mapping: MonkeyIdPositionsMapping)
+    mapping(address => uint256[]) public _owners2tokenIdArrayMapping;
+
+   
+    //- gives back an array with the CMO tokenIds that the provided sender address owns
+    function findMonkeyIdsOfAddress(address sender) public view returns (uint256[] memory) {  
         return _owners2tokenIdArrayMapping[sender];
     }
 
+
     // Events
 
-    // Transfer event, emit after successful transfer with these parameters  - seems done - why indexed? what does it mean, do I need that?
+    // Transfer event, emitted after successful transfer with these parameters
     event Transfer(
         address indexed from,
         address indexed to,
         uint256 indexed tokenId
     );
 
-    // Approval event, emit after successful approval with these parameters  - implement "you can transfer my CMO - functionality"
+    // Approval event, emitted after successful approval with these parameters
     event Approval(
         address indexed owner,
         address indexed approved,
         uint256 indexed tokenId
     );
 
-    // Creation event, emit after successful CMO creation with these parameters  -  seems done
+    // Creation event, emitted after successful CMO creation with these parameters
     event MonkeyCreated(
         address owner,
         uint256 tokenId,
@@ -106,23 +102,26 @@ contract MonkeyContract is IERC721, Ownable {
         uint256 genes
     );
 
-    // XXX
+    // After transfer of CMO, emitting useful data regarding new owner
     event NewOwnerArrayUpdated(
         uint256 tokenId,
         address newOwner,
         uint256[] newOwnerArrayUpdated,
         uint256 positionInNewOwnersArray
     );
-    // XXX
+    // After transfer of CMO, emitting useful data regarding old owner
     event OldOwnerArrayUpdated(
         uint256 tokenId,
         address oldOwner,
-        uint256[] oldOwnerArrayUpdated,
-        uint256 positionInOldOwnersArray
+        uint256[] oldOwnerArrayUpdated        
     );
 
 
-    // Constructor function, is setting _name, and _symbol - seems done
+    // Constructor function
+    // is setting _name, and _symbol, as well as creating a couple of test CMOs,
+    // and for them setting _parent1Id, _parent2Id and _generation to 0, 
+    // the _genes to the biggest possible uint256 number (overflow on purpose)
+    // and _owner to contract address
 
     constructor() public {
         _name = "Crypto Monkeys";
@@ -137,19 +136,26 @@ contract MonkeyContract is IERC721, Ownable {
         _createMonkey(0, 0, 0, uint256(-1), address(this));
     }
 
-    // Functions
+
+    // Functions 
+
+    // used for creating gen0 monkeys 
 
     function createGen0Monkey(uint256 _genes) public onlyOwner {
+        // making sure that no more than 12 monkeys will exist in gen0
         require(gen0amountTotal < GEN0_Limit);
 
+        // increasing counter of gen0 monkeys 
         gen0amountTotal++;
 
+        // creating
         _createMonkey(0, 0, 0, _genes, msg.sender);
 
+        // updating total supply
         _totalSupply++;
     }
 
-    // this function is going to be used for creating gen0 monkeys and also for creating monkeys from combining monkeys, returns monkey ID (tokenId?) - connect / fix / finish
+    // used for creating monkeys (returns tokenId, could be used)
     function _createMonkey(
         uint256 _parent1Id,
         uint256 _parent2Id,
@@ -166,25 +172,21 @@ contract MonkeyContract is IERC721, Ownable {
             birthtime: uint256(now)
         });
 
-        // the push function returns the length of the array, so we use that directly and save it as the ID, starting with 0
+        // the push function also returns the length of the array, using that directly and saving it as the ID, starting with 0
         uint256 newMonkeyId = allMonkeysArray.push(newMonkey) - 1;
 
         // emitting before the action
         emit MonkeyCreated(_owner, newMonkeyId, _parent1Id, _parent2Id, _genes);
 
-        _transferCallfromInside(address(0), _owner, newMonkeyId);
+        // after creation, transferring to new owner, sender is 0 address
+        _transferCallfromInside(address(0), _owner, newMonkeyId);        
 
-        /*
-    // under construction XXX
-    addMonkeyToOwnersCollection(_owner, newMonkeyId){
-    };
-    */
-
+        // tokenId is returned
         return newMonkeyId;
     }
 
 
-
+    // gives back all the main details on a CMO
     function getMonkeyDetails(uint256 tokenId)
         public
         view
@@ -209,7 +211,7 @@ contract MonkeyContract is IERC721, Ownable {
         );
     }
 
-    // allows another address to take / move your CMO
+    // The approve function allows another address to take / move your CMO
     function approve(uint256 tokenId, address allowedAddress) public {
         // requires that the msg.sender is the owner of the CMO to be moved
         require(_monkeyIdsAndTheirOwnersMapping[tokenId] == msg.sender);
@@ -218,34 +220,36 @@ contract MonkeyContract is IERC721, Ownable {
         emit Approval(msg.sender, allowedAddress, tokenId);
 
         // stores the allowed address into the mapping for it, with the monkey being the key
+        // before this, allowedAddress is 0, meaning nobody can take it
         _CMO2AllowedAddressMapping[tokenId] = allowedAddress;
     }
 
-    // Returns the name of the token. - seems done
+    // Returns the name of the token
     function name() external view returns (string memory) {
         return _name;
     }
 
-    // Returns the symbol of the token. - seems done
+    // Returns the symbol of the token
     function symbol() external view returns (string memory) {
         return _symbol;
     }
 
-    // query the totalSupply - seems done
+    // Returns the totalSupply
     function totalSupply() external view returns (uint256) {
         return _totalSupply;
     }
 
-    // Returns the number of tokens in "owner" 's account. - seems done
+    // Returns the amount of tokens in an address' account
     function balanceOf(address owner) external view returns (uint256) {
         return _numberOfCMOsOfAddressMapping[owner];
     }
 
-    // returns the owner of given tokenId, which is stored in the _monkeyIdsAndTheirOwnersMapping at the [tokenId] position - seems done
+    // returns the owner of given tokenId, which is stored in the _monkeyIdsAndTheirOwnersMapping at the [tokenId] position
     function ownerOf(uint256 tokenId) external view returns (address) {
         return _monkeyIdsAndTheirOwnersMapping[tokenId];
     }
 
+    // For transferring, can be called from outside 
     function transfer(address _to, uint256 _tokenId) external {
         //`to` cannot be the zero address.
         require(_to != address(0));
@@ -259,6 +263,7 @@ contract MonkeyContract is IERC721, Ownable {
         _transferCallfromInside(msg.sender, _to, _tokenId);
     }
 
+    // internal function for transferring, cannot be called from outside the contract
     function _transferCallfromInside(
         address _from,
         address _to,
@@ -270,53 +275,51 @@ contract MonkeyContract is IERC721, Ownable {
         // transferring, i.e. changing ownership entry in the _monkeyIdsAndTheirOwnersMapping for the tokenId
         _monkeyIdsAndTheirOwnersMapping[_tokenId] = _to;
 
-        // updating "balance" of address in _numberOfCMOsOfAddressMapping, 'to' address has 1 CMO more
-        _numberOfCMOsOfAddressMapping[_to] = _numberOfCMOsOfAddressMapping[_to]
-            .add(1);
+        // updating "balance" of address in _numberOfCMOsOfAddressMapping, so that the "to" address has 1 CMO more
+        _numberOfCMOsOfAddressMapping[_to] = _numberOfCMOsOfAddressMapping[_to].add(1);
 
-        // updating "balance" of address in _numberOfCMOsOfAddressMapping, sender has 1 CMO less
 
+        // if sender is NOT 0 address (happens during gen0 monkey creation),
+        // updating "balance" of address in _numberOfCMOsOfAddressMapping,  so that the "_from" address has 1 CMO less
+       
         if (_from != address(0)) {
-            _numberOfCMOsOfAddressMapping[_from] = _numberOfCMOsOfAddressMapping[_from]
-                .sub(1);
+            _numberOfCMOsOfAddressMapping[_from] = _numberOfCMOsOfAddressMapping[_from].sub(1);
         }
 
-        // saving tokenId to new owner's array in the mapping for all owners
+        // saving tokenId to new owner's array in the mapping for all owners, 
+        // also see next action below (storing position)
         _owners2tokenIdArrayMapping[_to].push(_tokenId);
 
-        // inside the global mapping for positions, under the new owner, under the tokenId, we save the position
-        // that this tokenId has in the other array (_owners2tokenIdArrayMapping), by measuring that arrays length, after adding to it, than sub 1
+        // inside the global mapping for positions, under the new owner, under the tokenId, 
+        // saving the position that this tokenId has in the other array (_owners2tokenIdArrayMapping), 
+        // by measuring that arrays length, after pushing the CMO to it, then subtracting 1
         // that means owner's first monkey will be in position 0
-        MonkeyIdPositionsMapping[_to][_tokenId] =
-            _owners2tokenIdArrayMapping[_to].length -
-            1;
+        MonkeyIdPositionsMapping[_to][_tokenId] = _owners2tokenIdArrayMapping[_to].length - 1;
 
-        // XXX tokenId, newOwner, newOwnerArrayUpdated, newMonkeyPositionSetTo
+        // emitting useful data regarding new owner after transfer of CMO
         emit NewOwnerArrayUpdated(
             _tokenId,
             _to,
             _owners2tokenIdArrayMapping[_to],
             MonkeyIdPositionsMapping[_to][_tokenId]
         );
-
         
         // deleting the tokenId from the old owners array of monkeys
         if ((_owners2tokenIdArrayMapping[_from]).length <0 ){
             delete _owners2tokenIdArrayMapping[_from][MonkeyIdPositionsMapping[_from][_tokenId]];
-        }        
-        
+        }                
 
         // deleting the saved index position, since old address is not longer owner
         delete MonkeyIdPositionsMapping[_from][_tokenId];
 
-        // XXX tokenId, oldOwner, oldOwnerArrayUpdated , oldMonkeyPositionSetTo
+        // emitting useful data regarding old owner after transfer of CMO
         emit OldOwnerArrayUpdated(
             _tokenId,
             _from,
-            _owners2tokenIdArrayMapping[_from],
-            MonkeyIdPositionsMapping[_from][_tokenId]
+            _owners2tokenIdArrayMapping[_from]
         );
 
+        // emitting Transfer event
         emit Transfer(_from, _to, _tokenId);
     }
 }

@@ -1,23 +1,37 @@
+// Connecting with Web3.js functionalities
 var web3 = new Web3(Web3.givenProvider);
 
+// This "instance" variable is a representation of the smart contract
 var instance;
-var user;
-var contractAddress = "0xF2Fa4984E85fDCc906531f7E804cffc17B663c55";
 
+// User will be set to the correct account from Ganache (it's necessary to log in to this account via Metamask)
+var user;
+
+// Contract address, has to be updated when migrating / contract address is changing
+var contractAddress = "0xD8bdA509d900509aC262886544Fc089c366c70a7";
+
+// When ready, during page load 
 $(document).ready(async function () {
+
+  // Enabling / connecting with Ganache accounts
   var accounts = await window.ethereum.enable();
 
+  // Setting the representation of the smart contract, specifying abi, contractAddress and first account from Ganache's list at this moment
   instance = new web3.eth.Contract(abi, contractAddress, {
     from: accounts[0],
   });
 
+  // Setting user to first account from Ganache's list at this moment
   user = accounts[0];
 
+  // To check in console if user is correct (shown in Metamask to be the same, for ex.)
   console.log("user: " + user);
  
 
-  // on pageload we subscribe to the MonkeyCreated event. From now on, whenever it is emitted (by anybody?), 
-  // we get data sent and the css of the div will be emptied and then appended with 
+  // on pageload we subscribe to the MonkeyCreated event. From now on, whenever it is emitted, 
+  // a notification is created and the css of the monkeyCreatedDiv will be emptied and then appended with the info
+  // This only reacts to MonkeyCreated events triggered by "instance", which is specified to "from: accounts[0]"
+  // I.e. only this user's created monkeys will trigger it.
   instance.events
     .MonkeyCreated()
     .on("data", function (event) {
@@ -49,8 +63,9 @@ $(document).ready(async function () {
 });
 
 
-// listens to button click, then creates dnsStr (same format as genes) from concatting all the already set css values
-// then calls the blockchain with these genes and mints a Crypto Monkey from them
+// Listens to button click, then creates dnsStr (16 digits number string, same format as genes) 
+// from concatting all the already set css values
+// then calls the contract's createGen0Monkey function and mints a Crypto Monkey that contains this string 
 $("#mintMonkey").click(() => {
   let dnaStr = getDna();
 
@@ -66,21 +81,22 @@ $("#mintMonkey").click(() => {
 });
 
 // Gallery Part
+
+// Hiding and showing things to switch between "creation" and "gallery"
+// Here switching back to creation
 $("#switchToCreationButton").click(() => {
-  $("#switchToCreationButton").hide();
-  $("#monkeyRowCreation").show();
-  $("#buttonHolderArea").show();  
+  $("#switchToCreationButton").hide();  
   $("#switchToGalleryButton").show();
 
   $("#monkeyRowCreation").show();
   $("#buttonHolderArea").show();
 
-  $("#monkeyRowGallery").empty();
-  
-  
+  // Important, so that the gallery is not added again on top, each time it is called
+  $("#monkeyRowGallery").empty(); 
 });
 
-
+// When switching to gallery (clicking the button for it), the creation part is hidden 
+// and the contract is queried on the blockchain, then data is fetched and displayed
 $("#switchToGalleryButton").click(async () => {
   $("#switchToGalleryButton").hide();
   $("#switchToCreationButton").show(); 
@@ -88,21 +104,29 @@ $("#switchToGalleryButton").click(async () => {
   $("#monkeyRowCreation").hide();
   $("#buttonHolderArea").hide();  
 
-
+  // userBalance will be the number of monkeys the user has
   var userBalance = await instance.methods.balanceOf(user).call();
   console.log(`user has ${userBalance} Crypto Monkeys`);
 
-  let myMonkeyIdsArray = await instance.methods.findAllMyMonkeyIds(user).call();       
+  // An array that holds all of the user's tokenIds
+  let myMonkeyIdsArray = await instance.methods.findMonkeyIdsOfAddress(user).call();       
   console.log("myMonkeyIdsArray: ");
   console.log(myMonkeyIdsArray);
   
+  // Looping through the user's tokenIds and for each:
+  // reading the "DNA string",
+  // creating the correct CSS data from it
+  // creating an unique HTML structure in the gallery 
+  // applying the CSS to it
+
   for (let j = 0; j < userBalance; j++) {
     const tokenId = myMonkeyIdsArray[j];
     let myCryptoMonkey = await instance.methods.getMonkeyDetails(tokenId).call(); 
-        
-    //console.log("myMonkeyIdsArray Position" + j);
-    //console.log(myCryptoMonkey);
-    
+
+    // Console logs to follow and observe  
+    /* 
+    console.log("myMonkeyIdsArray Position" + j);
+    console.log(myCryptoMonkey);    
   
     console.log("Token ID: " + tokenId); 
   
@@ -118,12 +142,12 @@ $("#switchToGalleryButton").click(async () => {
   
     console.log("parent1Id " + myCryptoMonkey.parent1Id);
   
-    console.log("parent2Id " + myCryptoMonkey.parent2Id);
-  
-    let tokenIdGenes = myCryptoMonkey.genes.toString();
-  
-    console.log("tokenIdGenes " + tokenIdGenes);
-  
+    console.log("parent2Id " + myCryptoMonkey.parent2Id);*/
+
+    // The 16 digit "DNA string" is turned into a string, then from the digit's position,
+    // the correct CSS variables are created  
+    let tokenIdGenes = myCryptoMonkey.genes.toString();  
+    // console.log("tokenIdGenes " + tokenIdGenes);
     var tokenIdHeadcolor = Number(tokenIdGenes.charAt(0)+tokenIdGenes.charAt(1));
     var tokenIdmouthcolor = Number(tokenIdGenes.charAt(2)+tokenIdGenes.charAt(3));
     var tokenIdeyescolor = Number(tokenIdGenes.charAt(4)+tokenIdGenes.charAt(5));
@@ -138,6 +162,7 @@ $("#switchToGalleryButton").click(async () => {
     var tokenIdanimation = Number(tokenIdGenes.charAt(14));
     var tokenIdlastNum = Number(tokenIdGenes.charAt(15));
   
+    // The CSS variables are saved into a single variable each time, which is passed on
     var tokenIdDNA = {
       headcolor: tokenIdHeadcolor,
       mouthcolor: tokenIdmouthcolor,
@@ -152,22 +177,23 @@ $("#switchToGalleryButton").click(async () => {
       lastNum: tokenIdlastNum,
     };
     console.log("tokenIdDNA ");
-    console.log(tokenIdDNA);
-    
-    
+    console.log(tokenIdDNA);   
   
-  
-    
+    // Call to create and append HTML for each cryptomonkey of the connected user
     $("#monkeyRowGallery").append(buildMonkeyBoxes(tokenId));
 
-  
+    // Call to apply CSS on the HTML structure, effect is styling and showing the next monkey
+    // needs a set of DNA, if no tokenId is given, reverts to "Creation" in the receiving functions
     renderMonkey(tokenIdDNA, tokenId);
     
   };
 
+  // Procedurally creating an HTML structure for each cryptomonkey of the connected user
+  // Note: Each monkeyBox has the monkeys tokenId concatted into its unique id, for saving, styling and accessing,
+  // and also the DNA variables are named uniquely with the tokenId
   function buildMonkeyBoxes(tokenId) {    
 
-    console.log("tokenId incoming: " +tokenId);
+    console.log("tokenId incoming: " + tokenId);
 
     return `
     <div class="monkeyBox m-2 light-b-shadow" id="monkeyBox${tokenId}">
@@ -242,14 +268,7 @@ $("#switchToGalleryButton").click(async () => {
       </div>
     </div>   
     `     
-  }  
-
-  
-
-
-
-
-
+  } 
 
 });
 

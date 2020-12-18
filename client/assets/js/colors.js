@@ -1,3 +1,4 @@
+// Defining the color codes that we use in sliders and gene string
 var colors = {
   00: "ae494f",
   01: "9a3031",

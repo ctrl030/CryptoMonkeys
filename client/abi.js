@@ -118,12 +118,6 @@ var abi = [
         "internalType": "uint256[]",
         "name": "oldOwnerArrayUpdated",
         "type": "uint256[]"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "positionInOldOwnersArray",
-        "type": "uint256"
       }
     ],
     "name": "OldOwnerArrayUpdated",
@@ -188,47 +182,6 @@ var abi = [
       {
         "internalType": "uint256",
         "name": "",
-        "type": "uint256"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "constant": true,
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "name": "_MonkeyIds2CryptoMonkeyMapping",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "parent1Id",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "parent2Id",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "generation",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "genes",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "birthtime",
         "type": "uint256"
       }
     ],
@@ -342,7 +295,7 @@ var abi = [
         "type": "address"
       }
     ],
-    "name": "findAllMyMonkeyIds",
+    "name": "findMonkeyIdsOfAddress",
     "outputs": [
       {
         "internalType": "uint256[]",

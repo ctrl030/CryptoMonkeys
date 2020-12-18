@@ -1,4 +1,4 @@
-// Audio
+// Audio functionality
 var monkeyAudio = $("#monkeyAudio")[0];
 var monkeyAudio2 = $("#monkeyAudio2")[0];
 
@@ -29,7 +29,8 @@ $("#pauseAudioButton").click(() => {
   pauseAudio();
 });
 
-// Switch between sliders
+
+// Buttons to switch between two types of sliders visually
 $("#showColorSlidersButton").click(() => {
   $(".colorSliders").show();
   $(".attributesSliders").hide();
@@ -40,8 +41,7 @@ $("#showAttributesSlidersButton").click(() => {
   $(".attributesSliders").show();
 });
 
-// Buttons to generate and mint monkeys
-
+// Buttons for the monkey creation / styling
 $("#buttonCalcDefaultMonkey").click(() => {
   renderMonkey(defaultDNA);
 });
