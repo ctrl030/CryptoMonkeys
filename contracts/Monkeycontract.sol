@@ -56,6 +56,11 @@ contract MonkeyContract is IERC721, Ownable {
     // they never get deleted here, array only grows and keeps track of them all.
     CryptoMonkey[] public allMonkeysArray;
 
+    // mapping owner address to 
+    // operator address (who has approval over all of owner's CMOs) to
+    // boolean that shows if the operator address actually is operator or not
+    mapping (address => mapping (address => bool)) private _operatorApprovalsMapping;  
+
     /* 
         not implemented, thinking about how a mapping would work,
        providing same functionality as allMonkeysArray    
@@ -71,10 +76,6 @@ contract MonkeyContract is IERC721, Ownable {
     mapping(address => uint256[]) public _owners2tokenIdArrayMapping;
 
    
-    //- gives back an array with the CMO tokenIds that the provided sender address owns
-    function findMonkeyIdsOfAddress(address sender) public view returns (uint256[] memory) {  
-        return _owners2tokenIdArrayMapping[sender];
-    }
 
 
     // Events
@@ -104,11 +105,15 @@ contract MonkeyContract is IERC721, Ownable {
 
     // After transfer of CMO, emitting useful data regarding new owner
     event NewOwnerArrayUpdated(
+        address transferringAddress,
+        address oldOwner,
         uint256 tokenId,
         address newOwner,
         uint256[] newOwnerArrayUpdated,
         uint256 positionInNewOwnersArray
     );
+
+
     // After transfer of CMO, emitting useful data regarding old owner
     event OldOwnerArrayUpdated(
         uint256 tokenId,
@@ -138,6 +143,11 @@ contract MonkeyContract is IERC721, Ownable {
 
 
     // Functions 
+
+    //- gives back an array with the CMO tokenIds that the provided sender address owns
+    function findMonkeyIdsOfAddress(address sender) public view returns (uint256[] memory) {  
+        return _owners2tokenIdArrayMapping[sender];
+    }
 
     // used for creating gen0 monkeys 
 
@@ -186,6 +196,25 @@ contract MonkeyContract is IERC721, Ownable {
     }
 
 
+    /// xxx @notice Get the approved address for a single NFT
+    /// @dev Throws if `_tokenId` is not a valid NFT.
+    /// @param _tokenId The NFT to find the approved address for
+    /// @return The approved address for this NFT, or the zero address if there is none
+    // function getApproved(uint256 _tokenId) external view returns (address);
+    function getApproved(uint256 _tokenId) external view returns (address){
+        return _CMO2AllowedAddressMapping[_tokenId];
+    }  
+
+    /// xxx @notice Query if an address is an authorized operator for another address
+    /// @param _owner The address that owns the NFTs
+    /// @param _operator The address that acts on behalf of the owner
+    /// @return True if `_operator` is an approved operator for `_owner`, false otherwise
+    function isApprovedForAll(address _owner, address _operator) external view returns (bool){
+        return _operatorApprovalsMapping[_owner][_operator]
+    };
+
+
+
     // gives back all the main details on a CMO
     function getMonkeyDetails(uint256 tokenId)
         public
@@ -211,18 +240,56 @@ contract MonkeyContract is IERC721, Ownable {
         );
     }
 
+
+
+    /// @notice Change or reaffirm the approved address for an NFT
+    /// @dev The zero address indicates there is no approved address.
+    ///  Throws unless `msg.sender` is the current NFT owner, or an authorized
+    ///  operator of the current owner.
+    /// @param _approved The new approved NFT controller
+    /// @param _tokenId The NFT to approve
+    // xxx function approve(address _approved, uint256 _tokenId) external;
+    
+
     // The approve function allows another address to take / move your CMO
-    function approve(uint256 tokenId, address allowedAddress) public {
+    function approve(address _approved, uint256 _tokenId) public {
         // requires that the msg.sender is the owner of the CMO to be moved
-        require(_monkeyIdsAndTheirOwnersMapping[tokenId] == msg.sender);
+        require(_monkeyIdsAndTheirOwnersMapping[_tokenId] == msg.sender);
 
         // emitting before the action
-        emit Approval(msg.sender, allowedAddress, tokenId);
+        emit Approval(msg.sender, _approved, _tokenId);
 
         // stores the allowed address into the mapping for it, with the monkey being the key
         // before this, allowedAddress is 0, meaning nobody can take it
-        _CMO2AllowedAddressMapping[tokenId] = allowedAddress;
+        _CMO2AllowedAddressMapping[_tokenId] = _approved;
     }
+
+
+
+
+    /// @notice Enable or disable approval for a third party ("operator") to manage
+    ///  all of `msg.sender`'s assets
+    /// @dev Emits the ApprovalForAll event. The contract MUST allow
+    ///  multiple operators per owner.
+    /// @param _operator Address to add to the set of authorized operators
+    /// @param _approved True if the operator is approved, false to revoke approval
+    // XXX function setApprovalForAll(address _operator, bool _approved) external;
+
+    // allows or revokes an address to get "operator" status, being allowed to take or move all of msg.sender 's CMOs
+    function setApprovalForAll(address _operator, bool _approved) external {
+
+        // msg.sender can set entry in his own mapping for _operator address to true or false
+        _operatorApprovalsMapping[msg.sender][_operator] = _approved;
+
+        // emitting ApprovalForAll event with owner address, operator related address, boolean whether is operator or not
+        emit ApprovalForAll(msg.sender, _operator, _approved);        
+    }
+
+    
+
+
+
+
 
     // Returns the name of the token
     function name() external view returns (string memory) {
@@ -257,15 +324,29 @@ contract MonkeyContract is IERC721, Ownable {
         // to` can not be the contract address.
         require(_to != address(this));
 
+        // xxx changing this:
         // `tokenId` token must be owned by `msg.sender`
-        require(_monkeyIdsAndTheirOwnersMapping[_tokenId] == msg.sender);
+        // require(_monkeyIdsAndTheirOwnersMapping[_tokenId] == msg.sender);
 
-        _transferCallfromInside(msg.sender, _to, _tokenId);
+        address monkeyOwner = _monkeyIdsAndTheirOwnersMapping[_tokenId];
+
+        // new try: checks if msg.sender is owner or operator, elseways reverting
+        if (monkeyOwner == msg.sender) {
+            _;
+        } else if (_operatorApprovalsMapping[monkeyOwner][msg.sender] == true) {
+            _;
+        } else {
+            revert();
+        }
+
+        // calling internal transfer function, providing both msg.sender as well as owner, in case they are different (operator is acting)
+        _transferCallfromInside(msg.sender, monkeyOwner, _to, _tokenId);
     }
 
     // internal function for transferring, cannot be called from outside the contract
     function _transferCallfromInside(
-        address _from,
+        address _transferSender,
+        address _monkeyOwner,
         address _to,
         uint256 _tokenId
     ) internal {
@@ -279,11 +360,11 @@ contract MonkeyContract is IERC721, Ownable {
         _numberOfCMOsOfAddressMapping[_to] = _numberOfCMOsOfAddressMapping[_to].add(1);
 
 
-        // if sender is NOT 0 address (happens during gen0 monkey creation),
+        // if transfer sender is NOT 0 address (happens during gen0 monkey creation),
         // updating "balance" of address in _numberOfCMOsOfAddressMapping,  so that the "_from" address has 1 CMO less
        
-        if (_from != address(0)) {
-            _numberOfCMOsOfAddressMapping[_from] = _numberOfCMOsOfAddressMapping[_from].sub(1);
+        if (_transferSender != address(0)) {
+            _numberOfCMOsOfAddressMapping[_monkeyOwner] = _numberOfCMOsOfAddressMapping[_monkeyOwner].sub(1);
         }
 
         // saving tokenId to new owner's array in the mapping for all owners, 
@@ -298,28 +379,30 @@ contract MonkeyContract is IERC721, Ownable {
 
         // emitting useful data regarding new owner after transfer of CMO
         emit NewOwnerArrayUpdated(
+            _transferSender,
+            _monkeyOwner,
             _tokenId,
             _to,
             _owners2tokenIdArrayMapping[_to],
             MonkeyIdPositionsMapping[_to][_tokenId]
-        );
+        );        
         
         // deleting the tokenId from the old owners array of monkeys
-        if ((_owners2tokenIdArrayMapping[_from]).length <0 ){
-            delete _owners2tokenIdArrayMapping[_from][MonkeyIdPositionsMapping[_from][_tokenId]];
+        if ((_owners2tokenIdArrayMapping[_monkeyOwner]).length <0 ){
+            delete _owners2tokenIdArrayMapping[_monkeyOwner][MonkeyIdPositionsMapping[_monkeyOwner][_tokenId]];
         }                
 
         // deleting the saved index position, since old address is not longer owner
-        delete MonkeyIdPositionsMapping[_from][_tokenId];
+        delete MonkeyIdPositionsMapping[_monkeyOwner][_tokenId];
 
         // emitting useful data regarding old owner after transfer of CMO
         emit OldOwnerArrayUpdated(
             _tokenId,
-            _from,
-            _owners2tokenIdArrayMapping[_from]
+            _monkeyOwner,
+            _owners2tokenIdArrayMapping[_monkeyOwner]
         );
 
         // emitting Transfer event
-        emit Transfer(_from, _to, _tokenId);
+        emit Transfer(_monkeyOwner, _to, _tokenId);
     }
 }
