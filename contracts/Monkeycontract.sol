@@ -77,6 +77,16 @@ contract MonkeyContract is IERC721, Ownable {
 
    
 
+    // Modifiers
+
+    modifier ownerOrOperator(){
+        
+
+
+        _; // orders execution to continue, if this line is reached (i.e. the require above was passed) 
+    }
+
+
 
     // Events
 
@@ -189,7 +199,7 @@ contract MonkeyContract is IERC721, Ownable {
         emit MonkeyCreated(_owner, newMonkeyId, _parent1Id, _parent2Id, _genes);
 
         // after creation, transferring to new owner, sender is 0 address
-        _transferCallfromInside(address(0), _owner, newMonkeyId);        
+        _transferCallfromInside(address(this), address(0), _owner, newMonkeyId);        
 
         // tokenId is returned
         return newMonkeyId;
@@ -210,8 +220,8 @@ contract MonkeyContract is IERC721, Ownable {
     /// @param _operator The address that acts on behalf of the owner
     /// @return True if `_operator` is an approved operator for `_owner`, false otherwise
     function isApprovedForAll(address _owner, address _operator) external view returns (bool){
-        return _operatorApprovalsMapping[_owner][_operator]
-    };
+        return _operatorApprovalsMapping[_owner][_operator];
+    }
 
 
 
@@ -324,20 +334,26 @@ contract MonkeyContract is IERC721, Ownable {
         // to` can not be the contract address.
         require(_to != address(this));
 
+        address monkeyOwner = _monkeyIdsAndTheirOwnersMapping[_tokenId];
+
+        require( monkeyOwner == msg.sender || _operatorApprovalsMapping[monkeyOwner][msg.sender] == true );
+
+        
+
         // xxx changing this:
         // `tokenId` token must be owned by `msg.sender`
         // require(_monkeyIdsAndTheirOwnersMapping[_tokenId] == msg.sender);
-
-        address monkeyOwner = _monkeyIdsAndTheirOwnersMapping[_tokenId];
-
-        // new try: checks if msg.sender is owner or operator, elseways reverting
-        if (monkeyOwner == msg.sender) {
-            _;
-        } else if (_operatorApprovalsMapping[monkeyOwner][msg.sender] == true) {
-            _;
-        } else {
-            revert();
-        }
+        
+        /*
+            // new try: checks if msg.sender is owner or operator, elseways reverting
+            if (monkeyOwner == msg.sender) {
+                _;
+            } else if (_operatorApprovalsMapping[monkeyOwner][msg.sender] == true) {
+                _;
+            } else {
+                revert();
+            }
+        */
 
         // calling internal transfer function, providing both msg.sender as well as owner, in case they are different (operator is acting)
         _transferCallfromInside(msg.sender, monkeyOwner, _to, _tokenId);
