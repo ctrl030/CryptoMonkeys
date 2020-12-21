@@ -126,6 +126,7 @@ contract MonkeyContract is IERC721, Ownable {
 
     // After transfer of CMO, emitting useful data regarding old owner
     event OldOwnerArrayUpdated(
+        address transferringAddress,
         uint256 tokenId,
         address oldOwner,
         uint256[] oldOwnerArrayUpdated        
@@ -413,6 +414,7 @@ contract MonkeyContract is IERC721, Ownable {
 
         // emitting useful data regarding old owner after transfer of CMO
         emit OldOwnerArrayUpdated(
+            _transferSender,
             _tokenId,
             _monkeyOwner,
             _owners2tokenIdArrayMapping[_monkeyOwner]
