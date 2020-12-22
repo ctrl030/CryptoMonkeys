@@ -18,10 +18,8 @@ contract MonkeyContract is IERC721, Ownable {
 
     // State variables
 
-    // xxxx Contract address
-    address _monkeyContractAddress;
-
-   
+    // Contract address
+    address _monkeyContractAddress;   
 
     // Only 12 monkeys can be created from scratch (generation 0)
     uint256 public GEN0_Limit = 12;
@@ -159,7 +157,7 @@ contract MonkeyContract is IERC721, Ownable {
         // _createMonkey(0, 0, 0, uint256(-1), address(this));
     }
 
- //xxxx
+
     function getMonkeyContractAddress() public view returns (address) {  
         return _monkeyContractAddress;
     }
@@ -213,7 +211,8 @@ contract MonkeyContract is IERC721, Ownable {
         // emitting before the action
         emit MonkeyCreated(_owner, newMonkeyId, _parent1Id, _parent2Id, _genes);
 
-        // xxxx after creation, transferring to new owner, sender is 0 address
+        // after creation, transferring to new owner, 
+        // transferring address is user, sender is 0 address
         _transferCallfromInside(msg.sender, address(0), _owner, newMonkeyId);        
 
         // tokenId is returned
@@ -355,7 +354,7 @@ contract MonkeyContract is IERC721, Ownable {
 
         
 
-        // xxx changing this:
+        // xxxx changing this:
         // `tokenId` token must be owned by `msg.sender`
         // require(_monkeyIdsAndTheirOwnersMapping[_tokenId] == msg.sender);
         
@@ -369,10 +368,6 @@ contract MonkeyContract is IERC721, Ownable {
                 revert();
             }
         */
-
-        // xxxx after creation, transferring to new owner, sender is 0 address
-        // _transferCallfromInside(_monkeyContractAddress, address(0), _owner, newMonkeyId);  
-
         
         // calling internal transfer function, providing both msg.sender as well as owner, in case they are different (operator is acting)
         _transferCallfromInside(msg.sender, monkeyOwner, _to, _tokenId);
@@ -420,7 +415,7 @@ contract MonkeyContract is IERC721, Ownable {
             _to,
             _owners2tokenIdArrayMapping[_to],
             MonkeyIdPositionsMapping[_to][_tokenId]
-        );        
+        );  
         
         // deleting the tokenId from the old owners array of monkeys
         if ((_owners2tokenIdArrayMapping[_monkeyOwner]).length <0 ){
