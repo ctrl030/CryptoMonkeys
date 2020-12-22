@@ -325,6 +325,21 @@ var abi = [
   },
   {
     "constant": true,
+    "inputs": [],
+    "name": "getMonkeyContractAddress",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
     "inputs": [
       {
         "internalType": "address",

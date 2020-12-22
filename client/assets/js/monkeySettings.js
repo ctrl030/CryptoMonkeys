@@ -144,6 +144,10 @@ function renderMonkey(dna, htmlname) {
 
   animationForMonkey(dna.animation, htmlname);
   $(`#dnaAnimationSlider`).val(dna.animation);
+
+  // only calling the function that applies the CSS
+  setSpecialNumber(dna.lastNum, htmlname);
+
 }
 
 

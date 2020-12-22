@@ -59,6 +59,15 @@ function dnaLowerHeadColor(color, code, htmlname="Creation") {
   $(`#dnaLowerHeadColor${htmlname}`).html(code); 
 }
 
+// So far this one does not do anything, besides generating this part of the DNA
+function setSpecialNumber(lastNum, htmlname="Creation") {  
+  $(`#dnaspecial${htmlname}`).html(lastNum); //This updates DNA that is displayed below the monkey
+}
+
+
+
+
+
 // Eye shape styling
 function eyeVariation(num, htmlname="Creation") { // num is a 2-digit code that relates to colors.js and represents this part of the DNA string
   $(`#dnaEyeShape${htmlname}`).html(num); // updating DNA-HTML that is displayed below the monkey

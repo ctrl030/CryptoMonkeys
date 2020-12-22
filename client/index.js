@@ -8,7 +8,8 @@ var instance;
 var user;
 
 // Contract address, has to be updated when migrating / contract address is changing
-var contractAddress = "0xD8bdA509d900509aC262886544Fc089c366c70a7";
+var contractAddress = "0x5998050c722c229758c2aC56c40162C7f1d5F7cc";
+
 
 // When ready, during page load 
 $(document).ready(async function () {
@@ -176,11 +177,14 @@ $("#switchToGalleryButton").click(async () => {
       animation: tokenIdanimation,
       lastNum: tokenIdlastNum,
     };
-    console.log("tokenIdDNA ");
-    console.log(tokenIdDNA);   
+    
   
     // Call to create and append HTML for each cryptomonkey of the connected user
     $("#monkeyRowGallery").append(buildMonkeyBoxes(tokenId));
+
+
+    console.log("tokenIdDNA: ");
+    console.log(tokenIdDNA);   
 
     // Call to apply CSS on the HTML structure, effect is styling and showing the next monkey
     // needs a set of DNA, if no tokenId is given, reverts to "Creation" in the receiving functions

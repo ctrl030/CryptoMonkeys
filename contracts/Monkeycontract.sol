@@ -18,6 +18,11 @@ contract MonkeyContract is IERC721, Ownable {
 
     // State variables
 
+    // xxxx Contract address
+    address _monkeyContractAddress;
+
+   
+
     // Only 12 monkeys can be created from scratch (generation 0)
     uint256 public GEN0_Limit = 12;
     uint256 public gen0amountTotal;
@@ -114,8 +119,8 @@ contract MonkeyContract is IERC721, Ownable {
     );
 
     // After transfer of CMO, emitting useful data regarding new owner
-    event NewOwnerArrayUpdated(
-        address transferringAddress,
+    event NewOwnerArrayUpdated( 
+        address transferringAddress,       
         address oldOwner,
         uint256 tokenId,
         address newOwner,
@@ -126,7 +131,7 @@ contract MonkeyContract is IERC721, Ownable {
 
     // After transfer of CMO, emitting useful data regarding old owner
     event OldOwnerArrayUpdated(
-        address transferringAddress,
+        
         uint256 tokenId,
         address oldOwner,
         uint256[] oldOwnerArrayUpdated        
@@ -142,15 +147,24 @@ contract MonkeyContract is IERC721, Ownable {
     constructor() public {
         _name = "Crypto Monkeys";
         _symbol = "CMO";
+        _monkeyContractAddress = address(this);
 
-        _createMonkey(0, 0, 0, uint256(-1), address(this));
+        
+        _createMonkey(0, 0, 0, uint256(-1), _monkeyContractAddress);
 
-        _createMonkey(0, 0, 0, uint256(-1), address(this));
+        _createMonkey(0, 0, 0, uint256(-1), _monkeyContractAddress);
 
-        _createMonkey(0, 0, 0, uint256(-1), address(this));
-
-        _createMonkey(0, 0, 0, uint256(-1), address(this));
+        _createMonkey(0, 0, 0, uint256(-1), _monkeyContractAddress);
+        
+        // _createMonkey(0, 0, 0, uint256(-1), address(this));
     }
+
+ //xxxx
+    function getMonkeyContractAddress() public view returns (address) {  
+        return _monkeyContractAddress;
+    }
+
+
 
 
     // Functions 
@@ -199,8 +213,8 @@ contract MonkeyContract is IERC721, Ownable {
         // emitting before the action
         emit MonkeyCreated(_owner, newMonkeyId, _parent1Id, _parent2Id, _genes);
 
-        // after creation, transferring to new owner, sender is 0 address
-        _transferCallfromInside(address(this), address(0), _owner, newMonkeyId);        
+        // xxxx after creation, transferring to new owner, sender is 0 address
+        _transferCallfromInside(msg.sender, address(0), _owner, newMonkeyId);        
 
         // tokenId is returned
         return newMonkeyId;
@@ -356,6 +370,10 @@ contract MonkeyContract is IERC721, Ownable {
             }
         */
 
+        // xxxx after creation, transferring to new owner, sender is 0 address
+        // _transferCallfromInside(_monkeyContractAddress, address(0), _owner, newMonkeyId);  
+
+        
         // calling internal transfer function, providing both msg.sender as well as owner, in case they are different (operator is acting)
         _transferCallfromInside(msg.sender, monkeyOwner, _to, _tokenId);
     }
@@ -379,8 +397,8 @@ contract MonkeyContract is IERC721, Ownable {
 
         // if transfer sender is NOT 0 address (happens during gen0 monkey creation),
         // updating "balance" of address in _numberOfCMOsOfAddressMapping,  so that the "_from" address has 1 CMO less
-       
-        if (_transferSender != address(0)) {
+        // xxxx
+        if (_monkeyOwner != address(0)) {
             _numberOfCMOsOfAddressMapping[_monkeyOwner] = _numberOfCMOsOfAddressMapping[_monkeyOwner].sub(1);
         }
 
@@ -396,7 +414,7 @@ contract MonkeyContract is IERC721, Ownable {
 
         // emitting useful data regarding new owner after transfer of CMO
         emit NewOwnerArrayUpdated(
-            _transferSender,
+            _transferSender,            
             _monkeyOwner,
             _tokenId,
             _to,
@@ -413,8 +431,7 @@ contract MonkeyContract is IERC721, Ownable {
         delete MonkeyIdPositionsMapping[_monkeyOwner][_tokenId];
 
         // emitting useful data regarding old owner after transfer of CMO
-        emit OldOwnerArrayUpdated(
-            _transferSender,
+        emit OldOwnerArrayUpdated(            
             _tokenId,
             _monkeyOwner,
             _owners2tokenIdArrayMapping[_monkeyOwner]
