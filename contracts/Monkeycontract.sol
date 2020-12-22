@@ -80,17 +80,6 @@ contract MonkeyContract is IERC721, Ownable {
 
    
 
-    // Modifiers
-
-    modifier ownerOrOperator(){
-        
-
-
-        _; // orders execution to continue, if this line is reached (i.e. the require above was passed) 
-    }
-
-
-
     // Events
 
     // Transfer event, emitted after successful transfer with these parameters
