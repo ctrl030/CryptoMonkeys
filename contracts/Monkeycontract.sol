@@ -32,7 +32,7 @@ contract MonkeyContract is IERC721, Ownable {
     string private _symbol;
 
     // amount of CMOs total in existence - can be queried by totalSupply function    
-    uint256 private _totalSupply;
+    uint256 public totalSupply;
 
     // this struct is the blueprint for new CMOs, they will be created from it
     struct CryptoMonkey {        
@@ -117,8 +117,7 @@ contract MonkeyContract is IERC721, Ownable {
 
 
     // After transfer of CMO, emitting useful data regarding old owner
-    event OldOwnerArrayUpdated(
-        
+    event OldOwnerArrayUpdated(        
         uint256 tokenId,
         address oldOwner,
         uint256[] oldOwnerArrayUpdated        
@@ -174,7 +173,7 @@ contract MonkeyContract is IERC721, Ownable {
         _createMonkey(0, 0, 0, _genes, msg.sender);
 
         // updating total supply
-        _totalSupply++;
+        totalSupply++;
     }
 
     // used for creating monkeys (returns tokenId, could be used)
@@ -314,10 +313,12 @@ contract MonkeyContract is IERC721, Ownable {
         return _symbol;
     }
 
-    // Returns the totalSupply
-    function totalSupply() external view returns (uint256) {
-        return _totalSupply;
-    }
+    /*
+        // Returns the _totalSupply if it exists as private state variable
+        function totalSupply() external view returns (uint256) {
+            return _totalSupply;
+        }
+    */
 
     // Returns the amount of tokens in an address' account
     function balanceOf(address owner) external view returns (uint256) {

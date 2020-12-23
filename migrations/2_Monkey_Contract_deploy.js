@@ -1,15 +1,13 @@
 const MonkeyContract = artifacts.require("MonkeyContract");
 
 
-module.exports = async function(deployer) {
+module.exports = async function(deployer, network, accounts) {
  
   try {
   
    await deployer.deploy(MonkeyContract);
 
    const instance = await MonkeyContract.deployed();
-
-   console.log(instance);
 
   }
 
