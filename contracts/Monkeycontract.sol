@@ -62,7 +62,7 @@ contract MonkeyContract is IERC721, Ownable {
     // mapping owner address to 
     // operator address (who has approval over all of owner's CMOs) to
     // boolean that shows if the operator address actually is operator or not
-    mapping (address => mapping (address => bool)) private _operatorApprovalsMapping;  
+    mapping (address => mapping (address => bool)) public operatorApprovalsMapping;  
 
     /* 
         not implemented, thinking about how a mapping would work,
@@ -171,9 +171,7 @@ contract MonkeyContract is IERC721, Ownable {
 
         // creating
         _createMonkey(0, 0, 0, _genes, msg.sender);
-
-        // updating total supply
-        totalSupply++;
+        
     }
 
     // used for creating monkeys (returns tokenId, could be used)
@@ -193,6 +191,9 @@ contract MonkeyContract is IERC721, Ownable {
             birthtime: uint256(now)
         });
 
+        // updating total supply
+        totalSupply++;
+        
         // the push function also returns the length of the array, using that directly and saving it as the ID, starting with 0
         uint256 newMonkeyId = allMonkeysArray.push(newMonkey) - 1;
 
@@ -222,7 +223,7 @@ contract MonkeyContract is IERC721, Ownable {
     /// @param _operator The address that acts on behalf of the owner
     /// @return True if `_operator` is an approved operator for `_owner`, false otherwise
     function isApprovedForAll(address _owner, address _operator) external view returns (bool){
-        return _operatorApprovalsMapping[_owner][_operator];
+        return operatorApprovalsMapping[_owner][_operator];
     }
 
 
@@ -254,15 +255,6 @@ contract MonkeyContract is IERC721, Ownable {
 
 
 
-    /// @notice Change or reaffirm the approved address for an NFT
-    /// @dev The zero address indicates there is no approved address.
-    ///  Throws unless `msg.sender` is the current NFT owner, or an authorized
-    ///  operator of the current owner.
-    /// @param _approved The new approved NFT controller
-    /// @param _tokenId The NFT to approve
-    // xxx function approve(address _approved, uint256 _tokenId) external;
-    
-
     // The approve function allows another address to take / move your CMO
     function approve(address _approved, uint256 _tokenId) public {
         // requires that the msg.sender is the owner of the CMO to be moved
@@ -278,30 +270,17 @@ contract MonkeyContract is IERC721, Ownable {
 
 
 
-
-    /// @notice Enable or disable approval for a third party ("operator") to manage
-    ///  all of `msg.sender`'s assets
-    /// @dev Emits the ApprovalForAll event. The contract MUST allow
-    ///  multiple operators per owner.
-    /// @param _operator Address to add to the set of authorized operators
-    /// @param _approved True if the operator is approved, false to revoke approval
-    // XXX function setApprovalForAll(address _operator, bool _approved) external;
-
     // allows or revokes an address to get "operator" status, being allowed to take or move all of msg.sender 's CMOs
     function setApprovalForAll(address _operator, bool _approved) external {
 
         // msg.sender can set entry in his own mapping for _operator address to true or false
-        _operatorApprovalsMapping[msg.sender][_operator] = _approved;
+        operatorApprovalsMapping[msg.sender][_operator] = _approved;
 
         // emitting ApprovalForAll event with owner address, operator related address, boolean whether is operator or not
         emit ApprovalForAll(msg.sender, _operator, _approved);        
     }
 
-    
-
-
-
-
+   
 
     // Returns the name of the token
     function name() external view returns (string memory) {
@@ -340,7 +319,11 @@ contract MonkeyContract is IERC721, Ownable {
 
         address monkeyOwner = _monkeyIdsAndTheirOwnersMapping[_tokenId];
 
-        require( monkeyOwner == msg.sender || _operatorApprovalsMapping[monkeyOwner][msg.sender] == true );
+        bool senderHasOperatorStatus = operatorApprovalsMapping[monkeyOwner][msg.sender];
+
+        address allowedAddress = _CMO2AllowedAddressMapping[_tokenId];
+
+        require( monkeyOwner == msg.sender || senderHasOperatorStatus == true || allowedAddress == msg.sender);
 
         
 
@@ -352,7 +335,7 @@ contract MonkeyContract is IERC721, Ownable {
             // new try: checks if msg.sender is owner or operator, elseways reverting
             if (monkeyOwner == msg.sender) {
                 _;
-            } else if (_operatorApprovalsMapping[monkeyOwner][msg.sender] == true) {
+            } else if (operatorApprovalsMapping[monkeyOwner][msg.sender] == true) {
                 _;
             } else {
                 revert();
@@ -365,9 +348,9 @@ contract MonkeyContract is IERC721, Ownable {
 
     // internal function for transferring, cannot be called from outside the contract
     function _transferCallfromInside(
-        address _transferSender,
-        address _monkeyOwner,
-        address _to,
+        address _transferSender, // i.e. owner so far or operator
+        address _monkeyOwner, // i.e. owner so far 
+        address _to, // i.e. new owner 
         uint256 _tokenId
     ) internal {
         // deleting any allowed address for the transfered CMO
@@ -380,9 +363,8 @@ contract MonkeyContract is IERC721, Ownable {
         _numberOfCMOsOfAddressMapping[_to] = _numberOfCMOsOfAddressMapping[_to].add(1);
 
 
-        // if transfer sender is NOT 0 address (happens during gen0 monkey creation),
-        // updating "balance" of address in _numberOfCMOsOfAddressMapping,  so that the "_from" address has 1 CMO less
-        // xxxx
+        // if CMO owner at this point is NOT 0 address (happens during gen0 monkey creation),
+        // updating "balance" of address in _numberOfCMOsOfAddressMapping,  so that the previous monkey owner has 1 CMO less      
         if (_monkeyOwner != address(0)) {
             _numberOfCMOsOfAddressMapping[_monkeyOwner] = _numberOfCMOsOfAddressMapping[_monkeyOwner].sub(1);
         }
