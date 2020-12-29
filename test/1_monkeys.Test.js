@@ -36,15 +36,40 @@ contract("MonkeyContract", accounts => {
     });
 
     
+    
+    
+    
+    
     // Actual test 3
-    it("should create a monkey", async() => {  
-      await testInstance.createGen0Monkey(1214131177989271, {from: accounts[0]});
+    it("should create three monkeys", async() => {  
+      await testInstance.createGen0Monkey(1111111111111111, {from: accounts[0]});
 
-      const testingMonkeyNr4Pos3 = await testInstance.getMonkeyDetails(3);
+      await testInstance.createGen0Monkey(2222222222222222, {from: accounts[0]});
 
+      await testInstance.createGen0Monkey(3333333333333333, {from: accounts[0]});
+
+      const testingMonkeyNr4PosAndId3 = await testInstance.getMonkeyDetails(3);
+
+      const testingMonkeyNr5PosAndId4 = await testInstance.getMonkeyDetails(4);
+
+      const testingMonkeyNr6PosAndId5 = await testInstance.getMonkeyDetails(5);
+
+      
       console.log("accounts[0] is", accounts[0])    
 
-      console.log("testingMonkeyNr4Pos3.owner is", testingMonkeyNr4Pos3.owner);
+      console.log("testingMonkeyNr4PosAndId3.owner is", testingMonkeyNr4PosAndId3.owner);
+
+      console.log("testingMonkeyNr5PosAndId4.owner is", testingMonkeyNr5PosAndId4.owner);
+
+      console.log("testingMonkeyNr6PosAndId5.owner is", testingMonkeyNr6PosAndId5.owner);
+      
+
+      assert.equal(testingMonkeyNr4PosAndId3.owner, accounts[0]);
+
+      assert.equal(testingMonkeyNr5PosAndId4.owner, accounts[0]);
+
+      assert.equal(testingMonkeyNr6PosAndId5.owner, accounts[0]);
+
       
       // When not only console logging, but comparing, i.e. testing, use: 
       // assert.equal(testingMonkey1, "")
@@ -86,6 +111,7 @@ contract("MonkeyContract", accounts => {
         // Console logging 
         console.log("operator status for accounts[1] (i.e. 2nd account) is:", operatorApprovalTesting);
       */
+
       // booleans can be evaluated directly as true/ false, i.e. 0/1 
       // assert.equal(operatorApprovalTesting);
 
@@ -139,20 +165,20 @@ contract("MonkeyContract", accounts => {
 
     });
 
-     
+    
     // Actual test 9
-    it("as operator, accounts[1] should transfer a crypto monkey to accounts[2]", async() => {  
-      await testInstance.transfer(accounts[2], 3, { 
+    it("as operator, accounts[1] should use transferFrom to move CMO tokenId3 from accounts[0] to accounts[2]", async() => {  
+      await testInstance.transferFrom(accounts[0], accounts[2], 3, { 
         from: accounts[1],
       });
 
-      const testingMonkeyNr4Pos3 = await testInstance.getMonkeyDetails(3);
+      const testingMonkeyNr4PosAndId3 = await testInstance.getMonkeyDetails(3);
 
       console.log("accounts[2] is", accounts[2])    
 
-      console.log("testingMonkeyNr4Pos3.owner is", testingMonkeyNr4Pos3.owner);
+      console.log("testingMonkeyNr4PosAndId3.owner is", testingMonkeyNr4PosAndId3.owner);
 
-      assert.equal(testingMonkeyNr4Pos3.owner, accounts[2]);
+      assert.equal(testingMonkeyNr4PosAndId3.owner, accounts[2]);
     });
 
     
@@ -162,12 +188,12 @@ contract("MonkeyContract", accounts => {
         from: accounts[2],
       });
 
-      const testingMonkeyNr4Pos3 = await testInstance.getMonkeyDetails(3);
+      const testingMonkeyNr4PosAndId3 = await testInstance.getMonkeyDetails(3);
 
       console.log("accounts[3] is", accounts[3]) 
-      console.log("testingMonkeyNr4Pos3.approvedAddress is", testingMonkeyNr4Pos3.approvedAddress);
+      console.log("testingMonkeyNr4PosAndId3.approvedAddress is", testingMonkeyNr4PosAndId3.approvedAddress);
 
-      assert.equal(testingMonkeyNr4Pos3.approvedAddress, accounts[3]);
+      assert.equal(testingMonkeyNr4PosAndId3.approvedAddress, accounts[3]);
 
     });
 
@@ -190,12 +216,45 @@ contract("MonkeyContract", accounts => {
         from: accounts[3],
       });
 
-      const testingMonkeyNr4Pos3 = await testInstance.getMonkeyDetails(3);
+      const testingMonkeyNr4PosAndId3 = await testInstance.getMonkeyDetails(3);
 
       console.log("accounts[3] is", accounts[3]) 
-      console.log("testingMonkeyNr4Pos3.owner is", testingMonkeyNr4Pos3.owner);
+      console.log("testingMonkeyNr4PosAndId3.owner is", testingMonkeyNr4PosAndId3.owner);
 
-      assert.equal(testingMonkeyNr4Pos3.owner, accounts[3]);
+      assert.equal(testingMonkeyNr4PosAndId3.owner, accounts[3]);
+
+    });
+
+
+    // Actual test 13 
+    it("as operator of accounts[0], accounts[1] should use safeTransferFrom to move CMO tokenId4 from accounts[0] to accounts[4]" , async() => {       
+      await testInstance.safeTransferFrom(accounts[0], accounts[4], 4, { 
+        from: accounts[1],
+      });
+
+      const testingMonkeyNr5PosAndId4 = await testInstance.getMonkeyDetails(4);
+
+      console.log("accounts[4] is", accounts[4]) 
+      console.log("testingMonkeyNr5PosAndId4.owner is", testingMonkeyNr5PosAndId4.owner);
+
+      assert.equal(testingMonkeyNr5PosAndId4.owner, accounts[4]);
+
+    });
+
+    
+    
+    // Actual test 14 xxxx - needs to send data as well, still in development
+    it("as operator of accounts[0], accounts[1] should use safeTransferFrom to move CMO tokenId5 from accounts[0] to accounts[5] and send in data", async() => {       
+      await testInstance.safeTransferFrom(accounts[0], accounts[5], 5, { 
+        from: accounts[1],
+      });
+
+      const testingMonkeyNr6PosAndId5 = await testInstance.getMonkeyDetails(5);
+
+      console.log("accounts[5] is", accounts[5]) 
+      console.log("testingMonkeyNr6PosAndId5.owner is", testingMonkeyNr6PosAndId5.owner);
+
+      assert.equal(testingMonkeyNr6PosAndId5.owner, accounts[5]);
 
     });
 
@@ -207,12 +266,12 @@ contract("MonkeyContract", accounts => {
       });
 
 
-      const testingMonkeyNr4Pos3 = await testInstance.getMonkeyDetails(3);
+      const testingMonkeyNr4PosAndId3 = await testInstance.getMonkeyDetails(3);
 
       console.log("accounts[4] is", accounts[3]) 
       console.log("accounts[4] is", accounts[4])    
 
-      console.log("testingMonkeyNr4Pos3.owner is", testingMonkeyNr4Pos3.owner);
+      console.log("testingMonkeyNr4PosAndId3.owner is", testingMonkeyNr4PosAndId3.owner);
 
     });
     */
@@ -220,17 +279,6 @@ contract("MonkeyContract", accounts => {
 
 
     
-
-    /* failing atm - reason: can't console log array of structs / objects. 
-    // Actual test 4
-    it("should console.log the allMonkeysArray", async() => {  
-      const allMonkeysArraytesting1 = await testInstance.allMonkeysArray();
-      console.log("allMonkeysArraytesting1 is", allMonkeysArraytesting1);
-      
-      //assert.equal(allMonkeysArraytesting1, "")
-
-    });
-    */
    
   })  
   

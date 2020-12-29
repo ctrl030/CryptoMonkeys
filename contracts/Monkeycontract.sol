@@ -9,6 +9,9 @@ import "./Safemath.sol";
 // importing ERC721 token standard interface
 import "./IERC721.sol";
 
+// importing interface to check if receiving address is a contract
+import "./IERC721Receiver.sol";
+
 contract MonkeyContract is IERC721, Ownable {
 
     // using safemath for all uint256 numbers, 
@@ -20,6 +23,11 @@ contract MonkeyContract is IERC721, Ownable {
 
     // Contract address
     address _monkeyContractAddress;   
+     
+    bytes4 internal constant confirmingERC721Received = bytes4(keccak256("onERC721Received(address,address,uint256,bytes)"));
+
+    bytes4 private constant _INTERFACE_ID_ERC721 = 0x80ac58cd;
+    bytes4 private constant _INTERFACE_ID_ERC165 = 0x01ffc9a7; 
 
     // Only 12 monkeys can be created from scratch (generation 0)
     uint256 public GEN0_Limit = 12;
@@ -77,6 +85,8 @@ contract MonkeyContract is IERC721, Ownable {
     // maps owner to an array that holds all their tokenIds (see above)
     // tokenId positions are saved in this mapping: MonkeyIdPositionsMapping)
     mapping(address => uint256[]) public _owners2tokenIdArrayMapping;
+
+
 
    
 
@@ -145,15 +155,19 @@ contract MonkeyContract is IERC721, Ownable {
         // _createMonkey(0, 0, 0, uint256(-1), address(this));
     }
 
+    // Functions 
+
 
     function getMonkeyContractAddress() public view returns (address) {  
         return _monkeyContractAddress;
+    }    
+
+
+    function supportsInterface (bytes4 _interfaceId) external view returns (bool){
+        return (_interfaceId == _INTERFACE_ID_ERC721 || _interfaceId == _INTERFACE_ID_ERC165);
     }
 
 
-
-
-    // Functions 
 
     //- gives back an array with the CMO tokenIds that the provided sender address owns
     function findMonkeyIdsOfAddress(address sender) public view returns (uint256[] memory) {  
@@ -209,7 +223,7 @@ contract MonkeyContract is IERC721, Ownable {
     }
 
 
-    /// xxx @notice Get the approved address for a single NFT
+    /// @notice Get the approved address for a single NFT
     /// @dev Throws if `_tokenId` is not a valid NFT.
     /// @param _tokenId The NFT to find the approved address for
     /// @return The approved address for this NFT, or the zero address if there is none
@@ -309,7 +323,7 @@ contract MonkeyContract is IERC721, Ownable {
         return _monkeyIdsAndTheirOwnersMapping[tokenId];
     }
 
-    // For transferring, can be called from outside 
+    // For transferring, can be called from outside, at the moment does same as transferFrom (from address is unneccessary)
     function transfer(address _to, uint256 _tokenId) external {
         //`to` cannot be the zero address.
         require(_to != address(0));
@@ -323,28 +337,140 @@ contract MonkeyContract is IERC721, Ownable {
 
         address allowedAddress = _CMO2AllowedAddressMapping[_tokenId];
 
-        require( monkeyOwner == msg.sender || senderHasOperatorStatus == true || allowedAddress == msg.sender);
-
-        
-
-        // xxxx changing this:
-        // `tokenId` token must be owned by `msg.sender`
-        // require(_monkeyIdsAndTheirOwnersMapping[_tokenId] == msg.sender);
-        
-        /*
-            // new try: checks if msg.sender is owner or operator, elseways reverting
-            if (monkeyOwner == msg.sender) {
-                _;
-            } else if (operatorApprovalsMapping[monkeyOwner][msg.sender] == true) {
-                _;
-            } else {
-                revert();
-            }
-        */
+        require(monkeyOwner == msg.sender || senderHasOperatorStatus == true || allowedAddress == msg.sender);        
         
         // calling internal transfer function, providing both msg.sender as well as owner, in case they are different (operator is acting)
         _transferCallfromInside(msg.sender, monkeyOwner, _to, _tokenId);
     }
+
+
+    /// @notice Transfer ownership of an NFT -- THE CALLER IS RESPONSIBLE
+    ///  TO CONFIRM THAT `_to` IS CAPABLE OF RECEIVING NFTS OR ELSE
+    ///  THEY MAY BE PERMANENTLY LOST
+    /// @dev Throws unless `msg.sender` is the current owner, an authorized
+    ///  operator, or the approved address for this NFT. Throws if `_from` is
+    ///  not the current owner. Throws if `_to` is the zero address. Throws if
+    ///  `_tokenId` is not a valid NFT.
+    /// @param _from The current owner of the NFT
+    /// @param _to The new owner
+    /// @param _tokenId The NFT to transfer
+    // xxx does same as transfer (from address is unneccessary) 
+    function transferFrom(address _from, address _to, uint256 _tokenId) external {
+
+        //`_to` cannot be the zero address.
+        require(_to != address(0));
+
+        // _to` can not be the contract address.
+        require(_to != address(this));
+
+        // _tokenId must be a valid CMO tokenId, 
+        // i.e. 0 or larger, and smaller than the length of allMonkeysArray
+        require(_tokenId >= 0 && _tokenId < allMonkeysArray.length);        
+
+        address monkeyOwner = _monkeyIdsAndTheirOwnersMapping[_tokenId];
+
+        // _from address must be monkeyOwner at this moment 
+        require(_from == monkeyOwner);
+
+        bool senderHasOperatorStatus = operatorApprovalsMapping[monkeyOwner][msg.sender];
+
+        address allowedAddress = _CMO2AllowedAddressMapping[_tokenId];
+
+        // sender of transfer is owner, or has operator status, or has allowance to move this particular CMO
+        require(monkeyOwner == msg.sender || senderHasOperatorStatus == true || allowedAddress == msg.sender);
+
+        _transferCallfromInside(msg.sender, monkeyOwner, _to, _tokenId);
+
+    }
+
+
+    /// @notice Transfers the ownership of an NFT from one address to another address
+    /// @dev Throws unless `msg.sender` is the current owner, an authorized
+    ///  operator, or the approved address for this NFT. Throws if `_from` is
+    ///  not the current owner. Throws if `_to` is the zero address. Throws if
+    ///  `_tokenId` is not a valid NFT. When transfer is complete, this function
+    ///  checks if `_to` is a smart contract (code size > 0). If so, it calls
+    ///  `onERC721Received` on `_to` and throws if the return value is not
+    ///  `bytes4(keccak256("onERC721Received(address,address,uint256,bytes)"))`.
+    /// @param _from The current owner of the NFT
+    /// @param _to The new owner
+    /// @param _tokenId The NFT to transfer
+    /// @param data Additional data with no specified format, sent in call to `_to`
+    function safeTransferFrom(address _from, address _to, uint256 _tokenId, bytes calldata data) external {
+
+        //`_to` cannot be the zero address.
+        require(_to != address(0));
+
+        // _to` can not be the contract address.
+        require(_to != address(this));
+
+        // _tokenId must be a valid CMO tokenId, 
+        // i.e. 0 or larger, and smaller than the length of allMonkeysArray
+        require(_tokenId >= 0 && _tokenId < allMonkeysArray.length);        
+
+        address monkeyOwner = _monkeyIdsAndTheirOwnersMapping[_tokenId];
+
+        // _from address must be monkeyOwner at this moment 
+        require(_from == monkeyOwner);
+
+        bool senderHasOperatorStatus = operatorApprovalsMapping[monkeyOwner][msg.sender];
+
+        address allowedAddress = _CMO2AllowedAddressMapping[_tokenId];
+
+        // sender of transfer is owner, or has operator status, or has allowance to move this particular CMO
+        require(monkeyOwner == msg.sender || senderHasOperatorStatus == true || allowedAddress == msg.sender);
+
+        _safeTransferFrom(_from, _to, _tokenId, data);
+    }
+
+    // newly written, internal version of safeTransferFrom, NOT from ERC721.sol    
+    function _safeTransferFrom(address _from, address _to, uint256 _tokenId, bytes memory _data) internal{  
+
+        _transferCallfromInside(msg.sender, _from, _to, _tokenId);       
+
+        require(_checkERC721Support(_from, _to, _tokenId, _data));
+        
+    }
+
+    /// @notice Transfers the ownership of an NFT from one address to another address
+    /// @dev This works identically to the other function with an extra data parameter,
+    ///  except this function just sets data to "".
+    /// @param _from The current owner of the NFT
+    /// @param _to The new owner
+    /// @param _tokenId The NFT to transfer
+    function safeTransferFrom(address _from, address _to, uint256 _tokenId) external {
+
+        //`_to` cannot be the zero address.
+        require(_to != address(0));
+
+        // _to` can not be the contract address.
+        require(_to != address(this));
+
+        // _tokenId must be a valid CMO tokenId, 
+        // i.e. 0 or larger, and smaller than the length of allMonkeysArray
+        require(_tokenId >= 0 && _tokenId < allMonkeysArray.length);        
+
+        address monkeyOwner = _monkeyIdsAndTheirOwnersMapping[_tokenId];
+
+        // _from address must be monkeyOwner at this moment 
+        require(_from == monkeyOwner);
+
+        bool senderHasOperatorStatus = operatorApprovalsMapping[monkeyOwner][msg.sender];
+
+        address allowedAddress = _CMO2AllowedAddressMapping[_tokenId];
+
+        // sender of transfer is owner, or has operator status, or has allowance to move this particular CMO
+        require(monkeyOwner == msg.sender || senderHasOperatorStatus == true || allowedAddress == msg.sender);
+
+        bytes memory _data = ""; 
+
+        _safeTransferFrom(_from, _to, _tokenId, _data);
+
+    }
+
+
+
+
 
     // internal function for transferring, cannot be called from outside the contract
     function _transferCallfromInside(
@@ -407,4 +533,32 @@ contract MonkeyContract is IERC721, Ownable {
         // emitting Transfer event
         emit Transfer(_monkeyOwner, _to, _tokenId);
     }
+
+    // Wrapper function to avaliate if receiving address is a smart contract or just a wallet address
+    // Returns true if contract, false if wallet or does not accept ERC721s
+    
+    
+    function _checkERC721Support(address _from, address _to, uint256 _tokenId, bytes  memory _data) internal returns(bool) {
+        // First checks if codesize of receiving address is not larger than 0. If it is not, returns true 
+        if (!_isContract(_to)){
+            return true;
+        }
+
+        // if codesize was larger than 0, checks if contract can receive ERC721s
+        bytes4 returnData = IERC721Receiver(_to).onERC721Received(msg.sender, _from, _tokenId, _data); 
+        // comparing and evaluating to true or false
+        return returnData == confirmingERC721Received;
+    }
+
+    // checking code size of _to address    
+    function _isContract (address _to) view internal returns(bool) {
+        uint32 size;
+        assembly {
+            size := extcodesize(_to)
+        }
+        return size > 0;
+    }
+
 }
+
+
