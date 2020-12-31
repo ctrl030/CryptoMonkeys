@@ -115,6 +115,8 @@ contract MonkeyContract is IERC721, Ownable {
         uint256 genes
     );
 
+    event BreedingSuccessful (uint256 genes, uint256 birthtime, uint256 parent1Id, uint256 parent2Id, uint256 generation, address owner, address approvedAddress);
+
     // After transfer of CMO, emitting useful data regarding new owner
     event NewOwnerArrayUpdated( 
         address transferringAddress,       
@@ -168,6 +170,69 @@ contract MonkeyContract is IERC721, Ownable {
     }
 
 
+    function breed(uint256 _parent1Id, uint256 _parent2Id) public returns (uint256) {
+
+        // msg.sender needs to be owner of both crypto monkeys
+        require(msg.sender == _monkeyIdsAndTheirOwnersMapping[_parent1Id] && msg.sender == _monkeyIdsAndTheirOwnersMapping[_parent2Id]);
+
+        // calculating new DNA string
+        uint256 _newDna = _mixDna(_parent1Id, _parent2Id);
+
+        // calculate generation here
+        uint256 _newGeneration = _calcGeneration(_parent1Id, _parent2Id);
+
+        // creating new monkey
+        uint256 newMonkeyId = _createMonkey(_parent1Id, _parent2Id, _newGeneration, _newDna, msg.sender);                       
+
+        emit BreedingSuccessful(
+            allMonkeysArray[newMonkeyId].genes,
+            allMonkeysArray[newMonkeyId].birthtime,
+            allMonkeysArray[newMonkeyId].parent1Id,
+            allMonkeysArray[newMonkeyId].parent2Id,
+            allMonkeysArray[newMonkeyId].generation,
+            _monkeyIdsAndTheirOwnersMapping[newMonkeyId],
+            _CMO2AllowedAddressMapping[newMonkeyId]
+        );       
+
+        return newMonkeyId;
+    }
+
+    function _calcGeneration (uint256 _parent1Id, uint256 _parent2Id) internal view returns(uint256) {
+
+        uint256 _generationOfParent1 = allMonkeysArray[_parent1Id].generation; 
+        uint256 _generationOfParent2 = allMonkeysArray[_parent2Id].generation; 
+
+        // new generation is average of parents generations plus 1
+        // for ex. 1 + 5 = 6, 6/2 = 3, 3+1=4, newGeneration would be 4
+
+        // rounding numbers if odd, for ex. 1+2=3, 3*10 = 30, 30/2 = 15
+        // 15 % 10 = 5, 5>0, 15+5=20
+        // 20 / 10 = 2, 2+1 = 3
+        // newGeneration = 3
+        uint256 _roundingNumbers = (((_generationOfParent1 + _generationOfParent2) * 10) / 2); 
+        if (_roundingNumbers % 10 > 0) {
+            _roundingNumbers + 5;      
+        }
+        uint256 newGeneration = (_roundingNumbers / 10 ) + 1;
+
+        return newGeneration;
+    }
+
+
+    function _mixDna (uint256 _parent1Id, uint256 _parent2Id) internal view returns (uint256) {
+        // a DNA string looks for example like this 11 22 33 44 55 66 77 88
+
+        // first 8 digits are selected by dividing, solidity will round down everything to full integers
+        uint256 firstEightNumbersFromParent1 =  allMonkeysArray[_parent1Id].genes / 100000000;
+
+        // second 8 digits are selected by using modulo, it's whats left over and undividable by 100000000
+        uint256 secondEightNumbersFromParent2 = allMonkeysArray[_parent2Id].genes % 100000000;
+
+        // multiplying to "make room at the end with zeros", then adding to finish new dna string 
+        uint256 newDnaString = (firstEightNumbersFromParent1 * 100000000) + secondEightNumbersFromParent2;
+
+        return newDnaString;   
+    }
 
     //- gives back an array with the CMO tokenIds that the provided sender address owns
     function findMonkeyIdsOfAddress(address sender) public view returns (uint256[] memory) {  
@@ -175,7 +240,6 @@ contract MonkeyContract is IERC721, Ownable {
     }
 
     // used for creating gen0 monkeys 
-
     function createGen0Monkey(uint256 _genes) public onlyOwner {
         // making sure that no more than 12 monkeys will exist in gen0
         require(gen0amountTotal < GEN0_Limit);
@@ -232,7 +296,7 @@ contract MonkeyContract is IERC721, Ownable {
         return _CMO2AllowedAddressMapping[_tokenId];
     }  
 
-    /// xxx @notice Query if an address is an authorized operator for another address
+    /// @notice Query if an address is an authorized operator for another address
     /// @param _owner The address that owns the NFTs
     /// @param _operator The address that acts on behalf of the owner
     /// @return True if `_operator` is an approved operator for `_owner`, false otherwise
@@ -337,6 +401,10 @@ contract MonkeyContract is IERC721, Ownable {
 
         address allowedAddress = _CMO2AllowedAddressMapping[_tokenId];
 
+        // _tokenId must be a valid CMO tokenId, 
+        // i.e. 0 or larger, and smaller than the length of allMonkeysArray
+        require(_tokenId >= 0 && _tokenId < allMonkeysArray.length);    
+
         require(monkeyOwner == msg.sender || senderHasOperatorStatus == true || allowedAddress == msg.sender);        
         
         // calling internal transfer function, providing both msg.sender as well as owner, in case they are different (operator is acting)
@@ -353,35 +421,16 @@ contract MonkeyContract is IERC721, Ownable {
     ///  `_tokenId` is not a valid NFT.
     /// @param _from The current owner of the NFT
     /// @param _to The new owner
-    /// @param _tokenId The NFT to transfer
-    // xxx does same as transfer (from address is unneccessary) 
+    /// @param _tokenId The NFT to transfer    
     function transferFrom(address _from, address _to, uint256 _tokenId) external {
 
-        //`_to` cannot be the zero address.
-        require(_to != address(0));
-
-        // _to` can not be the contract address.
-        require(_to != address(this));
-
-        // _tokenId must be a valid CMO tokenId, 
-        // i.e. 0 or larger, and smaller than the length of allMonkeysArray
-        require(_tokenId >= 0 && _tokenId < allMonkeysArray.length);        
+        require (_isOwnerOrOperatorOrAllowed(_from, _to, _tokenId));
 
         address monkeyOwner = _monkeyIdsAndTheirOwnersMapping[_tokenId];
 
-        // _from address must be monkeyOwner at this moment 
-        require(_from == monkeyOwner);
-
-        bool senderHasOperatorStatus = operatorApprovalsMapping[monkeyOwner][msg.sender];
-
-        address allowedAddress = _CMO2AllowedAddressMapping[_tokenId];
-
-        // sender of transfer is owner, or has operator status, or has allowance to move this particular CMO
-        require(monkeyOwner == msg.sender || senderHasOperatorStatus == true || allowedAddress == msg.sender);
-
         _transferCallfromInside(msg.sender, monkeyOwner, _to, _tokenId);
 
-    }
+    }    
 
 
     /// @notice Transfers the ownership of an NFT from one address to another address
@@ -398,29 +447,26 @@ contract MonkeyContract is IERC721, Ownable {
     /// @param data Additional data with no specified format, sent in call to `_to`
     function safeTransferFrom(address _from, address _to, uint256 _tokenId, bytes calldata data) external {
 
-        //`_to` cannot be the zero address.
-        require(_to != address(0));
-
-        // _to` can not be the contract address.
-        require(_to != address(this));
-
-        // _tokenId must be a valid CMO tokenId, 
-        // i.e. 0 or larger, and smaller than the length of allMonkeysArray
-        require(_tokenId >= 0 && _tokenId < allMonkeysArray.length);        
-
-        address monkeyOwner = _monkeyIdsAndTheirOwnersMapping[_tokenId];
-
-        // _from address must be monkeyOwner at this moment 
-        require(_from == monkeyOwner);
-
-        bool senderHasOperatorStatus = operatorApprovalsMapping[monkeyOwner][msg.sender];
-
-        address allowedAddress = _CMO2AllowedAddressMapping[_tokenId];
-
-        // sender of transfer is owner, or has operator status, or has allowance to move this particular CMO
-        require(monkeyOwner == msg.sender || senderHasOperatorStatus == true || allowedAddress == msg.sender);
+        require (_isOwnerOrOperatorOrAllowed(_from, _to, _tokenId));
 
         _safeTransferFrom(_from, _to, _tokenId, data);
+    }
+
+    
+    /// @notice Transfers the ownership of an NFT from one address to another address
+    /// @dev This works identically to the other function with an extra data parameter,
+    ///  except this function just sets data to "".
+    /// @param _from The current owner of the NFT
+    /// @param _to The new owner
+    /// @param _tokenId The NFT to transfer
+    function safeTransferFrom(address _from, address _to, uint256 _tokenId) external {
+
+        require (_isOwnerOrOperatorOrAllowed(_from, _to, _tokenId));
+
+        bytes memory _data = ""; 
+
+        _safeTransferFrom(_from, _to, _tokenId, _data);
+
     }
 
     // newly written, internal version of safeTransferFrom, NOT from ERC721.sol    
@@ -432,14 +478,7 @@ contract MonkeyContract is IERC721, Ownable {
         
     }
 
-    /// @notice Transfers the ownership of an NFT from one address to another address
-    /// @dev This works identically to the other function with an extra data parameter,
-    ///  except this function just sets data to "".
-    /// @param _from The current owner of the NFT
-    /// @param _to The new owner
-    /// @param _tokenId The NFT to transfer
-    function safeTransferFrom(address _from, address _to, uint256 _tokenId) external {
-
+    function _isOwnerOrOperatorOrAllowed(address _from, address _to, uint256 _tokenId) internal view returns (bool) {
         //`_to` cannot be the zero address.
         require(_to != address(0));
 
@@ -462,15 +501,9 @@ contract MonkeyContract is IERC721, Ownable {
         // sender of transfer is owner, or has operator status, or has allowance to move this particular CMO
         require(monkeyOwner == msg.sender || senderHasOperatorStatus == true || allowedAddress == msg.sender);
 
-        bytes memory _data = ""; 
-
-        _safeTransferFrom(_from, _to, _tokenId, _data);
+        return true;
 
     }
-
-
-
-
 
     // internal function for transferring, cannot be called from outside the contract
     function _transferCallfromInside(

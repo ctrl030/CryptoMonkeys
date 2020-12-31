@@ -41,12 +41,12 @@ contract("MonkeyContract", accounts => {
     
     
     // Actual test 3
-    it("should create three monkeys", async() => {  
-      await testInstance.createGen0Monkey(1111111111111111, {from: accounts[0]});
-
-      await testInstance.createGen0Monkey(2222222222222222, {from: accounts[0]});
-
+    it("accounts[0] should create three monkeys", async() => {  
       await testInstance.createGen0Monkey(3333333333333333, {from: accounts[0]});
+
+      await testInstance.createGen0Monkey(4444444444444444, {from: accounts[0]});
+
+      await testInstance.createGen0Monkey(5555555555555555, {from: accounts[0]});
 
       const testingMonkeyNr4PosAndId3 = await testInstance.getMonkeyDetails(3);
 
@@ -257,6 +257,52 @@ contract("MonkeyContract", accounts => {
       assert.equal(testingMonkeyNr6PosAndId5.owner, accounts[5]);
 
     });
+
+    // Actual test 15
+    it("accounts[0] should create two gen0 monkeys with tokenId 6 and 7", async() => {  
+      await testInstance.createGen0Monkey(6666666666666666, {from: accounts[0]});
+
+      await testInstance.createGen0Monkey(7777777777777777, {from: accounts[0]});     
+
+      const testingMonkeyNr7PosAndId6 = await testInstance.getMonkeyDetails(6);
+
+      const testingMonkeyNr8PosAndId7 = await testInstance.getMonkeyDetails(7);
+      
+      console.log("accounts[0] is", accounts[0])    
+
+      console.log("testingMonkeyNr7PosAndId6.owner is", testingMonkeyNr7PosAndId6.owner);
+
+      console.log("testingMonkeyNr8PosAndId7.owner is", testingMonkeyNr8PosAndId7.owner);
+      
+
+      assert.equal(testingMonkeyNr7PosAndId6.owner, accounts[0]);
+
+      assert.equal(testingMonkeyNr8PosAndId7.owner, accounts[0]);
+
+    });
+
+    
+    // Actual test 16
+    it("accounts[0] should breed monkeys with tokenId 6 and 7", async() => {  
+      await testInstance.breed(6, 7, {from: accounts[0]});
+
+      // const newMonkeyTokenIdTesting = 
+
+      const newMonkeyTokenIdTestingDetails = await testInstance.getMonkeyDetails(8);      
+      
+      console.log("accounts[0] is", accounts[0])    
+
+      // console.log("newMonkeyTokenIdTesting is", newMonkeyTokenIdTesting);
+
+      console.log("newMonkeyTokenIdTestingDetails are", newMonkeyTokenIdTestingDetails);
+      
+      console.log("newMonkeyTokenIdTestingDetails.genes are", Number(newMonkeyTokenIdTestingDetails.genes)); 
+
+      assert.equal(newMonkeyTokenIdTestingDetails.owner, accounts[0]);
+
+    });
+
+    
 
     /*
     // Actual test 11
