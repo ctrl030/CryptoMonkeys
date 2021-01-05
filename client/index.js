@@ -150,17 +150,17 @@ $("#switchToMultiplyButton").click(() => {
 });
 
 var parent1Input;
-var parent1Input;
+var parent2Input;
 
 
 $("#makeMoreMonkeysButton").click(async () => { 
-  var newMonkeyTokenId = await instance.methods.breed(parent1Input, parent1Input).call();
+  await instance.methods.breed(parent1Input, parent2Input).send();
 
-  console.log(newMonkeyTokenId);
+  
 
-  let newDetails = await instance.methods.getMonkeyDetails(newMonkeyTokenId).call();
+  // let newDetails = await instance.methods.getMonkeyDetails(newMonkeyTokenId).call();
 
-  console.log(newDetails);
+  // console.log(newDetails);
 
 });
 
@@ -215,50 +215,19 @@ $("#showParentsButton").click(async () => {
 
     for (let j = 0; j < 2; j++) {
       const tokenId = myIncomingmonkeyIdsArray[j];
-      let myCryptoMonkey = await instance.methods.getMonkeyDetails(tokenId).call();   
+
+      const dnaObject = await decipherDNAtoObject(tokenId);
       
-      // The 16 digit "DNA string" is turned into a string, then from the digit's position,
-      // the correct CSS variables are created  
-      let tokenIdGenes = myCryptoMonkey.genes.toString();  
-      // console.log("tokenIdGenes " + tokenIdGenes);
-      var tokenIdHeadcolor = Number(tokenIdGenes.charAt(0)+tokenIdGenes.charAt(1));
-      var tokenIdmouthcolor = Number(tokenIdGenes.charAt(2)+tokenIdGenes.charAt(3));
-      var tokenIdeyescolor = Number(tokenIdGenes.charAt(4)+tokenIdGenes.charAt(5));
-      var tokenIdearscolor = Number(tokenIdGenes.charAt(6)+tokenIdGenes.charAt(7));
-    
-      var tokenIdeyesShape = Number(tokenIdGenes.charAt(8));
-      var tokenIdmouthShape = Number(tokenIdGenes.charAt(9));
-    
-      var tokenIdeyeBackgroundColor = Number(tokenIdGenes.charAt(10)+tokenIdGenes.charAt(11));
-      var tokenIdlowerHeadColor = Number(tokenIdGenes.charAt(12)+tokenIdGenes.charAt(13));
-    
-      var tokenIdanimation = Number(tokenIdGenes.charAt(14));
-      var tokenIdlastNum = Number(tokenIdGenes.charAt(15));
-    
-      // The CSS variables are saved into a single variable each time, which is passed on
-      var tokenIdDNA = {
-        headcolor: tokenIdHeadcolor,
-        mouthcolor: tokenIdmouthcolor,
-        eyescolor: tokenIdeyescolor,
-        earscolor: tokenIdearscolor,
-      
-        eyesShape: tokenIdeyesShape,
-        mouthShape: tokenIdmouthShape,
-        eyeBackgroundColor: tokenIdeyeBackgroundColor,
-        lowerHeadColor: tokenIdlowerHeadColor,
-        animation: tokenIdanimation,
-        lastNum: tokenIdlastNum,
-      };      
     
       // Call to create and append HTML for each cryptomonkey of the connected user
       $("#monkeyRowMultiply").append(buildMonkeyBoxes(tokenId));  
   
       console.log("tokenIdDNA: ");
-      console.log(tokenIdDNA);   
+      console.log(dnaObject);   
   
       // Call to apply CSS on the HTML structure, effect is styling and showing the next monkey
       // needs a set of DNA, if no tokenId is given, reverts to "Creation" in the receiving functions
-      renderMonkey(tokenIdDNA, tokenId);
+      renderMonkey(dnaObject, tokenId);
       
     };
 
@@ -267,7 +236,44 @@ $("#showParentsButton").click(async () => {
 
 });
 
+async function decipherDNAtoObject(tokenId) {
+  let myCryptoMonkey = await instance.methods.getMonkeyDetails(tokenId).call();   
+      
+  // The 16 digit "DNA string" is turned into a string, then from the digit's position,
+  // the correct CSS variables are created  
+  let tokenIdGenes = myCryptoMonkey.genes.toString();  
+  // console.log("tokenIdGenes " + tokenIdGenes);
+  var tokenIdHeadcolor = Number(tokenIdGenes.charAt(0)+tokenIdGenes.charAt(1));
+  var tokenIdmouthcolor = Number(tokenIdGenes.charAt(2)+tokenIdGenes.charAt(3));
+  var tokenIdeyescolor = Number(tokenIdGenes.charAt(4)+tokenIdGenes.charAt(5));
+  var tokenIdearscolor = Number(tokenIdGenes.charAt(6)+tokenIdGenes.charAt(7));
 
+  var tokenIdeyesShape = Number(tokenIdGenes.charAt(8));
+  var tokenIdmouthShape = Number(tokenIdGenes.charAt(9));
+
+  var tokenIdeyeBackgroundColor = Number(tokenIdGenes.charAt(10)+tokenIdGenes.charAt(11));
+  var tokenIdlowerHeadColor = Number(tokenIdGenes.charAt(12)+tokenIdGenes.charAt(13));
+
+  var tokenIdanimation = Number(tokenIdGenes.charAt(14));
+  var tokenIdlastNum = Number(tokenIdGenes.charAt(15));
+
+  // The CSS variables are saved into a single variable each time, which is passed on
+  var tokenIdDNA = {
+    headcolor: tokenIdHeadcolor,
+    mouthcolor: tokenIdmouthcolor,
+    eyescolor: tokenIdeyescolor,
+    earscolor: tokenIdearscolor,
+  
+    eyesShape: tokenIdeyesShape,
+    mouthShape: tokenIdmouthShape,
+    eyeBackgroundColor: tokenIdeyeBackgroundColor,
+    lowerHeadColor: tokenIdlowerHeadColor,
+    animation: tokenIdanimation,
+    lastNum: tokenIdlastNum,
+  };      
+
+  return tokenIdDNA;
+}
 
 
 

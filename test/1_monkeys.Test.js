@@ -13,7 +13,7 @@ contract("MonkeyContract", accounts => {
     testInstance = await MonkeyContract.new();
   }) 
 
-  // Group of tests
+  // Group of tests - might use .only or .skip on "it" or "describe" , to be quicker
   describe("First group of tests", () => {
 
     // Actual test 1
@@ -245,8 +245,8 @@ contract("MonkeyContract", accounts => {
     
     // Actual test 14 xxxx - needs to send data as well, still in development
     it("as operator of accounts[0], accounts[1] should use safeTransferFrom to move CMO tokenId5 from accounts[0] to accounts[5] and send in data", async() => {       
-      await testInstance.safeTransferFrom(accounts[0], accounts[5], 5, { 
-        from: accounts[1],
+      await testInstance.safeTransferFrom(accounts[0], accounts[5], 5, /*"0xa1234",*/ { 
+        from: accounts[1]
       });
 
       const testingMonkeyNr6PosAndId5 = await testInstance.getMonkeyDetails(5);
@@ -257,6 +257,8 @@ contract("MonkeyContract", accounts => {
       assert.equal(testingMonkeyNr6PosAndId5.owner, accounts[5]);
 
     });
+
+
 
     // Actual test 15
     it("accounts[0] should create two gen0 monkeys with tokenId 6 and 7", async() => {  
