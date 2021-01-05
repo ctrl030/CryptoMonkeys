@@ -68,9 +68,17 @@ body {
 }
 
 #switchToCreationButton {
-  font-weight: bold;
-  display: none; 
+  font-weight: bold;   
 } 
+
+#switchToMultiplyButton {
+  font-weight: bold;   
+} 
+
+#switchToMarketButton {
+  font-weight: bold;   
+} 
+
 
 #monkeyRowGallery {
   color: #4f3222 !important;
@@ -80,6 +88,13 @@ body {
 }
 
 #monkeyRowCreation {
+  color: #4f3222 !important;
+  margin-right: 0px !important;
+  margin-left: 0px !important;
+  justify-content: space-around;
+}
+
+#monkeyRowMultiply {
   color: #4f3222 !important;
   margin-right: 0px !important;
   margin-left: 0px !important;
@@ -143,6 +158,43 @@ body {
   opacity: 0.95;
 }
 
+#buttonHolderDiv {
+  width: 1000px;
+  align-self: center;
+  display: flex;
+  justify-content: space-around;
+}
+
+.holderDiv {
+  width: 1000px;
+  align-self: center;
+  display: flex;
+  justify-content: space-around;
+}
+
+
+#multiplyButtonHolderArea {
+  margin-top: 8px;
+  margin-bottom: 8px;
+  height: 60px;
+  border-radius: 10px;
+  background-color: #ededed;
+  display: none;
+  justify-content: center;
+  margin-right: 0px !important;
+  margin-left: 0px !important;
+  opacity: 0.95;
+}
+
+#multiplybuttonHolderDiv {
+  width: 1000px;
+  align-self: center;
+  display: flex;
+  justify-content: space-around;
+}
+
+
+
 #monkeyCreatedDiv {
   position:absolute;
   width: 90%;
@@ -153,12 +205,7 @@ body {
   bottom:20px; 
 }
 
-#buttonHolderDiv {
-  width: 1000px;
-  align-self: center;
-  display: flex;
-  justify-content: space-around;
-}
+
 
 #jungleIslandFooter {
   height: 40px !important;

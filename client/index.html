@@ -76,20 +76,64 @@
             Silence
           </button>
 
-          <button type="button" class="btn btn-warning" id="switchToGalleryButton"> 
-           Switch Gallery / Creation
+          <button type="button" class="btn btn-warning" id="switchToCreationButton"> 
+            Create NFTs
           </button>
 
-          <!-- Hidden on page load -->
-          <button type="button" class="btn btn-warning" id="switchToCreationButton"> 
-            Switch Gallery / Creation 
+          <button type="button" class="btn btn-warning" id="switchToGalleryButton"> 
+            See your Monkeys 
           </button>
+    
+          <button type="button" class="btn btn-warning" id="switchToMultiplyButton"> 
+            Multiply 
+          </button> 
+
+          <button type="button" class="btn btn-warning" id="switchToMarketButton"> 
+            Trade 
+          </button>     
+         
         </div>
       </div>
 
       <!-- The gallery - here we later append all procedurally created monkeyBoxes  -->
       <div class="row" id="monkeyRowGallery">        
       </div>
+
+
+
+      
+      <div class="m-2 light-b-shadow" id="multiplyButtonHolderArea">
+        <div class="holderDiv" id="multiplybuttonHolderDiv">
+
+          <form>
+            <div class="form-row" id="multiplyInputfieldHolderDiv">
+              <div class="col">
+                <input type="text" class="form-control" placeholder="Parent 1 TokenId" id="parent1InputField">
+              </div>
+              <div class="col">
+                <input type="text" class="form-control" placeholder="Parent 2 TokenId" id="parent2InputField">
+              </div>
+            </div>
+          </form>          
+         
+          <button type="button" class="btn btn-success" id="showParentsButton">
+            Show parents
+          </button>
+  
+          <button type="button" class="btn btn-success" id="makeMoreMonkeysButton">
+            Make more monkeys
+          </button> 
+          
+        </div>
+      </div>
+
+      <!-- The multiplication "page" - here we later append the monkeyBoxes for the parents, then also child -->
+      <div class="row" id="monkeyRowMultiply">        
+      </div>
+
+
+
+
 
       <!-- The factory - this code is just for the new "factory" monkey, that is being configured -->
       <!-- Later, the CSS is applied to the correct box - note the id for the monkeyBox ! It is "Creation" here for factory -->
