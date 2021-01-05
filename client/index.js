@@ -8,7 +8,7 @@ var instance;
 var user;
 
 // Contract address, has to be updated when migrating / contract address is changing
-var contractAddress = "0xdE2d8c78ECA41Ab43797071399c115d8Ca7550DC";
+var contractAddress = "0x0B14e8D85393dA515527bdBdCc6b1970E6Fb873D";
 
 
 // When ready, during page load 
@@ -60,7 +60,41 @@ $(document).ready(async function () {
     })
     .on("error", function (error) {
       console.log(error);
-    });
+  });
+   
+
+  instance.events
+    .BreedingSuccessful()
+    .on("data", function (event) {
+      console.log(event);
+      
+      let tokenId = event.returnValues.tokenId;
+      let generation = event.returnValues.generation;
+      let genes = event.returnValues.genes;
+      let owner = event.returnValues.owner;
+      let parent1Id = event.returnValues.parent1Id;
+      let parent2Id = event.returnValues.parent2Id;   
+      $("#monkeyMuldtipliedSuccessDiv").css("display", "flex");
+      $("#monkeyMuldtipliedSuccessDiv").empty();
+      $("#monkeyMuldtipliedSuccessDiv").append(
+        `        
+          <ul>
+            <li>Crypto Monkey breeding successfully!</li>
+            <li>Here are the details: </li>
+            <li>tokenId:  ${tokenId}</li>  
+            <li>generation: ${generation}</li>
+            <li>genes: ${genes}</li>
+            <li>owner:  ${owner}</li>            
+            <li>parent1Id: ${parent1Id}</li>
+            <li>parent2Id: ${parent2Id}</li>            
+          </ul>
+        `
+      );
+    })
+    .on("error", function (error) {
+      console.log(error);
+  });
+
 });
 
 
@@ -115,10 +149,28 @@ $("#switchToMultiplyButton").click(() => {
   $("#monkeyRowGallery").empty(); 
 });
 
+var parent1Input;
+var parent1Input;
+
+
+$("#makeMoreMonkeysButton").click(async () => { 
+  var newMonkeyTokenId = await instance.methods.breed(parent1Input, parent1Input).call();
+
+  console.log(newMonkeyTokenId);
+
+  let newDetails = await instance.methods.getMonkeyDetails(newMonkeyTokenId).call();
+
+  console.log(newDetails);
+
+});
+
+
+
+
 $("#showParentsButton").click(async () => {
  
- var parent1Input = $("#parent1InputField").val();
- var parent2Input = $("#parent2InputField").val();
+ parent1Input = $("#parent1InputField").val();
+ parent2Input = $("#parent2InputField").val();
 
  // userBalance will be the number of monkeys the user has
  var userBalance = await instance.methods.balanceOf(user).call();
@@ -157,38 +209,14 @@ $("#showParentsButton").click(async () => {
   }
   else {
     console.log(parent1Input);
-    console.log(parent2Input);
-
-    //$("#monkeyRowMultiply").append(buildMonkeyBoxes(parent1Input));
-    // $("#monkeyRowMultiply").append(buildMonkeyBoxes(parent2Input));
+    console.log(parent2Input);   
 
     var myIncomingmonkeyIdsArray = [parent1Input, parent2Input];
 
     for (let j = 0; j < 2; j++) {
       const tokenId = myIncomingmonkeyIdsArray[j];
-      let myCryptoMonkey = await instance.methods.getMonkeyDetails(tokenId).call(); 
-  
-      // Console logs to follow and observe  
-      /* 
-      console.log("myMonkeyIdsArray Position" + j);
-      console.log(myCryptoMonkey);    
-    
-      console.log("Token ID: " + tokenId); 
-    
-      console.log("approvedAddress " + myCryptoMonkey.approvedAddress);
-    
-      console.log("birthtime " + myCryptoMonkey.birthtime);
-    
-      console.log("generation " + myCryptoMonkey.generation);
-    
-      console.log("genes " + myCryptoMonkey.genes);
-    
-      console.log("owner " + myCryptoMonkey.owner);
-    
-      console.log("parent1Id " + myCryptoMonkey.parent1Id);
-    
-      console.log("parent2Id " + myCryptoMonkey.parent2Id);*/
-  
+      let myCryptoMonkey = await instance.methods.getMonkeyDetails(tokenId).call();   
+      
       // The 16 digit "DNA string" is turned into a string, then from the digit's position,
       // the correct CSS variables are created  
       let tokenIdGenes = myCryptoMonkey.genes.toString();  
@@ -220,12 +248,10 @@ $("#showParentsButton").click(async () => {
         lowerHeadColor: tokenIdlowerHeadColor,
         animation: tokenIdanimation,
         lastNum: tokenIdlastNum,
-      };
-      
+      };      
     
       // Call to create and append HTML for each cryptomonkey of the connected user
-      $("#monkeyRowMultiply").append(buildMonkeyBoxes(tokenId));
-  
+      $("#monkeyRowMultiply").append(buildMonkeyBoxes(tokenId));  
   
       console.log("tokenIdDNA: ");
       console.log(tokenIdDNA);   
@@ -235,20 +261,15 @@ $("#showParentsButton").click(async () => {
       renderMonkey(tokenIdDNA, tokenId);
       
     };
-  
-
-
-
-
 
   };
-
- 
-  
-
   
 
 });
+
+
+
+
 
 
 $("#switchToMarketButton").click(() => { 

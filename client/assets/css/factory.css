@@ -206,6 +206,17 @@ body {
 }
 
 
+#monkeyMuldtipliedSuccessDiv {
+  position:absolute;
+  width: 90%;
+  justify-content: center;
+  border-radius: 10px;
+  font-size: 16px !important;
+  font-weight: bold !important; 
+}
+
+
+
 
 #jungleIslandFooter {
   height: 40px !important;

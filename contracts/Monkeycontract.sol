@@ -115,7 +115,7 @@ contract MonkeyContract is IERC721, Ownable {
         uint256 genes
     );
 
-    event BreedingSuccessful (uint256 genes, uint256 birthtime, uint256 parent1Id, uint256 parent2Id, uint256 generation, address owner, address approvedAddress);
+    event BreedingSuccessful (uint256 tokenId, uint256 genes, uint256 birthtime, uint256 parent1Id, uint256 parent2Id, uint256 generation, address owner);
 
     // After transfer of CMO, emitting useful data regarding new owner
     event NewOwnerArrayUpdated( 
@@ -185,13 +185,13 @@ contract MonkeyContract is IERC721, Ownable {
         uint256 newMonkeyId = _createMonkey(_parent1Id, _parent2Id, _newGeneration, _newDna, msg.sender);                       
 
         emit BreedingSuccessful(
+            newMonkeyId,
             allMonkeysArray[newMonkeyId].genes,
             allMonkeysArray[newMonkeyId].birthtime,
             allMonkeysArray[newMonkeyId].parent1Id,
             allMonkeysArray[newMonkeyId].parent2Id,
             allMonkeysArray[newMonkeyId].generation,
-            _monkeyIdsAndTheirOwnersMapping[newMonkeyId],
-            _CMO2AllowedAddressMapping[newMonkeyId]
+            _monkeyIdsAndTheirOwnersMapping[newMonkeyId]
         );       
 
         return newMonkeyId;

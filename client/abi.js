@@ -61,6 +61,12 @@ var abi = [
       {
         "indexed": false,
         "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
         "name": "genes",
         "type": "uint256"
       },
@@ -92,12 +98,6 @@ var abi = [
         "indexed": false,
         "internalType": "address",
         "name": "owner",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "approvedAddress",
         "type": "address"
       }
     ],
