@@ -16,7 +16,7 @@ body {
   background-attachment: fixed;
   min-height: 500px;  
   
-  line-height: 1 !important;
+  line-height: 1.4 !important;
   
 }
 
@@ -25,17 +25,17 @@ body {
   font-weight: bold;
 }
 
-#jungleIslandContainer {
-  margin-top: 2vh;
-  width: 1260px !important;
-  max-width: 1260px !important;
-  padding-right: 0px !important;
-  padding-left: 0px !important;
+#jungleIslandContainer {  
+  width: 1460px !important;
+  max-width: 1460px !important;
+  padding: 0px !important; 
+  margin-top: 0px !important;
+  margin-bottom: 0px !important; 
 }
 
 #jungleIslandTextDiv {
   text-align: center;
-  padding: 16px;
+  padding: 10px;
   background-color: #ededed;
   border-radius: 10px;
   margin-right: 0px !important;
@@ -101,13 +101,26 @@ body {
   justify-content: space-around;
 }
 
+#parentsArea {
+  justify-content: space-around;
+  display: flex;
+}
+
 .monkeySliderArea {
   position:relative;
   padding: 25px;
+  margin-top: 0px !important;
+  margin-bottom: 0px !important; 
   background-color: #ededed;
   border-radius: 10px;
   z-index: 0;
   opacity: 0.95;
+}
+
+#monkeyBoxCreation{
+  margin-top: 0px !important;
+  margin-bottom: 0px !important;
+  height: 600px !important; 
 }
 
 #sliderButtonHolderDiv {
@@ -115,7 +128,7 @@ body {
   align-self: center;
   display: flex;
   justify-content: space-around;
-  margin-bottom: 20px;
+  margin-bottom: 25px;
 }
 
 .attributesSliders {
@@ -124,7 +137,7 @@ body {
 
 .monkeyBox {
   position: relative;
-  height: 580px;
+  height: 640px;
   width: 400px !important;
   /*background-color: #93fc7c;*/
   background-image: url("https://cdn.pixabay.com/photo/2016/11/28/18/37/the-1865639_960_720.jpg");
@@ -135,15 +148,33 @@ body {
 .dnaDiv {
   position: absolute;
   width: 300px !important;
-  height: 24px !important;
-  display: flex;
-  justify-content: center;
+  height: 25px !important;
+  display: flex;  
   align-items: center;
-  left: 50px;
-  bottom: 15px;
+  left: 50px;  
   background-color: #ededed;
   border-radius: 10px;
 }
+
+#monkeyTokenIdDiv {
+  bottom:70px;
+  padding-left: 25px;
+}
+
+#monkeyGenerationDiv {
+  bottom: 40px;
+  padding-left: 25px;
+}
+
+.monkeyDNALine {
+  bottom: 10px;
+  justify-content: center;  
+}
+
+#monkeyDNALineCreation {
+  bottom: 15px;
+}
+
 
 #buttonHolderArea {
   margin-top: 8px;
@@ -174,15 +205,12 @@ body {
 
 
 #multiplyButtonHolderArea {
-  margin-top: 8px;
-  margin-bottom: 8px;
+  margin: 0px !important;  
   height: 60px;
   border-radius: 10px;
   background-color: #ededed;
   display: none;
-  justify-content: center;
-  margin-right: 0px !important;
-  margin-left: 0px !important;
+  justify-content: center;  
   opacity: 0.95;
 }
 
@@ -193,7 +221,19 @@ body {
   justify-content: space-around;
 }
 
+.multiplyAreaBackground {  
+  padding: 5px;
+  margin-top: 10px !important;
+  margin-bottom: 0px !important;
+  background-color: #ededed;
+  border-radius: 10px;
+  z-index: 0;
+}
 
+#monkeyMuldtipliedSuccessArea {
+  justify-content: center;
+  display: flex;
+}
 
 #monkeyCreatedDiv {
   position:absolute;
@@ -201,13 +241,18 @@ body {
   justify-content: center;
   border-radius: 10px;
   font-size: 16px !important;
-  font-weight: bold !important;     
-  bottom:20px; 
+  font-weight: bold !important;    
+  margin-bottom: 0px !important; 
+  bottom: 20px; 
+}
+
+#monkeyCreatedDivUnorderedList { 
+  margin-bottom: 0px !important; 
 }
 
 
 #monkeyMuldtipliedSuccessDiv {
-  position:absolute;
+  
   width: 90%;
   justify-content: center;
   border-radius: 10px;
@@ -220,7 +265,7 @@ body {
 
 #jungleIslandFooter {
   height: 40px !important;
-  margin-top: 8px;
+  margin-top: 8px;  
   margin-bottom: 8px;
   border-radius: 10px;
   background-color: #ededed;

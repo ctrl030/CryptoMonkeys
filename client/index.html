@@ -99,9 +99,7 @@
       <div class="row" id="monkeyRowGallery">        
       </div>
 
-      <!-- This div will be displayed after successful breeding, appended with relevant info  -->
-      <div class="alert alert-success m-2 light-b-shadow" role="alert" id="monkeyMuldtipliedSuccessDiv" style="display: none">
-      </div>
+      
 
       
       <div class="m-2 light-b-shadow" id="multiplyButtonHolderArea">
@@ -130,12 +128,19 @@
         </div>
       </div>
 
-      <!-- The multiplication "page" - here we later append the monkeyBoxes for the parents, then also child -->
-      <div class="row" id="monkeyRowMultiply">        
+      <div class="row" id="monkeyMuldtipliedSuccessArea">
+        <!-- This div will be displayed after successful breeding, appended with relevant info  -->
+        <div class="alert alert-success m-2 light-b-shadow" role="alert" id="monkeyMuldtipliedSuccessDiv" style="display: none">
+        </div>
       </div>
 
+      <!-- The multiplication "page" - here we later append the monkeyBoxes for the parents, then also child -->
+      <div class="row" id="monkeyRowMultiply" style="display: none">
+        <div class="multiplyAreaBackground" id="parentsArea" ></div>
+        <div class="multiplyAreaBackground" id="childArea"></div>         
+      </div>
 
-
+      
 
 
       <!-- The factory - this code is just for the new "factory" monkey, that is being configured -->
@@ -144,7 +149,7 @@
 
       <div class="row" id="monkeyRowCreation">
         <div class="monkeyBox m-2 light-b-shadow" id="monkeyBoxCreation">
-          <div id="monkey">
+          <div class="monkeyCreation" id="monkey">
             <div id="mbody">
               <div id="mHead">
                 <div id="earsArea">
@@ -193,10 +198,10 @@
                 <div class="feet" id="rightFoot"></div>
               </div>
             </div>
-          </div>
+          </div>         
 
           <!-- DNA / genes for the monkey in creation -->
-          <div class="dnaDiv" id="monkeyDNA">
+          <div class="dnaDiv monkeyDNALine" id="monkeyDNALineCreation">
             <b>
               DNA:
               <!-- These variables hold the color-related codes for the monkey in creation -->
@@ -214,6 +219,7 @@
               <span id="dnaspecialCreation"></span>
             </b>
           </div>
+
         </div>
 
         <!-- Holding all configuration and minting GUI elements  -->
@@ -429,7 +435,7 @@
 
       
       <!-- The footer, outside of the factory and gallery row, will always be displayed -->
-      <div class="m-2 light-b-shadow" id="jungleIslandFooter">
+      <div class="light-b-shadow" id="jungleIslandFooter">
         <p>Done by ctrl030 during Ivan on Tech Academy Bootcamp, Q4 2020</p>
       </div>
     </div>

@@ -8,8 +8,7 @@ var instance;
 var user;
 
 // Contract address, has to be updated when migrating / contract address is changing
-var contractAddress = "0x0B14e8D85393dA515527bdBdCc6b1970E6Fb873D";
-
+var contractAddress = "0x9bf427BC3f41F2483aEc1B87aEE48B2Ba9970514";
 
 // When ready, during page load 
 $(document).ready(async function () {
@@ -46,7 +45,7 @@ $(document).ready(async function () {
       $("#monkeyCreatedDiv").empty();
       $("#monkeyCreatedDiv").append(
         `        
-          <ul>
+          <ul id="monkeyCreatedDivUnorderedList">
             <li>Crypto Monkey created successfully!</li>
             <li>Here are the details: </li>
             <li>owner:  ${owner}</li> 
@@ -61,19 +60,20 @@ $(document).ready(async function () {
     .on("error", function (error) {
       console.log(error);
   });
-   
+  
+  
 
   instance.events
     .BreedingSuccessful()
     .on("data", function (event) {
-      console.log(event);
-      
-      let tokenId = event.returnValues.tokenId;
+      console.log(event);      
+      let tokenId = event.returnValues.tokenId;      
       let generation = event.returnValues.generation;
       let genes = event.returnValues.genes;
       let owner = event.returnValues.owner;
       let parent1Id = event.returnValues.parent1Id;
-      let parent2Id = event.returnValues.parent2Id;   
+      let parent2Id = event.returnValues.parent2Id;
+      showLastBornChildMonkey(tokenId);
       $("#monkeyMuldtipliedSuccessDiv").css("display", "flex");
       $("#monkeyMuldtipliedSuccessDiv").empty();
       $("#monkeyMuldtipliedSuccessDiv").append(
@@ -117,6 +117,14 @@ $("#mintMonkey").click(() => {
 
 // Gallery Part
 
+function hideBreedingElements() {
+  $("#parentsArea").empty();
+  $("#childArea").empty();  
+  $("#multiplyButtonHolderArea").hide();
+  $("#monkeyMuldtipliedSuccessDiv").hide();
+  $("#monkeyRowMultiply").hide();
+}
+
 // Hiding and showing things to switch between "creation" and "gallery"
 // Here switching back to creation
 $("#switchToCreationButton").click(() => {  
@@ -125,9 +133,8 @@ $("#switchToCreationButton").click(() => {
   $("#buttonHolderArea").show();
 
   // hides breeding functionalities
-  $("#monkeyRowMultiply").hide();
-  $("#multiplyButtonHolderArea").hide(); 
-  $("#monkeyRowMultiply").empty(); 
+  hideBreedingElements();
+  
   
 
   // Important, so that the gallery is not added again on top, each time it is called
@@ -137,9 +144,8 @@ $("#switchToCreationButton").click(() => {
 $("#switchToMultiplyButton").click(() => {
 
   // shows breeding functionalities
-  $("#multiplyButtonHolderArea").css("display", "flex");
-  $("#monkeyRowMultiply").show();
-  $("#multiplyButtonHolderArea").show();
+  $("#multiplyButtonHolderArea").css("display", "flex");  
+  $("#multiplyButtonHolderArea").show();  
 
   // hides creation functionalities
   $("#monkeyRowCreation").hide();
@@ -157,6 +163,8 @@ $("#makeMoreMonkeysButton").click(async () => {
   await instance.methods.breed(parent1Input, parent2Input).send();
 
   
+  
+
 
   // let newDetails = await instance.methods.getMonkeyDetails(newMonkeyTokenId).call();
 
@@ -164,6 +172,27 @@ $("#makeMoreMonkeysButton").click(async () => {
 
 });
 
+async function showLastBornChildMonkey(tokenId) {
+  $("#childArea").show();
+
+  let myCryptoMonkey = await instance.methods.getMonkeyDetails(tokenId).call();
+
+  const dnaObject = await decipherDNAtoObject(myCryptoMonkey); 
+
+  const tokenGeneration = myCryptoMonkey.generation;
+  
+  // Call to create and append HTML for each cryptomonkey of the connected user
+  $("#childArea").append(buildMonkeyBoxes(tokenId));  
+
+  $(`#generationDisplayLine${tokenId}`).html(tokenGeneration);
+
+  console.log("tokenIdDNA: ");
+  console.log(dnaObject);   
+
+  // Call to apply CSS on the HTML structure, effect is styling and showing the next monkey
+  // needs a set of DNA, if no tokenId is given, reverts to "Creation" in the receiving functions
+  renderMonkey(dnaObject, tokenId);         
+}
 
 
 
@@ -208,6 +237,11 @@ $("#showParentsButton").click(async () => {
     alert("Must be 2 different monkeys you own")   
   }
   else {
+    $("#parentsArea").empty();
+    $("#childArea").empty();  
+    $("#monkeyRowMultiply").show();
+    $("#childArea").hide(); 
+
     console.log(parent1Input);
     console.log(parent2Input);   
 
@@ -216,18 +250,24 @@ $("#showParentsButton").click(async () => {
     for (let j = 0; j < 2; j++) {
       const tokenId = myIncomingmonkeyIdsArray[j];
 
-      const dnaObject = await decipherDNAtoObject(tokenId);
+      let myCryptoMonkey = await instance.methods.getMonkeyDetails(tokenId).call();
+
+      const dnaObject = await decipherDNAtoObject(myCryptoMonkey); 
+
+      const tokenGeneration = myCryptoMonkey.generation;
       
-    
       // Call to create and append HTML for each cryptomonkey of the connected user
-      $("#monkeyRowMultiply").append(buildMonkeyBoxes(tokenId));  
-  
+      $("#parentsArea").append(buildMonkeyBoxes(tokenId));  
+
+      $(`#generationDisplayLine${tokenId}`).html(tokenGeneration);
+
       console.log("tokenIdDNA: ");
       console.log(dnaObject);   
   
       // Call to apply CSS on the HTML structure, effect is styling and showing the next monkey
       // needs a set of DNA, if no tokenId is given, reverts to "Creation" in the receiving functions
-      renderMonkey(dnaObject, tokenId);
+      renderMonkey(dnaObject, tokenId);         
+      
       
     };
 
@@ -236,8 +276,7 @@ $("#showParentsButton").click(async () => {
 
 });
 
-async function decipherDNAtoObject(tokenId) {
-  let myCryptoMonkey = await instance.methods.getMonkeyDetails(tokenId).call();   
+async function decipherDNAtoObject(myCryptoMonkey) {    
       
   // The 16 digit "DNA string" is turned into a string, then from the digit's position,
   // the correct CSS variables are created  
@@ -281,9 +320,7 @@ async function decipherDNAtoObject(tokenId) {
 $("#switchToMarketButton").click(() => { 
   
   // hides breeding functionalities
-  $("#monkeyRowMultiply").hide();
-  $("#multiplyButtonHolderArea").hide();
-  $("#monkeyRowMultiply").empty();  
+  hideBreedingElements();
 
   // hides creation functionalities
   $("#monkeyRowCreation").hide();
@@ -299,9 +336,7 @@ $("#switchToMarketButton").click(() => {
 $("#switchToGalleryButton").click(async () => {  
 
   // hides breeding functionalities
-  $("#monkeyRowMultiply").hide();
-  $("#multiplyButtonHolderArea").hide();
-  $("#monkeyRowMultiply").empty(); 
+  hideBreedingElements();
 
   // hides creation functionalities
   $("#monkeyRowCreation").hide();
@@ -324,77 +359,25 @@ $("#switchToGalleryButton").click(async () => {
 
   for (let j = 0; j < userBalance; j++) {
     const tokenId = myMonkeyIdsArray[j];
-    let myCryptoMonkey = await instance.methods.getMonkeyDetails(tokenId).call(); 
+    let myCryptoMonkey = await instance.methods.getMonkeyDetails(tokenId).call();
+    const dnaObject = await decipherDNAtoObject(myCryptoMonkey);   
 
-    // Console logs to follow and observe  
-    /* 
-    console.log("myMonkeyIdsArray Position" + j);
-    console.log(myCryptoMonkey);    
-  
-    console.log("Token ID: " + tokenId); 
-  
-    console.log("approvedAddress " + myCryptoMonkey.approvedAddress);
-  
-    console.log("birthtime " + myCryptoMonkey.birthtime);
-  
-    console.log("generation " + myCryptoMonkey.generation);
-  
-    console.log("genes " + myCryptoMonkey.genes);
-  
-    console.log("owner " + myCryptoMonkey.owner);
-  
-    console.log("parent1Id " + myCryptoMonkey.parent1Id);
-  
-    console.log("parent2Id " + myCryptoMonkey.parent2Id);*/
+    const tokenGeneration = myCryptoMonkey.generation;
 
-    // The 16 digit "DNA string" is turned into a string, then from the digit's position,
-    // the correct CSS variables are created  
-    let tokenIdGenes = myCryptoMonkey.genes.toString();  
-    // console.log("tokenIdGenes " + tokenIdGenes);
-    var tokenIdHeadcolor = Number(tokenIdGenes.charAt(0)+tokenIdGenes.charAt(1));
-    var tokenIdmouthcolor = Number(tokenIdGenes.charAt(2)+tokenIdGenes.charAt(3));
-    var tokenIdeyescolor = Number(tokenIdGenes.charAt(4)+tokenIdGenes.charAt(5));
-    var tokenIdearscolor = Number(tokenIdGenes.charAt(6)+tokenIdGenes.charAt(7));
-  
-    var tokenIdeyesShape = Number(tokenIdGenes.charAt(8));
-    var tokenIdmouthShape = Number(tokenIdGenes.charAt(9));
-  
-    var tokenIdeyeBackgroundColor = Number(tokenIdGenes.charAt(10)+tokenIdGenes.charAt(11));
-    var tokenIdlowerHeadColor = Number(tokenIdGenes.charAt(12)+tokenIdGenes.charAt(13));
-  
-    var tokenIdanimation = Number(tokenIdGenes.charAt(14));
-    var tokenIdlastNum = Number(tokenIdGenes.charAt(15));
-  
-    // The CSS variables are saved into a single variable each time, which is passed on
-    var tokenIdDNA = {
-      headcolor: tokenIdHeadcolor,
-      mouthcolor: tokenIdmouthcolor,
-      eyescolor: tokenIdeyescolor,
-      earscolor: tokenIdearscolor,
-    
-      eyesShape: tokenIdeyesShape,
-      mouthShape: tokenIdmouthShape,
-      eyeBackgroundColor: tokenIdeyeBackgroundColor,
-      lowerHeadColor: tokenIdlowerHeadColor,
-      animation: tokenIdanimation,
-      lastNum: tokenIdlastNum,
-    };
-    
-  
     // Call to create and append HTML for each cryptomonkey of the connected user
     $("#monkeyRowGallery").append(buildMonkeyBoxes(tokenId));
 
+    $(`#generationDisplayLine${tokenId}`).html(tokenGeneration);
 
     console.log("tokenIdDNA: ");
-    console.log(tokenIdDNA);   
+    console.log(dnaObject);   
 
     // Call to apply CSS on the HTML structure, effect is styling and showing the next monkey
     // needs a set of DNA, if no tokenId is given, reverts to "Creation" in the receiving functions
-    renderMonkey(tokenIdDNA, tokenId);
-    
-  };
+    renderMonkey(dnaObject, tokenId);      
 
-  
+
+  }; 
 
 });
 
@@ -458,7 +441,21 @@ function buildMonkeyBoxes(tokenId) {
       </div>
     </div>
 
-    <div class="dnaDiv" id="monkeyDNA">
+    <div class="dnaDiv" id="monkeyGenerationDiv">
+      <b>
+      Generation:           
+      <span id="generationDisplayLine${tokenId}"></span>              
+      </b>
+    </div>            
+
+    <div class="dnaDiv" id="monkeyTokenIdDiv">
+      <b>
+        Token ID: ${tokenId}           
+        <span id="tokenIdDisplayLine${tokenId}"></span>              
+      </b>
+    </div>
+
+    <div class="dnaDiv monkeyDNALine" id="monkeyDNALine">
       <b>
         DNA:
         

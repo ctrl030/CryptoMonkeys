@@ -32079,12 +32079,12 @@
         }
       },
       "links": {},
-      "address": "0x6B15DA0b160395ba7df2f69F5Df2D0AED4262965",
-      "transactionHash": "0x9a765b43667b2f23f048c8c63863857597e08ef2226324a7a5c823ac14bf2bb9"
+      "address": "0x9bf427BC3f41F2483aEc1B87aEE48B2Ba9970514",
+      "transactionHash": "0xa09e9b1e6ff55e0fb01a24883d3cd92bc72f0ba528d767e1e34f22768b03ac44"
     }
   },
   "schemaVersion": "3.2.0",
-  "updatedAt": "2021-01-05T16:39:31.373Z",
+  "updatedAt": "2021-01-06T19:29:43.604Z",
   "networkType": "ethereum",
   "devdoc": {
     "methods": {
