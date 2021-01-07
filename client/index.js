@@ -8,7 +8,7 @@ var instance;
 var user;
 
 // Contract address, has to be updated when migrating / contract address is changing
-var contractAddress = "0x9bf427BC3f41F2483aEc1B87aEE48B2Ba9970514";
+var contractAddress = "0xa01e290AFcFfF04fa13eCF5D4e73a349026bd586";
 
 // When ready, during page load 
 $(document).ready(async function () {
@@ -173,7 +173,9 @@ $("#makeMoreMonkeysButton").click(async () => {
 });
 
 async function showLastBornChildMonkey(tokenId) {
+  $("#childArea").empty(); 
   $("#childArea").show();
+  
 
   let myCryptoMonkey = await instance.methods.getMonkeyDetails(tokenId).call();
 
@@ -181,7 +183,9 @@ async function showLastBornChildMonkey(tokenId) {
 
   const tokenGeneration = myCryptoMonkey.generation;
   
-  // Call to create and append HTML for each cryptomonkey of the connected user
+  
+
+  // Call to create and append HTML 
   $("#childArea").append(buildMonkeyBoxes(tokenId));  
 
   $(`#generationDisplayLine${tokenId}`).html(tokenGeneration);
@@ -334,7 +338,7 @@ $("#switchToMarketButton").click(() => {
 // When switching to gallery (clicking the button for it), the creation part is hidden 
 // and the contract is queried on the blockchain, then data is fetched and displayed
 $("#switchToGalleryButton").click(async () => {  
-
+  $("#monkeyRowGallery").empty();
   // hides breeding functionalities
   hideBreedingElements();
 
