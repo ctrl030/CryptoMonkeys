@@ -79,6 +79,11 @@ body {
   font-weight: bold;   
 } 
 
+#mintMonkey {
+  font-weight: bold;
+  font-size: 1.1rem !important;   
+}
+
 
 #monkeyRowGallery {
   color: #4f3222 !important;
