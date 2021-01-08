@@ -41,7 +41,7 @@ contract("MonkeyContract", accounts => {
     
     
     // Actual test 3
-    it.only("accounts[0] should create three monkeys", async() => {  
+    it("accounts[0] should create three monkeys", async() => {  
       await testInstance.createGen0Monkey(1111111111111111, {from: accounts[0]});
 
       await testInstance.createGen0Monkey(2222222222222222, {from: accounts[0]});

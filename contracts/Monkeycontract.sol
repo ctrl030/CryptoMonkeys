@@ -237,7 +237,7 @@ contract MonkeyContract is IERC721, Ownable {
         uint256 index = 7;
 
         // Doing a Bitwise Operation
-        // looping from 1 to 128, each step index is doubling, i.e. 1, 2, 4, 8, 16, 32, , 128, loop will therefore run 8 times 
+        // looping from 1 to 128, each step index is doubling, i.e. 1, 2, 4, 8, 16, 32, 64, 128, loop will therefore run 8 times 
         /* in 8 bit format, these numbers are written like this: 
         00000001 = 1
         00000010 = 2
@@ -270,6 +270,15 @@ contract MonkeyContract is IERC721, Ownable {
         }
 
         uint256 newGeneSequence; 
+
+        uint256 randomPairSelector = uint256(uint256(pseudoRandom8bits) % 8); 
+
+        uint256 pseudoRandomAdv = uint256(keccak256(abi.encodePacked(now, uint256(pseudoRandom8bits), totalSupply, allMonkeysArray[allMonkeysArray.length-1].genes)));         
+
+        // makes this number a 2 digit number
+        pseudoRandomAdv = pseudoRandomAdv % 100;
+
+        geneArray[randomPairSelector] = pseudoRandomAdv;
         
         // puts in last positioned array entry (2 digits) as first numbers, then adds 00, then adds again,
         // therefore reversing the backwards information in the array again to correct order 
@@ -282,15 +291,16 @@ contract MonkeyContract is IERC721, Ownable {
             }                
         } 
 
-        newGeneSequence = newGeneSequence / 10;
+        /*
+        newGeneSequence = newGeneSequence / 100;
 
-        newGeneSequence = newGeneSequence *10;
+        newGeneSequence = newGeneSequence *100;
+        */
 
-        uint256 pseudoRandomAdv = uint256(keccak256(abi.encodePacked(now, totalSupply, allMonkeysArray[allMonkeysArray.length-1].genes))); 
+        
+        
 
-        pseudoRandomAdv = pseudoRandomAdv % 10;
 
-        newGeneSequence = newGeneSequence + pseudoRandomAdv;
 
         return newGeneSequence;        
     }
