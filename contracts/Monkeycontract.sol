@@ -149,12 +149,7 @@ contract MonkeyContract is IERC721, Ownable {
 
         
         _createMonkey(0, 0, 0, uint256(-1), _monkeyContractAddress);
-
-        _createMonkey(0, 0, 0, uint256(-1), _monkeyContractAddress);
-
-        _createMonkey(0, 0, 0, uint256(-1), _monkeyContractAddress);
         
-        // _createMonkey(0, 0, 0, uint256(-1), address(this));
     }
 
     // Functions 
@@ -175,8 +170,14 @@ contract MonkeyContract is IERC721, Ownable {
         // msg.sender needs to be owner of both crypto monkeys
         require(msg.sender == _monkeyIdsAndTheirOwnersMapping[_parent1Id] && msg.sender == _monkeyIdsAndTheirOwnersMapping[_parent2Id]);
 
+        // first 8 digits are selected by dividing, solidity will round down everything to full integers
+        uint256 _parent1genes = allMonkeysArray[_parent1Id].genes; 
+
+        // second 8 digits are selected by using modulo, it's whats left over and undividable by 100000000
+        uint256 _parent2genes = allMonkeysArray[_parent2Id].genes; 
+
         // calculating new DNA string
-        uint256 _newDna = _mixDna(_parent1Id, _parent2Id);
+        uint256 _newDna = _mixDna(_parent1genes, _parent2genes);
 
         // calculate generation here
         uint256 _newGeneration = _calcGeneration(_parent1Id, _parent2Id);
@@ -196,6 +197,8 @@ contract MonkeyContract is IERC721, Ownable {
 
         return newMonkeyId;
     }
+
+    
 
     function _calcGeneration (uint256 _parent1Id, uint256 _parent2Id) internal view returns(uint256) {
 
@@ -218,20 +221,78 @@ contract MonkeyContract is IERC721, Ownable {
         return newGeneration;
     }
 
+    // will generate a pseudo random number and from that decide whether to take mom or dad genes, repeated for 8 pairs of 2 digits each
+    function _mixDna (uint256 _parent1genes, uint256 _parent2genes) internal view returns (uint256) {
 
-    function _mixDna (uint256 _parent1Id, uint256 _parent2Id) internal view returns (uint256) {
-        // a DNA string looks for example like this 11 22 33 44 55 66 77 88
+        // an array with size 8 (will hold 8 pairs of 2 digits each)
+        uint256[8] memory geneArray;
+        
+        // timestamp of now is converted into 8 bits and modulo 255 is applied,
+        // resulting in pseudo random number from 0-255, expressed in 8 bit: 00000000 - 11111111
+        uint8 pseudoRandom8bits = uint8(now %255);
 
-        // first 8 digits are selected by dividing, solidity will round down everything to full integers
-        uint256 firstEightNumbersFromParent1 =  allMonkeysArray[_parent1Id].genes / 100000000;
+        uint256 i = 1;
 
-        // second 8 digits are selected by using modulo, it's whats left over and undividable by 100000000
-        uint256 secondEightNumbersFromParent2 = allMonkeysArray[_parent2Id].genes % 100000000;
+        // will be used to count down, start at end of string
+        uint256 index = 7;
 
-        // multiplying to "make room at the end with zeros", then adding to finish new dna string 
-        uint256 newDnaString = (firstEightNumbersFromParent1 * 100000000) + secondEightNumbersFromParent2;
+        // Doing a Bitwise Operation
+        // looping from 1 to 128, each step index is doubling, i.e. 1, 2, 4, 8, 16, 32, , 128, loop will therefore run 8 times 
+        /* in 8 bit format, these numbers are written like this: 
+        00000001 = 1
+        00000010 = 2
+        00000100 = 4
+        00001000 = 8   
+        00010000 = 16
+        00100000 = 32
+        01000000 = 64
+        10000000 = 128  
+        & - bitwise operator "and", can compare digits, for ex.
+        00000010 & 10100010 will resolve to true, since second last digit is 1 in both cases
+        00000100 & 10100010 will resolve to false, since no digits are same
+        */
+        for ( i = 1; i <= 128; i=i*2) {
+            if (pseudoRandom8bits & i != 0){
+                // puts the last 2 digits of genes number string into next position in geneArray each time
+                // the array will therefore be backwards in comparison to the old genes strings
+                geneArray[index] = uint8(_parent1genes % 100);
+            } else {
+                geneArray[index] = uint8(_parent2genes % 100);
+            }
 
-        return newDnaString;   
+            //each loop, take off the last 2 digits from the genes number string
+            _parent1genes = _parent1genes / 100;
+            _parent2genes = _parent2genes / 100;
+
+            // counting down the index, for practically setting the 8 positions in the geneArray from back to front,
+            // starting with geneArray[7] and counting down
+            index = index -1;             
+        }
+
+        uint256 newGeneSequence; 
+        
+        // puts in last positioned array entry (2 digits) as first numbers, then adds 00, then adds again,
+        // therefore reversing the backwards information in the array again to correct order 
+        for (i = 0; i < 8; i++) {
+            newGeneSequence = newGeneSequence + geneArray[i];
+
+            // will stop adding zeros after last repitition
+            if (i != 7)  {
+                newGeneSequence = newGeneSequence * 100;
+            }                
+        } 
+
+        newGeneSequence = newGeneSequence / 10;
+
+        newGeneSequence = newGeneSequence *10;
+
+        uint256 pseudoRandomAdv = uint256(keccak256(abi.encodePacked(now, totalSupply, allMonkeysArray[allMonkeysArray.length-1].genes))); 
+
+        pseudoRandomAdv = pseudoRandomAdv % 10;
+
+        newGeneSequence = newGeneSequence + pseudoRandomAdv;
+
+        return newGeneSequence;        
     }
 
     //- gives back an array with the CMO tokenIds that the provided sender address owns
