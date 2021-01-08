@@ -8,7 +8,7 @@ var instance;
 var user;
 
 // Contract address, has to be updated when migrating / contract address is changing
-var contractAddress = "0xa01e290AFcFfF04fa13eCF5D4e73a349026bd586";
+var contractAddress = "0x87735b942a8C8Ae8440f0c766dF38Da9495370Dd";
 
 // When ready, during page load 
 $(document).ready(async function () {
