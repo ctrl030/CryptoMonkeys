@@ -271,21 +271,23 @@ contract MonkeyContract is IERC721, Ownable {
 
         uint256 newGeneSequence; 
 
-        uint256 randomPairSelector = uint256(uint256(pseudoRandom8bits) % 8); 
+        // Taken out, only for selectng random pair
+        //uint256 randomPairSelector = uint256(uint256(pseudoRandom8bits) % 8); 
 
         uint256 pseudoRandomAdv = uint256(keccak256(abi.encodePacked(now, uint256(pseudoRandom8bits), totalSupply, allMonkeysArray[allMonkeysArray.length-1].genes)));         
 
-        // makes this number a 2 digit number
-        pseudoRandomAdv = pseudoRandomAdv % 100;
+        // makes this number a 2 digit number between 10-98
+        pseudoRandomAdv = (pseudoRandomAdv % 89) + 10;
 
-        geneArray[randomPairSelector] = pseudoRandomAdv;
+        // setting first 2 digits in DNA string to random numbers
+        geneArray[0] = pseudoRandomAdv;
         
         // puts in last positioned array entry (2 digits) as first numbers, then adds 00, then adds again,
         // therefore reversing the backwards information in the array again to correct order 
         for (i = 0; i < 8; i++) {
             newGeneSequence = newGeneSequence + geneArray[i];
 
-            // will stop adding zeros after last repitition
+            // will stop adding zeros after last repetition
             if (i != 7)  {
                 newGeneSequence = newGeneSequence * 100;
             }                

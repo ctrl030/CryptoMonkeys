@@ -286,22 +286,25 @@ contract("MonkeyContract", accounts => {
     
     // Actual test 16
     it("accounts[0] should breed monkeys with tokenId 4 and 5", async() => {  
+
+      for (let index = 0; index < 20; index++) {    
+      
       await testInstance.breed(4, 5, {from: accounts[0]});
 
       // const newMonkeyTokenIdTesting = 
 
-      const newMonkeyTokenIdTestingDetails = await testInstance.getMonkeyDetails(6);      
+      const newMonkeyTokenIdTestingDetails = await testInstance.getMonkeyDetails(index + 6);      
       
-      console.log("accounts[0] is", accounts[0])    
+      // console.log("accounts[0] is", accounts[0])    
 
       // console.log("newMonkeyTokenIdTesting is", newMonkeyTokenIdTesting);
 
-      console.log("newMonkeyTokenIdTestingDetails are", newMonkeyTokenIdTestingDetails);
+      // console.log("newMonkeyTokenIdTestingDetails are", newMonkeyTokenIdTestingDetails);
       
       console.log("newMonkeyTokenIdTestingDetails.genes are", Number(newMonkeyTokenIdTestingDetails.genes)); 
 
-      assert.equal(newMonkeyTokenIdTestingDetails.owner, accounts[0]);
-
+      // assert.equal(newMonkeyTokenIdTestingDetails.owner, accounts[0]);
+    }
     });
 
     
