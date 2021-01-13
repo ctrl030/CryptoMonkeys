@@ -106,12 +106,7 @@ contract("MonkeyContract", accounts => {
   
       assert.equal(operatorApprovalTesting, true);
 
-      /* trying to directly query variable, fails atm xxx
-        const operatorApprovalTesting = await testInstance.operatorApprovalsMapping[accounts[0]][accounts[1]];
-        // Console logging 
-        console.log("operator status for accounts[1] (i.e. 2nd account) is:", operatorApprovalTesting);
-      */
-
+     
       // booleans can be evaluated directly as true/ false, i.e. 0/1 
       // assert.equal(operatorApprovalTesting);
 
@@ -243,7 +238,7 @@ contract("MonkeyContract", accounts => {
 
     
     
-    // Actual test 14 xxxx - needs to send data as well, still in development
+    // Actual test 14 xxx - needs to send data as well, still in development
     it("as operator of accounts[0], accounts[1] should use safeTransferFrom to move CMO tokenId3 from accounts[0] to accounts[5] and send in data", async() => {       
       await testInstance.safeTransferFrom(accounts[0], accounts[5], 3, /*"0xa1234",*/ { 
         from: accounts[1]

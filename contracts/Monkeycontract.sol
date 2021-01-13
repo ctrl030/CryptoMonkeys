@@ -21,7 +21,7 @@ contract MonkeyContract is IERC721, Ownable {
 
     // State variables
 
-    // Contract address
+    // MonkeyContract address
     address _monkeyContractAddress;   
      
     bytes4 internal constant confirmingERC721Received = bytes4(keccak256("onERC721Received(address,address,uint256,bytes)"));
