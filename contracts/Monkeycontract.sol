@@ -70,7 +70,7 @@ contract MonkeyContract is IERC721, Ownable {
     // mapping owner address to 
     // operator address (who has approval over all of owner's CMOs) to
     // boolean that shows if the operator address actually is operator or not
-    mapping (address => mapping (address => bool)) public operatorApprovalsMapping;  
+    mapping (address => mapping (address => bool)) private operatorApprovalsMapping;  
 
     /* 
         not implemented, thinking about how a mapping would work,
