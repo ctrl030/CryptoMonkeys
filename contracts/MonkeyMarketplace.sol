@@ -11,8 +11,6 @@ contract MonkeyMarketplace is Ownable, IMonkeyMarketplace  {
 
   MonkeyContract private _monkeycontract;
 
-  uint256[] listOfOffers;
-
   struct Offer {
     address payable seller;
     uint256 price;
@@ -27,6 +25,8 @@ contract MonkeyMarketplace is Ownable, IMonkeyMarketplace  {
   mapping (uint256 => uint256) tokenIdtoActiveofferId;
 
   event MarketTransaction(string TxType, address owner, uint256 tokenId);
+
+  event monkeySold (address seller, address buyer, uint256 priceInGwei, uint256 tokenId);
 
   event NewOfferCreated (address offerCreatedBy, uint256 tokenId, uint256 price);
 
@@ -146,11 +146,20 @@ contract MonkeyMarketplace is Ownable, IMonkeyMarketplace  {
   * Requirement: There must be an active offer for _tokenId
   */
   function buyMonkey(uint256 _tokenId) external payable {
+    
     require(tokenIdToOfferMapping[_tokenId].active == true);
 
     require(tokenIdToOfferMapping[_tokenId].price == msg.value);
 
-    _monkeycontract.transferFrom(tokenIdToOfferMapping[_tokenId].seller, msg.sender, _tokenId);
+    uint256 _priceInGwei = msg.value * 1000000000;
+
+    address _oldOwner = tokenIdToOfferMapping[_tokenId].seller;
+
+    _monkeycontract.transferFrom(_oldOwner, msg.sender, _tokenId);
+
+    emit MarketTransaction("Buy", msg.sender, _tokenId);
+
+    emit monkeySold (_oldOwner, msg.sender, _priceInGwei, _tokenId);
 
   }
 
