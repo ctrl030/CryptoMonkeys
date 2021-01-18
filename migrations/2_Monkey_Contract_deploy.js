@@ -12,6 +12,9 @@ module.exports = async function(deployer, network, accounts) {
 
    await deployer.deploy(MonkeyMarketplace, instance.address);
 
+   const MonkeyMarketplaceInstance = await MonkeyContract.deployed();
+   
+
   }
 
   catch (err) {

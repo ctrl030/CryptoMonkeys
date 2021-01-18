@@ -11,6 +11,8 @@ contract MonkeyMarketplace is Ownable, IMonkeyMarketplace  {
 
   MonkeyContract private _monkeycontract;
 
+  uint256[] listOfOffers;
+
   struct Offer {
     address payable seller;
     uint256 price;
@@ -130,7 +132,7 @@ contract MonkeyMarketplace is Ownable, IMonkeyMarketplace  {
   function getAllTokenOnSale() external view returns(uint256[] memory listOfOffers) {
     for (uint256 k = 0; k < offersArray.length; k++) {
       if (offersArray[k].active) {
-        listOfOffers.push(offersArray[k]);
+        listOfOffers[(listOfOffers.length + 1)] = offersArray[k].tokenId;
       }         
     }
     return listOfOffers; 

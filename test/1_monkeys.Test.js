@@ -2,10 +2,11 @@
 
 const MonkeyContract = artifacts.require("MonkeyContract");
 
-contract("MonkeyContract", accounts => {
+// Global variables
+let testInstance;
 
-  // Global variables
-  let testInstance;
+contract("MonkeyContract", accounts => {
+ 
 
   // Before all tests
   // could also be beforeEach, to start a fresh blockchain for each test
@@ -75,7 +76,7 @@ contract("MonkeyContract", accounts => {
       // assert.equal(testingMonkey1, "")
 
     });
-    
+    /*
     // Actual test 4
     it("should console.log the totalSupply", async() => {  
       const totalSupplytesting1 = await testInstance.totalSupply();
@@ -240,7 +241,7 @@ contract("MonkeyContract", accounts => {
     
     // Actual test 14 xxx - needs to send data as well, still in development
     it("as operator of accounts[0], accounts[1] should use safeTransferFrom to move CMO tokenId3 from accounts[0] to accounts[5] and send in data", async() => {       
-      await testInstance.safeTransferFrom(accounts[0], accounts[5], 3, /*"0xa1234",*/ { 
+      await testInstance.safeTransferFrom(accounts[0], accounts[5], 3, /*"0xa1234",*/ /*{ 
         from: accounts[1]
       });
 
@@ -321,11 +322,63 @@ contract("MonkeyContract", accounts => {
 
     });
     */
-
+      
 
 
     
    
   })  
   
+});
+
+
+
+
+
+const MonkeyMarketplace = artifacts.require("MonkeyMarketplace");
+
+// Global variables
+let testMarketInstance;
+
+contract("MonkeyMarketplace", accounts => {  
+
+  // Before all tests
+  // could also be beforeEach, to start a fresh blockchain for each test
+  before(async()=> {
+    testMarketInstance = await MonkeyMarketplace.new(testInstance.address);
+  }) 
+
+  // Group of tests - might use .only or .skip on "it" or "describe" , to be quicker
+  describe("Second group of tests", () => {
+
+    // Actual test 1
+    it("accounts[0] should give operator status to marketplace", async() => {        
+      
+      
+      
+
+    });
+
+
+
+    /*
+    it("Seeing testing data", async() => {        
+      
+      console.log("accounts");
+      console.log(accounts);
+      console.log("testMarketInstance");
+      console.log(testMarketInstance);
+      
+
+    });
+
+    
+    // Actual test 2
+    it("", async() => {  
+      const name = await testMarketInstance.name();
+    });
+    */
+
+
+  });
 });
