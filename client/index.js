@@ -4,17 +4,28 @@ var web3 = new Web3(Web3.givenProvider);
 // This "instance" variable is a representation of the smart contract
 var instance;
 
-// User will be set to the correct account from Ganache (it's necessary to log in to this account via Metamask)
-var user;
+// xxx for marketplace
+var marketInstance;
+
+// User1 will be set to the correct account from Ganache (it's necessary to log in to this account via Metamask)
+var user1;
+
+// xxx for marketplace
+var user2;
 
 // Contract address, has to be updated when migrating / contract address is changing
 var contractAddress = "0x12c0E76EFBf9d84419b6A6e30247C000dAE2C7da";
+
+// xxx for marketplace
+var marketContractAddress = "0xFCFFF233DD94A52990F8d734FecB44fD5dad8A01";
+
+var accounts;
 
 // When ready, during page load 
 $(document).ready(async function () {
 
   // Enabling / connecting with Ganache accounts
-  var accounts = await window.ethereum.enable();
+  accounts = await window.ethereum.enable();
 
   // Setting the representation of the smart contract, specifying abi, contractAddress and first account from Ganache's list at this moment
   instance = new web3.eth.Contract(abi, contractAddress, {
@@ -22,11 +33,10 @@ $(document).ready(async function () {
   });
 
   // Setting user to first account from Ganache's list at this moment
-  user = accounts[0];
+  user1 = accounts[0];
 
   // To check in console if user is correct (shown in Metamask to be the same, for ex.)
-  console.log("user: " + user);
- 
+  console.log("user1: " + user1); 
 
   // on pageload we subscribe to the MonkeyCreated event. From now on, whenever it is emitted, 
   // a notification is created and the css of the monkeyCreatedDiv will be emptied and then appended with the info
@@ -98,6 +108,28 @@ $(document).ready(async function () {
 });
 
 
+
+
+// 
+$("#switchToMarketButton").click(() => {
+  
+  // xxx from user is not specified here
+  marketInstance = new web3.eth.Contract(marketAbi, marketContractAddress, {    
+  });
+
+  user2 = accounts[1];
+
+  console.log("user2 is " + user2);
+
+  console.log("marketInstance is");
+
+  console.log(marketInstance);
+  
+});
+
+ 
+
+
 // Listens to button click, then creates dnsStr (16 digits number string, same format as genes) 
 // from concatting all the already set css values
 // then calls the contract's createGen0Monkey function and mints a Crypto Monkey that contains this string 
@@ -162,10 +194,6 @@ var parent2Input;
 $("#makeMoreMonkeysButton").click(async () => { 
   await instance.methods.breed(parent1Input, parent2Input).send();
 
-  
-  
-
-
   // let newDetails = await instance.methods.getMonkeyDetails(newMonkeyTokenId).call();
 
   // console.log(newDetails);
@@ -206,11 +234,11 @@ $("#showParentsButton").click(async () => {
  parent2Input = $("#parent2InputField").val();
 
  // userBalance will be the number of monkeys the user has
- var userBalance = await instance.methods.balanceOf(user).call();
- console.log(`user has ${userBalance} Crypto Monkeys`);
+ var userBalance = await instance.methods.balanceOf(user1).call();
+ console.log(`user1 has ${userBalance} Crypto Monkeys`);
 
  // An array that holds all of the user's tokenIds
- let myMonkeyIdsArray = await instance.methods.findMonkeyIdsOfAddress(user).call();       
+ let myMonkeyIdsArray = await instance.methods.findMonkeyIdsOfAddress(user1).call();       
  console.log("myMonkeyIdsArray: ");
  console.log(myMonkeyIdsArray);
 
@@ -347,11 +375,11 @@ $("#switchToGalleryButton").click(async () => {
   $("#buttonHolderArea").hide();  
 
   // userBalance will be the number of monkeys the user has
-  var userBalance = await instance.methods.balanceOf(user).call();
-  console.log(`user has ${userBalance} Crypto Monkeys`);
+  var userBalance = await instance.methods.balanceOf(user1).call();
+  console.log(`user1 has ${userBalance} Crypto Monkeys`);
 
-  // An array that holds all of the user's tokenIds
-  let myMonkeyIdsArray = await instance.methods.findMonkeyIdsOfAddress(user).call();       
+  // An array that holds all of user1's tokenIds
+  let myMonkeyIdsArray = await instance.methods.findMonkeyIdsOfAddress(user1).call();       
   console.log("myMonkeyIdsArray: ");
   console.log(myMonkeyIdsArray);
   
