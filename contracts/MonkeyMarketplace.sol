@@ -112,12 +112,13 @@ contract MonkeyMarketplace is Ownable, IMonkeyMarketplace  {
   */
   function getOffer(uint256 _tokenId) external view returns (address seller, uint256 price, uint256 index, uint256 tokenId, bool active)
   {
+    Offer storage offer = tokenIdToOfferMapping[_tokenId];
     return (
-    tokenIdToOfferMapping[_tokenId].seller,
-    tokenIdToOfferMapping[_tokenId].price,
-    tokenIdToOfferMapping[_tokenId].index, 
-    tokenIdToOfferMapping[_tokenId].tokenId,
-    tokenIdToOfferMapping[_tokenId].active       
+    offer.seller,
+    offer.price,
+    offer.index, 
+    offer.tokenId,
+    offer.active       
     );
   }
 
@@ -162,9 +163,13 @@ contract MonkeyMarketplace is Ownable, IMonkeyMarketplace  {
 
     address _oldOwner = tokenIdToOfferMapping[_tokenId].seller;
 
-    _monkeycontract.transferFrom(_oldOwner, msg.sender, _tokenId);
+    // deleting offer array entry
+    delete offersArray[tokenIdToOfferMapping[_tokenId].index];
 
-    removeOffer(_tokenId);
+    // deleting offer mapping entry
+    delete tokenIdToOfferMapping[_tokenId];  
+
+    _monkeycontract.transferFrom(_oldOwner, msg.sender, _tokenId);
 
     emit MarketTransaction("Buy", msg.sender, _tokenId);
 

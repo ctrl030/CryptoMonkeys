@@ -3,22 +3,22 @@ var web3 = new Web3(Web3.givenProvider);
 
 // This "instance" variable is a representation of the smart contract
 var instance;
-
+/*
 // xxx for marketplace
 var marketInstance;
-
+*/
 // User1 will be set to the correct account from Ganache (it's necessary to log in to this account via Metamask)
 var user1;
-
+/*
 // xxx for marketplace
 var user2;
-
+*/
 // Contract address, has to be updated when migrating / contract address is changing
 var contractAddress = "0x12c0E76EFBf9d84419b6A6e30247C000dAE2C7da";
-
+/*
 // xxx for marketplace
 var marketContractAddress = "0xFCFFF233DD94A52990F8d734FecB44fD5dad8A01";
-
+*/
 var accounts;
 
 // When ready, during page load 
@@ -109,7 +109,7 @@ $(document).ready(async function () {
 
 
 
-
+/*
 // 
 $("#switchToMarketButton").click(() => {
   
@@ -126,7 +126,7 @@ $("#switchToMarketButton").click(() => {
   console.log(marketInstance);
   
 });
-
+*/
  
 
 
