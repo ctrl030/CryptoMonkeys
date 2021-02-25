@@ -56,13 +56,17 @@ contract MonkeyMarketplace is Ownable, IMonkeyMarketplace  {
 
     //Marketplace contract (this) needs to be an approved operator when the offer is created.
     require(_monkeycontract.isApprovedForAll(msg.sender, address(this)), "Marketplace address needs operator status from monkey owner.");
-                   
+
+    Offer memory tokenOffer = tokenIdToOfferMapping[_tokenId];
+
     // There can only be one active offer for a token at a time.    
-    if (tokenIdToOfferMapping[_tokenId].active) {
+    if (tokenOffer.active) {
+      
+      // delete offer array entry 
+      delete offersArray[tokenOffer.index]; 
+
       // delete mapping entry
       delete tokenIdToOfferMapping[_tokenId];
-      // delete offer array entry 
-      delete offersArray[_tokenId];
     }
     
     // Creating a new offer from the Offer struct "blueprint"
@@ -71,13 +75,13 @@ contract MonkeyMarketplace is Ownable, IMonkeyMarketplace  {
       price: _price,
       tokenId: _tokenId,      
       active: true,
-      index: offersArray.length
+      index: offersArray.length  // This is the index it has in the offersArray, see below
     });
 
     // saving new offer (it's a struct) to mapping 
     tokenIdToOfferMapping[_tokenId] = newOffer;    
 
-    offersArray.push(newOffer);
+    offersArray.push(newOffer);  
 
     emit MarketTransaction("Create offer", monkeyOwner, _tokenId);
 
@@ -101,7 +105,7 @@ contract MonkeyMarketplace is Ownable, IMonkeyMarketplace  {
     delete offersArray[tokenOffer.index];
 
     // deleting mapping entry
-    delete tokenOffer;      
+    delete tokenIdToOfferMapping[_tokenId];      
 
     emit MarketTransaction("Remove offer", msg.sender, _tokenId);
     
@@ -112,7 +116,9 @@ contract MonkeyMarketplace is Ownable, IMonkeyMarketplace  {
   */
   function getOffer(uint256 _tokenId) external view returns (address seller, uint256 price, uint256 index, uint256 tokenId, bool active)
   {
-    Offer storage offer = tokenIdToOfferMapping[_tokenId];
+    require (tokenIdToOfferMapping[_tokenId].active, "No active offer for this tokenId.");
+
+    Offer memory offer = tokenIdToOfferMapping[_tokenId];
     return (
     offer.seller,
     offer.price,
@@ -127,7 +133,7 @@ contract MonkeyMarketplace is Ownable, IMonkeyMarketplace  {
   */
   function getAllTokenOnSale() external view returns(uint256[] memory listOfOffers) {
     
-    if (offersArray == 0){
+    if (offersArray.length == 0){
 
       return listOfOffers[];
 
@@ -148,28 +154,42 @@ contract MonkeyMarketplace is Ownable, IMonkeyMarketplace  {
 
   /**
   * Executes the purchase of _tokenId.
-  * Sends the funds to the seller and transfers the token using transferFrom in Monkeycontract.
+  * Sends the funds to the seller and transfers the token using transferFrom in Monkeycontract.   XXXX
   * Emits the MarketTransaction event with txType "Buy".
   * Requirement: The msg.value needs to equal the price of _tokenId
   * Requirement: There must be an active offer for _tokenId
   */
-  function buyMonkey(uint256 _tokenId) external payable {
+  function buyMonkey(uint256 _tokenId) external payable {    
+
+    Offer memory tokenOffer = tokenIdToOfferMapping[_tokenId];
     
-    require(tokenIdToOfferMapping[_tokenId].active == true);
+    require(tokenOffer.active == true);
 
-    require(tokenIdToOfferMapping[_tokenId].price == msg.value);
+    require(tokenOffer.price == msg.value);    
 
-    uint256 _priceInGwei = msg.value * 1000000000;
-
-    address _oldOwner = tokenIdToOfferMapping[_tokenId].seller;
+    uint256 _priceInGwei = msg.value / 1000000000;
+                                       
+    address _oldOwner = tokenOffer.seller;
 
     // deleting offer array entry
-    delete offersArray[tokenIdToOfferMapping[_tokenId].index];
+    delete offersArray[tokenOffer.index];
 
     // deleting offer mapping entry
-    delete tokenIdToOfferMapping[_tokenId];  
+    delete tokenIdToOfferMapping[_tokenId];
+
+    // deleting local memory variable against re-entrancy 
+    delete tokenOffer;
+
+    // marketplace as operator is transferring the NFT    
+
+
+    
 
     _monkeycontract.transferFrom(_oldOwner, msg.sender, _tokenId);
+
+    // transferring sent funds to _oldOwner
+
+    _safeTransferFrom
 
     emit MarketTransaction("Buy", msg.sender, _tokenId);
 
@@ -177,8 +197,4 @@ contract MonkeyMarketplace is Ownable, IMonkeyMarketplace  {
 
   }
 
-}
-
-
-
-    
+} 

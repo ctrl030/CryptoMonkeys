@@ -460,7 +460,7 @@ contract MonkeyContract is IERC721, Ownable {
         return _monkeyIdsAndTheirOwnersMapping[tokenId];
     }
 
-    // For transferring, can be called from outside, at the moment does same as transferFrom (from address is unneccessary)
+    // For transferring, can be called from outside, at the moment does same as transferFrom (from address is unneccessary) XXX
     function transfer(address _to, uint256 _tokenId) external {
         //`to` cannot be the zero address.
         require(_to != address(0));
@@ -542,8 +542,8 @@ contract MonkeyContract is IERC721, Ownable {
 
     }
 
-    // newly written, internal version of safeTransferFrom, NOT from ERC721.sol    
-    function _safeTransferFrom(address _from, address _to, uint256 _tokenId, bytes memory _data) internal{  
+    // internal function
+    function _safeTransferFrom(address _from, address _to, uint256 _tokenId, bytes memory _data) internal {  
 
         _transferCallfromInside(msg.sender, _from, _to, _tokenId);       
 
@@ -564,7 +564,7 @@ contract MonkeyContract is IERC721, Ownable {
 
         address monkeyOwner = _monkeyIdsAndTheirOwnersMapping[_tokenId];
 
-        // _from address must be monkeyOwner at this moment 
+        // _from address must be monkeyOwner at this moment  XXXX
         require(_from == monkeyOwner);
 
         bool senderHasOperatorStatus = operatorApprovalsMapping[monkeyOwner][msg.sender];
