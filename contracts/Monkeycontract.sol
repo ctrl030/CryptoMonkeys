@@ -145,10 +145,9 @@ contract MonkeyContract is IERC721, Ownable {
     constructor() public {
         _name = "Crypto Monkeys";
         _symbol = "CMO";
-        _monkeyContractAddress = address(this);
-
+        _monkeyContractAddress = address(this);      
         
-        _createMonkey(0, 0, 0, uint256(-1), _monkeyContractAddress);
+        _createMonkey(0, 0, 0, 1214131177989271, address(0));
         
     }
 
@@ -408,8 +407,13 @@ contract MonkeyContract is IERC721, Ownable {
 
     // The approve function allows another address to take / move your CMO
     function approve(address _approved, uint256 _tokenId) public {
-        // requires that the msg.sender is the owner of the CMO to be moved
-        require(_monkeyIdsAndTheirOwnersMapping[_tokenId] == msg.sender);
+
+        address monkeyOwner = _monkeyIdsAndTheirOwnersMapping[_tokenId];
+
+        bool senderHasOperatorStatus = operatorApprovalsMapping[monkeyOwner][msg.sender];
+
+        // requires that the msg.sender is the owner or operator of the CMO to be moved
+        require(monkeyOwner == msg.sender || senderHasOperatorStatus);
 
         // emitting before the action
         emit Approval(msg.sender, _approved, _tokenId);
