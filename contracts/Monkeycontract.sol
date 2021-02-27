@@ -464,12 +464,13 @@ contract MonkeyContract is IERC721, Ownable {
         return _monkeyIdsAndTheirOwnersMapping[tokenId];
     }
 
-    // For transferring, can be called from outside, at the moment does same as transferFrom (from address is unneccessary) XXX
+    // For transferring, can be called from outside, at the moment does same as transferFrom
     function transfer(address _to, uint256 _tokenId) external {
+        
         //`to` cannot be the zero address.
         require(_to != address(0));
 
-        // to` can not be the contract address.
+        // to` cannot be the contract address.
         require(_to != address(this));
 
         address monkeyOwner = _monkeyIdsAndTheirOwnersMapping[_tokenId];
@@ -568,7 +569,7 @@ contract MonkeyContract is IERC721, Ownable {
 
         address monkeyOwner = _monkeyIdsAndTheirOwnersMapping[_tokenId];
 
-        // _from address must be monkeyOwner at this moment  XXXX
+        // _from address must be monkeyOwner at this moment  
         require(_from == monkeyOwner);
 
         bool senderHasOperatorStatus = operatorApprovalsMapping[monkeyOwner][msg.sender];

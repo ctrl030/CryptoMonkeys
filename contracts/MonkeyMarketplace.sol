@@ -163,7 +163,7 @@ contract MonkeyMarketplace is Ownable, IMonkeyMarketplace  {
 
   /**
   * Executes the purchase of _tokenId.
-  * Sends the funds to the seller and transfers the token using transferFrom in Monkeycontract.   XXXX
+  * Sends the funds to the seller and transfers the token using transferFrom in Monkeycontract.   
   * Emits the MarketTransaction event with txType "Buy".
   * Requirement: The msg.value needs to equal the price of _tokenId
   * Requirement: There must be an active offer for _tokenId
@@ -186,7 +186,7 @@ contract MonkeyMarketplace is Ownable, IMonkeyMarketplace  {
     // deleting offer mapping entry
     delete tokenIdToOfferMapping[_tokenId];
 
-    // deleting local memory variable against re-entrancy XXX 
+    // deleting local memory variable against re-entrancy  
     delete tokenOffer;    
 
     // transferring the NFT

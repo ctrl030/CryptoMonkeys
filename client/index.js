@@ -3,22 +3,24 @@ var web3 = new Web3(Web3.givenProvider);
 
 // This "instance" variable is a representation of the smart contract
 var instance;
-/*
+
 // xxx for marketplace
 var marketInstance;
-*/
+
 // User1 will be set to the correct account from Ganache (it's necessary to log in to this account via Metamask)
 var user1;
+
 /*
 // xxx for marketplace
 var user2;
 */
-// Contract address, has to be updated when migrating / contract address is changing
+
+// Contract address for main contract, has to be updated when migrating => i.e. contract address is changing
 var contractAddress = "0x12c0E76EFBf9d84419b6A6e30247C000dAE2C7da";
-/*
-// xxx for marketplace
+
+// Contract address for marketplace contract, has to be updated when migrating => i.e. contract address is changing
 var marketContractAddress = "0xFCFFF233DD94A52990F8d734FecB44fD5dad8A01";
-*/
+
 var accounts;
 
 // When ready, during page load 
@@ -27,10 +29,11 @@ $(document).ready(async function () {
   // Enabling / connecting with Ganache accounts
   accounts = await window.ethereum.enable();
 
-  // Setting the representation of the smart contract, specifying abi, contractAddress and first account from Ganache's list at this moment
+  // Setting the representation of the main smart contract, specifying abi, contractAddress and first account from Ganache's list at this moment
   instance = new web3.eth.Contract(abi, contractAddress, {
     from: accounts[0],
   });
+
 
   // Setting user to first account from Ganache's list at this moment
   user1 = accounts[0];
@@ -109,24 +112,44 @@ $(document).ready(async function () {
 
 
 
-/*
+
 // 
 $("#switchToMarketButton").click(() => {
-  
-  // xxx from user is not specified here
-  marketInstance = new web3.eth.Contract(marketAbi, marketContractAddress, {    
-  });
 
+  // hides breeding functionalities
+  hideBreedingElements();
+  // hides creation functionalities
+  $("#monkeyRowCreation").hide();
+  $("#buttonHolderArea").hide();  
+  // Important, so that the only 1 gallery exists
+  $("#monkeyRowGallery").empty();   
+  
+  // Setting the representation of the market smart contract, specifying abi, contractAddress and first account from Ganache's list at this moment
+  marketInstance = new web3.eth.Contract(marketAbi, marketContractAddress, {
+    from: accounts[0],
+  });  
+  console.log("marketInstance is");
+  console.log(marketInstance);
+
+  
+
+
+
+
+  /*
   user2 = accounts[1];
 
   console.log("user2 is " + user2);
-
-  console.log("marketInstance is");
-
-  console.log(marketInstance);
+  */
   
 });
-*/
+
+
+$("#switchToMarketButton").click(() => { 
+  
+  
+});
+
  
 
 
@@ -165,9 +188,7 @@ $("#switchToCreationButton").click(() => {
   $("#buttonHolderArea").show();
 
   // hides breeding functionalities
-  hideBreedingElements();
-  
-  
+  hideBreedingElements(); 
 
   // Important, so that the gallery is not added again on top, each time it is called
   $("#monkeyRowGallery").empty(); 
@@ -349,18 +370,7 @@ async function decipherDNAtoObject(myCryptoMonkey) {
 
 
 
-$("#switchToMarketButton").click(() => { 
-  
-  // hides breeding functionalities
-  hideBreedingElements();
 
-  // hides creation functionalities
-  $("#monkeyRowCreation").hide();
-  $("#buttonHolderArea").hide();  
-
-  // Important, so that the gallery is not added again on top, each time it is called
-  $("#monkeyRowGallery").empty(); 
-});
 
 
 // When switching to gallery (clicking the button for it), the creation part is hidden 

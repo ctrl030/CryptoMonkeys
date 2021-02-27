@@ -8,7 +8,7 @@ module.exports = async function(deployer, network, accounts) {
 
    await deployer.deploy(MonkeyMarketplace, MonkeyContract.address);
 
-   const MonkeyMarketplaceInstance = await MonkeyContract.deployed();   
+   const MonkeyMarketplaceInstance = await MonkeyMarketplace.deployed();   
 
   }
 
