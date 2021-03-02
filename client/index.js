@@ -10,16 +10,16 @@ var marketInstance;
 // User1 will be set to the correct account from Ganache (it's necessary to log in to this account via Metamask)
 var user1;
 
-/*
+/*F
 // xxx for marketplace
 var user2;
 */
 
 // Contract address for main contract, has to be updated when migrating => i.e. contract address is changing
-var contractAddress = "0x12c0E76EFBf9d84419b6A6e30247C000dAE2C7da";
+var contractAddress = "0xCaB0D39655adAB3038e268a50131A1396C8b7299";
 
 // Contract address for marketplace contract, has to be updated when migrating => i.e. contract address is changing
-var marketContractAddress = "0xFCFFF233DD94A52990F8d734FecB44fD5dad8A01";
+var marketContractAddress = "0xee3CB5a84C80A770aCf153FF6CFd513f613A5C2b";
 
 var accounts;
 
@@ -114,43 +114,93 @@ $(document).ready(async function () {
 
 
 // 
-$("#switchToMarketButton").click(() => {
-
+$("#switchToMarketButton").click(() => { 
   // hides breeding functionalities
-  hideBreedingElements();
+  hideBreedingElements();  
   // hides creation functionalities
   $("#monkeyRowCreation").hide();
   $("#buttonHolderArea").hide();  
-  // Important, so that the only 1 gallery exists
+  // emptying gallery
   $("#monkeyRowGallery").empty();   
+  // emptying market
+  $("#marketRow").empty(); 
+
+  $("#marketButtonHolderArea").css("display", "flex"); 
   
+
+  $("#marketButtonHolderArea").show();
+
   // Setting the representation of the market smart contract, specifying abi, contractAddress and first account from Ganache's list at this moment
   marketInstance = new web3.eth.Contract(marketAbi, marketContractAddress, {
     from: accounts[0],
   });  
   console.log("marketInstance is");
-  console.log(marketInstance);
+  console.log(marketInstance);  
+
+  marketInstance.events
+    .MarketTransaction()
+    .on("data", function (event) {
+      console.log(event);
+      $("#marketActivityDiv").css("display", "flex");
+      $("#marketActivityDiv").empty();
+      $("#marketActivityDiv").append(
+        `        
+          Market activity registered. Click "Market" again to refresh the offers. 
+        `
+      );
+    })
+    .on("error", function (error) {
+      console.log(error);
+  });
 
   
+
+
+
+
+
+  /*
+  
+  append button holder area with 3 buttons and 1 field: show offer + tokenId field, sell, my offers
+    if you click on show offer, 
+      must have filled out field with tokenId
+      empty all offers
+      show only selected offer (offerbox)
+      show new instructions 
+      2 buttons: buy (metamask will open with payment), back (back to all offers, same as clicking on buy before, emptying) 
+      
+
+    if you click on sell
+      empty all offers
+      show all monkeys you own
+      append button holder area with 2 fields and 1 button: tokenId and price, create offer
+
+    if you click on my offers
+      show all your offers (offerboxes)
+
+  text explainer box with instructions how to use
+
+  load all offers atm and show (offerboxes)
+
+
+
+  need:
+
+  different kind of monkey boxes
+    offerboxes
+
+
+  */
+
 
 
 
 
   /*
   user2 = accounts[1];
-
   console.log("user2 is " + user2);
-  */
-  
+  */  
 });
-
-
-$("#switchToMarketButton").click(() => { 
-  
-  
-});
-
- 
 
 
 // Listens to button click, then creates dnsStr (16 digits number string, same format as genes) 
@@ -165,12 +215,8 @@ $("#mintMonkey").click(() => {
     } else {
       console.log(txHash);
     }
-  });
-
-  
+  });  
 });
-
-// Gallery Part
 
 function hideBreedingElements() {
   $("#parentsArea").empty();
@@ -180,8 +226,20 @@ function hideBreedingElements() {
   $("#monkeyRowMultiply").hide();
 }
 
-// Hiding and showing things to switch between "creation" and "gallery"
-// Here switching back to creation
+function hideMarketElements() {
+  
+  // $("#childArea").empty();  
+  $("#marketButtonHolderArea").hide();
+  
+}
+
+
+
+
+
+
+
+// Button to monkey creation
 $("#switchToCreationButton").click(() => {  
 
   $("#monkeyRowCreation").show();
@@ -190,23 +248,53 @@ $("#switchToCreationButton").click(() => {
   // hides breeding functionalities
   hideBreedingElements(); 
 
-  // Important, so that the gallery is not added again on top, each time it is called
+  // emptying market
+  $("#marketRow").empty(); 
+
+  //emptying gallery
   $("#monkeyRowGallery").empty(); 
 });
 
+// Button to breeding area
 $("#switchToMultiplyButton").click(() => {
+  switchToMultiply()   
+});
 
+$("#backToMultiplyButton").click(() => {
+  switchToMultiply()
+});
+
+
+function switchToMultiply() {
   // shows breeding functionalities
   $("#multiplyButtonHolderArea").css("display", "flex");  
-  $("#multiplyButtonHolderArea").show();  
+  $("#multiplyButtonHolderArea").show(); 
+  $("#makeMoreMonkeysButton").hide();   
+  $("#showParentsButton").show();  
+
+  $("#parent1InputField").val("");
+  $("#parent2InputField").val("");
+  $("#parent1InputField").show(); 
+  $("#parent2InputField").show(); 
+
+  $("#backToMultiplyButton").hide(); 
+  $("#parentsArea").empty();
+  $("#childArea").empty();  
+    
 
   // hides creation functionalities
   $("#monkeyRowCreation").hide();
   $("#buttonHolderArea").hide();  
 
-  // Important, so that the gallery is not added again on top, each time it is called
-  $("#monkeyRowGallery").empty(); 
-});
+  // emptying market
+  $("#marketRow").empty();
+  hideMarketElements(); 
+
+  //emptying gallery
+  $("#monkeyRowGallery").empty();
+}
+
+
 
 var parent1Input;
 var parent2Input;
@@ -237,7 +325,7 @@ async function showLastBornChildMonkey(tokenId) {
   // Call to create and append HTML 
   $("#childArea").append(buildMonkeyBoxes(tokenId));  
 
-  $(`#generationDisplayLine${tokenId}`).html(tokenGeneration);
+  //$(`#generationDisplayLine${tokenId}`).html(tokenGeneration);
 
   console.log("tokenIdDNA: ");
   console.log(dnaObject);   
@@ -246,8 +334,6 @@ async function showLastBornChildMonkey(tokenId) {
   // needs a set of DNA, if no tokenId is given, reverts to "Creation" in the receiving functions
   renderMonkey(dnaObject, tokenId);         
 }
-
-
 
 $("#showParentsButton").click(async () => {
  
@@ -294,6 +380,11 @@ $("#showParentsButton").click(async () => {
     $("#childArea").empty();  
     $("#monkeyRowMultiply").show();
     $("#childArea").hide(); 
+    $("#backToMultiplyButton").show();    
+    $("#makeMoreMonkeysButton").show();
+    $("#showParentsButton").hide();
+    $("#parent1InputField").hide();  
+    $("#parent2InputField").hide(); 
 
     console.log(parent1Input);
     console.log(parent2Input);   
@@ -373,10 +464,15 @@ async function decipherDNAtoObject(myCryptoMonkey) {
 
 
 
-// When switching to gallery (clicking the button for it), the creation part is hidden 
+// Button to gallery XXXX
+// the creation part is hidden 
 // and the contract is queried on the blockchain, then data is fetched and displayed
 $("#switchToGalleryButton").click(async () => {  
-  $("#monkeyRowGallery").empty();
+  // emptying gallery
+  $("#monkeyRowGallery").empty();   
+  // emptying market
+  $("#marketRow").empty();
+  
   // hides breeding functionalities
   hideBreedingElements();
 
@@ -515,11 +611,18 @@ function buildMonkeyBoxes(tokenId) {
         <span id="dnaspecial${tokenId}"></span>
       </b>
     </div>
+
+    <div class="dnaDiv" id="offerPriceDiv" style="display: none">
+      <b>
+        Price:            
+        <span id="offerPriceDisplayLine${tokenId}"></span>              
+      </b>
+    </div>
   </div>   
   `     
 } 
 
 
-  
+
 
 

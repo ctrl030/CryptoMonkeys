@@ -61,7 +61,7 @@
       <!-- Welcoming text -->
       <div class="m-2 light-b-shadow" id="jungleIslandTextDiv">
         <h1 class="textOverBoxes">Jungle Island</h1>
-        <h3 class="textOverBoxes">Create your Crypto Monkey</h3>
+        <h3 class="textOverBoxes">Create your Crypto Monkey NFT</h3>
       </div>
 
       <!-- Holding three audio buttons and two for switching between factory and gallery (these look identical and hide and show)-->
@@ -102,6 +102,39 @@
       <div class="row" id="monkeyRowGallery">        
       </div>
 
+      <!-- The marketplace -->
+      <div class="row" id="marketRow">        
+      </div>
+
+      <div class="m-2 light-b-shadow" id="marketButtonHolderArea">
+        <div class="" id="marketbuttonHolderDiv">
+
+          <button type="button" class="btn btn-success" id="showThisOfferButton">
+            Show offer
+          </button>
+
+          <form>
+            <div class="form-row" id="marketInputfieldHolderDiv">
+              <div class="col">
+                <input type="text" class="form-control" placeholder="Monkey TokenId" id="">
+              </div>              
+            </div>
+          </form> 
+  
+          <button type="button" class="btn btn-success" id="showSellAreaButton">
+            Selling area
+          </button> 
+
+          <button type="button" class="btn btn-success" id="showSellAreaButton">
+            My offers
+          </button>           
+         
+        </div>
+      </div>
+
+
+
+
       
       <div class="m-2 light-b-shadow" id="multiplyButtonHolderArea">
         <div class="holderDiv" id="multiplybuttonHolderDiv">
@@ -120,8 +153,12 @@
           <button type="button" class="btn btn-success" id="showParentsButton">
             Show parents
           </button>
+
+          <button type="button" class="btn btn-success" id="backToMultiplyButton">
+            Back & Start again
+          </button>
   
-          <button type="button" class="btn btn-success" id="makeMoreMonkeysButton">
+          <button type="button" class="btn btn-primary" id="makeMoreMonkeysButton">
             Make more monkeys
           </button> 
           
@@ -131,7 +168,7 @@
 
       <div class="row" id="monkeyMuldtipliedSuccessArea">
         <!-- This div will be displayed after successful breeding, appended with relevant info  -->
-        <div class="alert alert-success m-2 light-b-shadow" role="alert" id="monkeyMuldtipliedSuccessDiv" style="display: none">
+        <div class="alert alert-success m-2 light-b-shadow" role="alert" id="monkeyMuldtipliedSuccessDiv">
         </div>
       </div>
 

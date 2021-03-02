@@ -161,6 +161,12 @@ body {
   border-radius: 10px;
 }
 
+#offerPriceDiv {
+  display: none;
+  padding-left: 25px;
+  top: 10px
+}
+
 #monkeyTokenIdDiv {
   bottom:70px;
   padding-left: 25px;
@@ -208,6 +214,22 @@ body {
   justify-content: space-around;
 }
 
+#marketButtonHolderArea {
+  margin: 0px !important;  
+  height: 60px;
+  border-radius: 10px;
+  background-color: #ededed;
+  display: none;
+  justify-content: center;  
+  opacity: 0.95;
+}
+
+#marketbuttonHolderDiv {
+  width: 1000px;
+  align-self: center;
+  display: flex;
+  justify-content: space-around;
+}
 
 #multiplyButtonHolderArea {
   margin: 0px !important;  
@@ -257,12 +279,23 @@ body {
 
 
 #monkeyMuldtipliedSuccessDiv {
-  
+  display: none;
   width: 90%;
   justify-content: center;
   border-radius: 10px;
   font-size: 16px !important;
   font-weight: bold !important; 
+}
+
+#marketActivityDiv {
+  position:absolute;
+  width: 90%;
+  justify-content: center;
+  border-radius: 10px;
+  font-size: 16px !important;
+  font-weight: bold !important;    
+  margin-bottom: 0px !important; 
+  bottom: 20px; 
 }
 
 
