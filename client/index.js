@@ -114,7 +114,7 @@ $(document).ready(async function () {
 
 
 // 
-$("#switchToMarketButton").click(() => { 
+$("#switchToMarketButton").click( async () => { 
   // hides breeding functionalities
   hideBreedingElements();  
   // hides creation functionalities
@@ -153,6 +153,103 @@ $("#switchToMarketButton").click(() => {
       console.log(error);
   });
 
+
+  // XXXX
+  // offersArrayRaw still includes inactive offers (offers for tokenId 0 )
+  var offersArrayRaw = await marketInstance.methods.getAllTokenOnSale().call();
+  console.log("Offers Array including inactive offers: ");
+  console.log(offersArrayRaw);
+
+  // Array of tokenIds for which an active order exists 
+  var offerTokenIdsArray;
+
+  // Array of the complete offers
+  var completeOffersArray;
+
+  for (let index = 0; index < offersArrayRaw.length; index++) {
+    const tokenId = offersArrayRaw[index];
+    // filtering out inactive offers
+    if (tokenId != 0) {
+
+      // adding active offers to offerTokenIdsArray
+      offerTokenIdsArray.push(tokenId);
+
+      // querying the complete offer for this tokenId from the blockchain
+      var completeOffer = await marketInstance.methods.getOffer(tokenId).call(); 
+
+      // adding all active, complete offers to completeOffersArray
+      completeOffersArray.push(completeOffer);
+
+      var offerPrice = completeOffer.price;
+
+
+      var myCryptoMonkey = await instance.methods.getMonkeyDetails(tokenId).call();
+
+      const dnaObject = await decipherDNAtoObject(myCryptoMonkey);   
+
+      const tokenGeneration = myCryptoMonkey.generation;
+
+      // Call to create and append HTML for each cryptomonkey of the connected user
+      $("#marketRow").append(buildMonkeyBoxes(tokenId));
+          
+      console.log("tokenIdDNA: ");
+      console.log(dnaObject);   
+
+
+      $(`#generationDisplayLine${tokenId}`).html(tokenGeneration);
+
+      $(`#offerPriceDisplayLine${tokenId}`).html(offerPrice);
+
+      
+      // Call to apply CSS on the HTML structure, effect is styling and showing the next monkey
+      // needs a set of DNA, if no tokenId is given, reverts to "Creation" in the receiving functions
+      renderMonkey(dnaObject, tokenId);
+      
+      showPrices(tokenId);
+
+    }    
+  }
+
+    
+
+
+
+
+
+  console.log("Active offers exist for these tokenIds: ");
+  console.log(offerTokenIdsArray);
+
+  
+
+ 
+  
+      // Looping through the user's tokenIds and for each:
+    // reading the "DNA string",
+    // creating the correct CSS data from it
+    // creating an unique HTML structure in the gallery 
+  // applying the CSS to it
+
+  for (let m = 0; m < userBalance; m++) {
+    const offer = offersArray[m];
+    let myCryptoMonkey = await instance.methods.getMonkeyDetails(offer).call();
+    const dnaObject = await decipherDNAtoObject(myCryptoMonkey);   
+
+    const tokenGeneration = myCryptoMonkey.generation;
+
+    // Call to create and append HTML for each cryptomonkey of the connected user
+    $("#monkeyRowGallery").append(buildMonkeyBoxes(tokenId));
+
+    $(`#generationDisplayLine${tokenId}`).html(tokenGeneration);
+
+    console.log("tokenIdDNA: ");
+    console.log(dnaObject);   
+
+    // Call to apply CSS on the HTML structure, effect is styling and showing the next monkey
+    // needs a set of DNA, if no tokenId is given, reverts to "Creation" in the receiving functions
+    renderMonkey(dnaObject, tokenId);      
+
+
+  }; 
   
 
 
@@ -201,6 +298,31 @@ $("#switchToMarketButton").click(() => {
   console.log("user2 is " + user2);
   */  
 });
+
+
+function showPrices(tokenId) {
+  $(`#monkeyBox${tokenId}.monkey`).css("top", "29%");  
+
+  $(`#monkeyTokenIdDiv${tokenId}`).css("bottom", "100px");
+
+  $(`#monkeyGenerationDiv${tokenId}`).css("bottom", "70px");
+
+  $(`#monkeyDNALine${tokenId}`).css("bottom", "40px");  
+
+  $(`#offerPriceDiv${tokenId}`).css("display", "flex"); 
+}
+
+function withoutPrices() {
+  $(`.monkey`).css("top", "32%");  
+
+  $(`.monkeyTokenIdDiv`).css("bottom", "70px");
+
+  $(`#monkeyGenerationDiv`).css("bottom", "40px");
+
+  $(`#monkeyDNALine`).css("bottom", "10px");  
+
+  $(`#offerPriceDiv`).css("display", "none"); 
+}
 
 
 // Listens to button click, then creates dnsStr (16 digits number string, same format as genes) 
@@ -464,7 +586,7 @@ async function decipherDNAtoObject(myCryptoMonkey) {
 
 
 
-// Button to gallery XXXX
+// Button to gallery 
 // the creation part is hidden 
 // and the contract is queried on the blockchain, then data is fetched and displayed
 $("#switchToGalleryButton").click(async () => {  
@@ -528,7 +650,7 @@ function buildMonkeyBoxes(tokenId) {
 
   return `
   <div class="monkeyBox m-2 light-b-shadow" id="monkeyBox${tokenId}">
-    <div id="monkey">
+    <div class="monkey" id="monkey">
       <div id="mbody">
         <div id="mHead">
           <div id="earsArea">
@@ -579,21 +701,21 @@ function buildMonkeyBoxes(tokenId) {
       </div>
     </div>
 
-    <div class="dnaDiv" id="monkeyGenerationDiv">
+    <div class="dnaDiv monkeyGenerationDiv" id="monkeyGenerationDiv${tokenId}">
       <b>
       Generation:           
       <span id="generationDisplayLine${tokenId}"></span>              
       </b>
     </div>            
 
-    <div class="dnaDiv" id="monkeyTokenIdDiv">
+    <div class="dnaDiv monkeyTokenIdDiv" id="monkeyTokenIdDiv${tokenId}">
       <b>
         Token ID: ${tokenId}           
         <span id="tokenIdDisplayLine${tokenId}"></span>              
       </b>
     </div>
 
-    <div class="dnaDiv monkeyDNALine" id="monkeyDNALine">
+    <div class="dnaDiv monkeyDNALine" id="monkeyDNALine${tokenId}">
       <b>
         DNA:
         
@@ -612,7 +734,7 @@ function buildMonkeyBoxes(tokenId) {
       </b>
     </div>
 
-    <div class="dnaDiv" id="offerPriceDiv" style="display: none">
+    <div class="dnaDiv offerPriceDiv" id="offerPriceDiv${tokenId}">
       <b>
         Price:            
         <span id="offerPriceDisplayLine${tokenId}"></span>              

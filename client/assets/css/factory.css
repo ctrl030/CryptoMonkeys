@@ -161,18 +161,18 @@ body {
   border-radius: 10px;
 }
 
-#offerPriceDiv {
+.offerPriceDiv {
   display: none;
   padding-left: 25px;
-  top: 10px
+  bottom: 10px
 }
 
-#monkeyTokenIdDiv {
+.monkeyTokenIdDiv {
   bottom:70px;
   padding-left: 25px;
 }
 
-#monkeyGenerationDiv {
+.monkeyGenerationDiv {
   bottom: 40px;
   padding-left: 25px;
 }
