@@ -100,15 +100,28 @@ body {
 }
 
 #monkeyRowMultiply {
+  display: none; 
   color: #4f3222 !important;
   margin-right: 0px !important;
   margin-left: 0px !important;
   justify-content: space-around;
 }
 
+#marketRow{
+  display:none;
+  color: #4f3222 !important;
+  margin-left: 0px !important;
+  margin-right: 0px !important;
+  margin-top: 0px !important;
+  margin-bottom: 0px !important;  
+  justify-content: space-around;
+}
+
+
+
 #parentsArea {
   justify-content: space-around;
-  display: flex;
+  display: none;
 }
 
 .monkeySliderArea {
@@ -215,7 +228,7 @@ body {
 }
 
 #marketButtonHolderArea {
-  margin: 0px !important;  
+  margin-bottom: 8px !important;
   height: 60px;
   border-radius: 10px;
   background-color: #ededed;
@@ -231,8 +244,35 @@ body {
   justify-content: space-around;
 }
 
-#multiplyButtonHolderArea {
+#monkeyDisplayArea {
+  color: #4f3222 !important;
+  margin-right: 0px !important;
+  margin-left: 0px !important;
+  justify-content: space-around;
+}
+
+#offerButtonHolderArea {
   margin: 0px !important;  
+  height: 60px;
+  border-radius: 10px;
+  background-color: #ededed;
+  display: none;
+  justify-content: center;  
+  opacity: 0.95;
+}
+
+#offerbuttonHolderDiv {
+  width: 1000px;
+  align-self: center;
+  display: flex;
+  justify-content: space-around;
+}
+
+#multiplyButtonHolderArea {
+  margin-top: 0px !important;
+  margin-left: 0px !important;
+  margin-right: 0px !important;
+  margin-bottom: 8px !important;  
   height: 60px;
   border-radius: 10px;
   background-color: #ededed;
@@ -245,24 +285,27 @@ body {
   width: 1000px;
   align-self: center;
   display: flex;
-  justify-content: space-around;
+  justify-content: space-around; 
 }
 
-.multiplyAreaBackground {  
-  padding: 5px;
-  margin-top: 10px !important;
-  margin-bottom: 0px !important;
+.multiplyAreaBackground {    
+  margin-bottom: 8px !important;
+  padding: 5px;  
   background-color: #ededed;
   border-radius: 10px;
   z-index: 0;
+  opacity: 0.95;
 }
 
-#monkeyMuldtipliedSuccessArea {
+#monkeyMultipliedSuccessArea {
   justify-content: center;
   display: flex;
+  margin-left: 0px !important;
+  margin-right: 0px !important; 
 }
 
 #monkeyCreatedDiv {
+  display: none;
   position:absolute;
   width: 90%;
   justify-content: center;
@@ -277,14 +320,22 @@ body {
   margin-bottom: 0px !important; 
 }
 
+#breedingSuccessfulDivUnorderedList { 
+  margin-top: 16px !important; 
+  margin-bottom: 16px !important; 
+}
 
-#monkeyMuldtipliedSuccessDiv {
+
+#monkeyMultipliedSuccessDiv {
   display: none;
-  width: 90%;
+  width: 100% !important;
   justify-content: center;
   border-radius: 10px;
   font-size: 16px !important;
   font-weight: bold !important; 
+  position: relative;  
+  border: 1px solid transparent;  
+  margin-bottom: 8px;
 }
 
 #marketActivityDiv {
@@ -297,13 +348,8 @@ body {
   margin-bottom: 0px !important; 
   bottom: 20px; 
 }
-
-
-
-
 #jungleIslandFooter {
   height: 40px !important;
-  margin-top: 8px;  
   margin-bottom: 8px;
   border-radius: 10px;
   background-color: #ededed;

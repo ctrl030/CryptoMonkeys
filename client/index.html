@@ -103,34 +103,46 @@
       </div>
 
       <!-- The marketplace -->
-      <div class="row" id="marketRow">        
-      </div>
+      <div class="row" id="marketRow">          
+        
+        <div class="light-b-shadow" id="marketButtonHolderArea">       
 
-      <div class="m-2 light-b-shadow" id="marketButtonHolderArea">
-        <div class="" id="marketbuttonHolderDiv">
-
-          <button type="button" class="btn btn-success" id="showThisOfferButton">
-            Show offer
-          </button>
-
-          <form>
-            <div class="form-row" id="marketInputfieldHolderDiv">
-              <div class="col">
-                <input type="text" class="form-control" placeholder="Monkey TokenId" id="">
-              </div>              
-            </div>
-          </form> 
+          <div class="" id="marketbuttonHolderDiv">
+    
+            <button type="button" class="btn btn-success" id="showBuyAreaButton">
+              Buy monkeys
+            </button>          
+      
+            <button type="button" class="btn btn-success" id="showSellAreaButton">
+              Sell monkeys
+            </button> 
+          </div>    
+           
+        </div>        
   
-          <button type="button" class="btn btn-success" id="showSellAreaButton">
-            Selling area
-          </button> 
-
-          <button type="button" class="btn btn-success" id="showSellAreaButton">
-            My offers
-          </button>           
-         
+        <div class="m-2 light-b-shadow" id="offerButtonHolderArea">
+          <div class="" id="offerbuttonHolderDiv">         
+  
+            <button type="button" class="btn btn-success" id="createOfferMenuButton">
+              Create offer for this monkey:
+            </button>  
+  
+            <form>
+              <div class="form-row" id="offerInputfieldHolderDiv">
+                <div class="col">
+                  <input type="text" class="form-control" placeholder="Monkey TokenId" id="">
+                </div>              
+              </div>
+            </form>   
+           
+          </div>
         </div>
-      </div>
+
+        <div class= "row" id="monkeyDisplayArea">
+
+        </div>
+
+      </div>     
 
 
 
@@ -166,14 +178,14 @@
         </div>
       </div>
 
-      <div class="row" id="monkeyMuldtipliedSuccessArea">
+      <div class="row" id="monkeyMultipliedSuccessArea">
         <!-- This div will be displayed after successful breeding, appended with relevant info  -->
-        <div class="alert alert-success m-2 light-b-shadow" role="alert" id="monkeyMuldtipliedSuccessDiv">
+        <div class="alert-success light-b-shadow" role="alert" id="monkeyMultipliedSuccessDiv">
         </div>
       </div>
 
       <!-- The multiplication "page" - here we later append the monkeyBoxes for the parents, then also child -->
-      <div class="row" id="monkeyRowMultiply" style="display: none">
+      <div class="row" id="monkeyRowMultiply">
         <div class="multiplyAreaBackground" id="parentsArea" ></div>
         <div class="multiplyAreaBackground" id="childArea"></div>         
       </div>
@@ -443,7 +455,7 @@
           </div>
 
           <!-- This div will be displayed when a monkey is created, appended with relevant info  -->
-          <div class="alert alert-success m-2 light-b-shadow" role="alert" id="monkeyCreatedDiv" style="display: none">
+          <div class="alert alert-success m-2 light-b-shadow" role="alert" id="monkeyCreatedDiv">
           </div>
 
         </div>

@@ -16,10 +16,10 @@ var user2;
 */
 
 // Contract address for main contract, has to be updated when migrating => i.e. contract address is changing
-var contractAddress = "0xCaB0D39655adAB3038e268a50131A1396C8b7299";
+var contractAddress = "0x7189101c52ca69C96E303b813CC30B5E064F2Bd9";
 
 // Contract address for marketplace contract, has to be updated when migrating => i.e. contract address is changing
-var marketContractAddress = "0xee3CB5a84C80A770aCf153FF6CFd513f613A5C2b";
+var marketContractAddress = "0xadE8eAf9D83E765DF8274b1F23c9Abe6aFF98C46";
 
 var accounts;
 
@@ -87,11 +87,11 @@ $(document).ready(async function () {
       let parent1Id = event.returnValues.parent1Id;
       let parent2Id = event.returnValues.parent2Id;
       showLastBornChildMonkey(tokenId);
-      $("#monkeyMuldtipliedSuccessDiv").css("display", "flex");
-      $("#monkeyMuldtipliedSuccessDiv").empty();
-      $("#monkeyMuldtipliedSuccessDiv").append(
+      $("#monkeyMultipliedSuccessDiv").css("display", "flex");
+      $("#monkeyMultipliedSuccessDiv").empty();
+      $("#monkeyMultipliedSuccessDiv").append(
         `        
-          <ul>
+          <ul id="breedingSuccessfulDivUnorderedList">
             <li>Crypto Monkey breeding successfully!</li>
             <li>Here are the details: </li>
             <li>tokenId:  ${tokenId}</li>  
@@ -121,14 +121,19 @@ $("#switchToMarketButton").click( async () => {
   $("#monkeyRowCreation").hide();
   $("#buttonHolderArea").hide();  
   // emptying gallery
-  $("#monkeyRowGallery").empty();   
-  // emptying market
-  $("#marketRow").empty(); 
+  $("#monkeyRowGallery").empty();     
 
-  $("#marketButtonHolderArea").css("display", "flex"); 
-  
+  //resetting market
+  hideMarketElements();
+ 
+  $("#marketRow").css("display", "block"); 
+
+  $("#marketButtonHolderArea").css("display", "flex");   
 
   $("#marketButtonHolderArea").show();
+  
+  
+  
 
   // Setting the representation of the market smart contract, specifying abi, contractAddress and first account from Ganache's list at this moment
   marketInstance = new web3.eth.Contract(marketAbi, marketContractAddress, {
@@ -152,110 +157,6 @@ $("#switchToMarketButton").click( async () => {
     .on("error", function (error) {
       console.log(error);
   });
-
-
-  // XXXX
-  // offersArrayRaw still includes inactive offers (offers for tokenId 0 )
-  var offersArrayRaw = await marketInstance.methods.getAllTokenOnSale().call();
-  console.log("Offers Array including inactive offers: ");
-  console.log(offersArrayRaw);
-
-  // Array of tokenIds for which an active order exists 
-  var offerTokenIdsArray;
-
-  // Array of the complete offers
-  var completeOffersArray;
-
-  for (let index = 0; index < offersArrayRaw.length; index++) {
-    const tokenId = offersArrayRaw[index];
-    // filtering out inactive offers
-    if (tokenId != 0) {
-
-      // adding active offers to offerTokenIdsArray
-      offerTokenIdsArray.push(tokenId);
-
-      // querying the complete offer for this tokenId from the blockchain
-      var completeOffer = await marketInstance.methods.getOffer(tokenId).call(); 
-
-      // adding all active, complete offers to completeOffersArray
-      completeOffersArray.push(completeOffer);
-
-      var offerPrice = completeOffer.price;
-
-
-      var myCryptoMonkey = await instance.methods.getMonkeyDetails(tokenId).call();
-
-      const dnaObject = await decipherDNAtoObject(myCryptoMonkey);   
-
-      const tokenGeneration = myCryptoMonkey.generation;
-
-      // Call to create and append HTML for each cryptomonkey of the connected user
-      $("#marketRow").append(buildMonkeyBoxes(tokenId));
-          
-      console.log("tokenIdDNA: ");
-      console.log(dnaObject);   
-
-
-      $(`#generationDisplayLine${tokenId}`).html(tokenGeneration);
-
-      $(`#offerPriceDisplayLine${tokenId}`).html(offerPrice);
-
-      
-      // Call to apply CSS on the HTML structure, effect is styling and showing the next monkey
-      // needs a set of DNA, if no tokenId is given, reverts to "Creation" in the receiving functions
-      renderMonkey(dnaObject, tokenId);
-      
-      showPrices(tokenId);
-
-    }    
-  }
-
-    
-
-
-
-
-
-  console.log("Active offers exist for these tokenIds: ");
-  console.log(offerTokenIdsArray);
-
-  
-
- 
-  
-      // Looping through the user's tokenIds and for each:
-    // reading the "DNA string",
-    // creating the correct CSS data from it
-    // creating an unique HTML structure in the gallery 
-  // applying the CSS to it
-
-  for (let m = 0; m < userBalance; m++) {
-    const offer = offersArray[m];
-    let myCryptoMonkey = await instance.methods.getMonkeyDetails(offer).call();
-    const dnaObject = await decipherDNAtoObject(myCryptoMonkey);   
-
-    const tokenGeneration = myCryptoMonkey.generation;
-
-    // Call to create and append HTML for each cryptomonkey of the connected user
-    $("#monkeyRowGallery").append(buildMonkeyBoxes(tokenId));
-
-    $(`#generationDisplayLine${tokenId}`).html(tokenGeneration);
-
-    console.log("tokenIdDNA: ");
-    console.log(dnaObject);   
-
-    // Call to apply CSS on the HTML structure, effect is styling and showing the next monkey
-    // needs a set of DNA, if no tokenId is given, reverts to "Creation" in the receiving functions
-    renderMonkey(dnaObject, tokenId);      
-
-
-  }; 
-  
-
-
-
-
-
   /*
   
   append button holder area with 3 buttons and 1 field: show offer + tokenId field, sell, my offers
@@ -299,6 +200,51 @@ $("#switchToMarketButton").click( async () => {
   */  
 });
 
+$("#showSellAreaButton").click( async () => { 
+
+  $("#offerButtonHolderArea").css("display", "flex");  
+
+  $("#offerButtonHolderArea").show(); 
+  $(`#monkeyDisplayArea`).empty();
+
+  galleryLogic(`#monkeyDisplayArea`);
+
+  
+
+  /*
+    
+    // Looping through the user's tokenIds and for each:
+    // reading the "DNA string",
+    // creating the correct CSS data from it
+    // creating an unique HTML structure in the gallery 
+    // applying the CSS to it
+
+    for (let m = 0; m < userBalance; m++) {
+      const offer = offersArray[m];
+      let myCryptoMonkey = await instance.methods.getMonkeyDetails(offer).call();
+      const dnaObject = await decipherDNAtoObject(myCryptoMonkey);   
+
+      const tokenGeneration = myCryptoMonkey.generation;
+
+      // Call to create and append HTML for each cryptomonkey of the connected user
+      $("#marketRow").append(buildMonkeyBoxes(tokenId));
+
+      $(`#generationDisplayLine${tokenId}`).html(tokenGeneration);
+
+      console.log("tokenIdDNA: ");
+      console.log(dnaObject);   
+
+      // Call to apply CSS on the HTML structure, effect is styling and showing the next monkey
+      // needs a set of DNA, if no tokenId is given, reverts to "Creation" in the receiving functions
+      renderMonkey(dnaObject, tokenId);      
+
+
+    }; 
+  });
+
+  */ 
+
+});
 
 function showPrices(tokenId) {
   $(`#monkeyBox${tokenId}.monkey`).css("top", "29%");  
@@ -324,6 +270,74 @@ function withoutPrices() {
   $(`#offerPriceDiv`).css("display", "none"); 
 }
 
+$("#showBuyAreaButton").click( async () => { 
+  
+  // XXXX BUYING FUNCTIONALITY - ALL ACTIVE OFFERS
+  // offersArrayRaw still includes inactive offers (offers for tokenId 0 )
+  var offersArrayRaw = await marketInstance.methods.getAllTokenOnSale().call();
+  console.log("Offers Array including inactive offers: ");
+  console.log(offersArrayRaw);
+
+  // Array of tokenIds for which an active order exists 
+  var offerTokenIdsArray;
+
+  // Array of the complete offers
+  var completeOffersArray;
+
+  for (let index = 0; index < offersArrayRaw.length; index++) {
+    const tokenId = offersArrayRaw[index];
+    // filtering out inactive offers
+    if (tokenId != 0) {
+      // adding active offers to offerTokenIdsArray
+      offerTokenIdsArray.push(tokenId);
+
+      // querying the complete offer for this tokenId from the blockchain
+      var completeOffer = await marketInstance.methods.getOffer(tokenId).call(); 
+
+      // adding all active, complete offers to completeOffersArray
+      completeOffersArray.push(completeOffer);
+
+      var offerPrice = completeOffer.price;
+
+
+      var monkeyInOffer = await instance.methods.getMonkeyDetails(tokenId).call();
+
+      const dnaObject = await decipherDNAtoObject(monkeyInOffer);   
+
+      const tokenGeneration = monkeyInOffer.generation;
+
+      // Call to create and append HTML for each cryptomonkey of the connected user
+      $("#monkeyDisplayArea").append(buildMonkeyBoxes(tokenId)); // XXXX wrong place to append to?
+          
+      console.log("tokenIdDNA: ");
+      console.log(dnaObject);   
+
+
+      $(`#generationDisplayLine${tokenId}`).html(tokenGeneration);
+
+      $(`#offerPriceDisplayLine${tokenId}`).html(offerPrice);
+
+      
+      // Call to apply CSS on the HTML structure, effect is styling and showing the next monkey
+      // needs a set of DNA, if no tokenId is given, reverts to "Creation" in the receiving functions
+      renderMonkey(dnaObject, tokenId);
+      
+      showPrices(tokenId);
+
+    }    
+  }
+
+  console.log("Active offers exist for these tokenIds: ");
+  console.log(offerTokenIdsArray);
+
+}); 
+
+
+
+
+
+
+
 
 // Listens to button click, then creates dnsStr (16 digits number string, same format as genes) 
 // from concatting all the already set css values
@@ -342,16 +356,20 @@ $("#mintMonkey").click(() => {
 
 function hideBreedingElements() {
   $("#parentsArea").empty();
-  $("#childArea").empty();  
+  $("#parentsArea").css("display", "none");
+  $("#childArea").empty();
+  $("#childArea").css("display", "none");
   $("#multiplyButtonHolderArea").hide();
-  $("#monkeyMuldtipliedSuccessDiv").hide();
-  $("#monkeyRowMultiply").hide();
+  $("#monkeyMultipliedSuccessDiv").hide();
+  $("#monkeyRowMultiply").hide();  
 }
 
-function hideMarketElements() {
+function hideMarketElements() {  
+  $("#marketRow").css("display", "none"); 
+  $("#marketButtonHolderArea").css("display", "none"); 
+  $("#offerButtonHolderArea").css("display", "none");
+  $("#monkeyDisplayArea").empty();   
   
-  // $("#childArea").empty();  
-  $("#marketButtonHolderArea").hide();
   
 }
 
@@ -370,8 +388,8 @@ $("#switchToCreationButton").click(() => {
   // hides breeding functionalities
   hideBreedingElements(); 
 
-  // emptying market
-  $("#marketRow").empty(); 
+  // emptying market 
+  hideMarketElements(); 
 
   //emptying gallery
   $("#monkeyRowGallery").empty(); 
@@ -387,7 +405,9 @@ $("#backToMultiplyButton").click(() => {
 });
 
 
+
 function switchToMultiply() {
+  hideBreedingElements();  
   // shows breeding functionalities
   $("#multiplyButtonHolderArea").css("display", "flex");  
   $("#multiplyButtonHolderArea").show(); 
@@ -409,7 +429,6 @@ function switchToMultiply() {
   $("#buttonHolderArea").hide();  
 
   // emptying market
-  $("#marketRow").empty();
   hideMarketElements(); 
 
   //emptying gallery
@@ -433,16 +452,13 @@ $("#makeMoreMonkeysButton").click(async () => {
 
 async function showLastBornChildMonkey(tokenId) {
   $("#childArea").empty(); 
-  $("#childArea").show();
-  
+  $("#childArea").show();  
 
   let myCryptoMonkey = await instance.methods.getMonkeyDetails(tokenId).call();
 
   const dnaObject = await decipherDNAtoObject(myCryptoMonkey); 
 
-  const tokenGeneration = myCryptoMonkey.generation;
-  
-  
+  const tokenGeneration = myCryptoMonkey.generation; 
 
   // Call to create and append HTML 
   $("#childArea").append(buildMonkeyBoxes(tokenId));  
@@ -458,7 +474,7 @@ async function showLastBornChildMonkey(tokenId) {
 }
 
 $("#showParentsButton").click(async () => {
- 
+  
  parent1Input = $("#parent1InputField").val();
  parent2Input = $("#parent2InputField").val();
 
@@ -497,14 +513,15 @@ $("#showParentsButton").click(async () => {
   else if (parent1Input == parent2Input) { 
     alert("Must be 2 different monkeys you own")   
   }
-  else {
-    $("#parentsArea").empty();
-    $("#childArea").empty();  
-    $("#monkeyRowMultiply").show();
+  else {      
+    $("#monkeyRowMultiply").css("display", "flex");    
     $("#childArea").hide(); 
     $("#backToMultiplyButton").show();    
     $("#makeMoreMonkeysButton").show();
     $("#showParentsButton").hide();
+
+    $("#parentsArea").empty();
+    $("#parentsArea").css("display", "flex");   
     $("#parent1InputField").hide();  
     $("#parent2InputField").hide(); 
 
@@ -592,8 +609,8 @@ async function decipherDNAtoObject(myCryptoMonkey) {
 $("#switchToGalleryButton").click(async () => {  
   // emptying gallery
   $("#monkeyRowGallery").empty();   
-  // emptying market
-  $("#marketRow").empty();
+  // emptying market  
+  hideMarketElements(); 
   
   // hides breeding functionalities
   hideBreedingElements();
@@ -602,6 +619,11 @@ $("#switchToGalleryButton").click(async () => {
   $("#monkeyRowCreation").hide();
   $("#buttonHolderArea").hide();  
 
+  galleryLogic(`#monkeyRowGallery`);
+
+});
+
+async function galleryLogic(divToAppendTo) {
   // userBalance will be the number of monkeys the user has
   var userBalance = await instance.methods.balanceOf(user1).call();
   console.log(`user1 has ${userBalance} Crypto Monkeys`);
@@ -625,7 +647,7 @@ $("#switchToGalleryButton").click(async () => {
     const tokenGeneration = myCryptoMonkey.generation;
 
     // Call to create and append HTML for each cryptomonkey of the connected user
-    $("#monkeyRowGallery").append(buildMonkeyBoxes(tokenId));
+    $(`${divToAppendTo}`).append(buildMonkeyBoxes(tokenId));
 
     $(`#generationDisplayLine${tokenId}`).html(tokenGeneration);
 
@@ -634,12 +656,11 @@ $("#switchToGalleryButton").click(async () => {
 
     // Call to apply CSS on the HTML structure, effect is styling and showing the next monkey
     // needs a set of DNA, if no tokenId is given, reverts to "Creation" in the receiving functions
-    renderMonkey(dnaObject, tokenId);      
-
+    renderMonkey(dnaObject, tokenId);  
 
   }; 
+}
 
-});
 
 // Procedurally creating an HTML structure for each cryptomonkey of the connected user
 // Note: Each monkeyBox has the monkeys tokenId concatted into its unique id, for saving, styling and accessing,
