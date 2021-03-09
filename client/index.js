@@ -16,10 +16,10 @@ var user2;
 */
 
 // Contract address for main contract, has to be updated when migrating => i.e. contract address is changing
-var contractAddress = "0x7189101c52ca69C96E303b813CC30B5E064F2Bd9";
+var contractAddress = "0x932dA8a6c2502b07D7211868da81e65415FcCEEB";
 
 // Contract address for marketplace contract, has to be updated when migrating => i.e. contract address is changing
-var marketContractAddress = "0xadE8eAf9D83E765DF8274b1F23c9Abe6aFF98C46";
+var marketContractAddress = "0x3134C3A1524989ACEa70cdf8af665971662B6e05";
 
 var accounts;
 
@@ -50,6 +50,12 @@ $(document).ready(async function () {
     .on("data", function (event) {
       console.log(event);
       let owner = event.returnValues.owner;
+      console.log(owner);
+      console.log(user1);
+      // check if both addresses are the same (also use checksum because of format), if not same, don't show to this user (CMO created by other user)
+      if (web3.utils.toChecksumAddress(owner) != web3.utils.toChecksumAddress(user1)) {
+        return;
+      }
       let tokenId = event.returnValues.tokenId;
       let parent1Id = event.returnValues.parent1Id;
       let parent2Id = event.returnValues.parent2Id;
@@ -67,7 +73,7 @@ $(document).ready(async function () {
             <li>parent2Id: ${parent2Id}</li>
             <li>genes: ${genes}</li>
           </ul>
-        `
+        `      
       );
     })
     .on("error", function (error) {
@@ -272,7 +278,7 @@ function withoutPrices() {
 
 $("#showBuyAreaButton").click( async () => { 
   
-  // XXXX BUYING FUNCTIONALITY - ALL ACTIVE OFFERS
+  // XXX BUYING FUNCTIONALITY - ALL ACTIVE OFFERS
   // offersArrayRaw still includes inactive offers (offers for tokenId 0 )
   var offersArrayRaw = await marketInstance.methods.getAllTokenOnSale().call();
   console.log("Offers Array including inactive offers: ");
@@ -307,7 +313,7 @@ $("#showBuyAreaButton").click( async () => {
       const tokenGeneration = monkeyInOffer.generation;
 
       // Call to create and append HTML for each cryptomonkey of the connected user
-      $("#monkeyDisplayArea").append(buildMonkeyBoxes(tokenId)); // XXXX wrong place to append to?
+      $("#monkeyDisplayArea").append(buildMonkeyBoxes(tokenId)); 
           
       console.log("tokenIdDNA: ");
       console.log(dnaObject);   
@@ -369,14 +375,24 @@ function hideMarketElements() {
   $("#marketButtonHolderArea").css("display", "none"); 
   $("#offerButtonHolderArea").css("display", "none");
   $("#monkeyDisplayArea").empty();   
-  
-  
+  $("#chooseMonkeyForOfferInputField").val("");
+  $("#choosePriceForOfferInputField").val("");  
 }
 
+let tokenIdToCreateOffer;
+let priceToCreateOfferInWEI; 
+
+// XXXX
+$("#createOfferButton").click(async () => {  
+
+  tokenIdToCreateOffer = $("#chooseMonkeyForOfferInputField").val();
+
+  priceToCreateOfferInWEI = (10**18) * $("#choosePriceForOfferInputField").val();  
+
+  await marketInstance.methods.setOffer(priceToCreateOfferInWEI, tokenIdToCreateOffer).send();
 
 
-
-
+});
 
 
 // Button to monkey creation
@@ -463,8 +479,8 @@ async function showLastBornChildMonkey(tokenId) {
   // Call to create and append HTML 
   $("#childArea").append(buildMonkeyBoxes(tokenId));  
 
-  //$(`#generationDisplayLine${tokenId}`).html(tokenGeneration);
-
+  $(`#childArea #generationDisplayLine${tokenId}`).html(tokenGeneration);
+                       
   console.log("tokenIdDNA: ");
   console.log(dnaObject);   
 
@@ -472,6 +488,9 @@ async function showLastBornChildMonkey(tokenId) {
   // needs a set of DNA, if no tokenId is given, reverts to "Creation" in the receiving functions
   renderMonkey(dnaObject, tokenId);         
 }
+
+
+
 
 $("#showParentsButton").click(async () => {
   

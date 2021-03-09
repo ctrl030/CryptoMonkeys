@@ -63,24 +63,12 @@ body {
   justify-content: space-around;
 }
 
-#switchToGalleryButton {
-  font-weight: bold; 
+.boldButton {
+  font-weight: bold;   
 }
 
-#switchToCreationButton {
-  font-weight: bold;   
-} 
-
-#switchToMultiplyButton {
-  font-weight: bold;   
-} 
-
-#switchToMarketButton {
-  font-weight: bold;   
-} 
-
-#mintMonkey {
-  font-weight: bold;
+.importantButton{
+  font-weight: bold !important;
   font-size: 1.1rem !important;   
 }
 
@@ -252,7 +240,7 @@ body {
 }
 
 #offerButtonHolderArea {
-  margin: 0px !important;  
+  margin-bottom: 8px !important;  
   height: 60px;
   border-radius: 10px;
   background-color: #ededed;
@@ -293,8 +281,7 @@ body {
   padding: 5px;  
   background-color: #ededed;
   border-radius: 10px;
-  z-index: 0;
-  opacity: 0.95;
+  z-index: 0; 
 }
 
 #monkeyMultipliedSuccessArea {
