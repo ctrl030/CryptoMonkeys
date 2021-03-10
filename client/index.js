@@ -16,10 +16,10 @@ var user2;
 */
 
 // Contract address for main contract, has to be updated when migrating => i.e. contract address is changing
-var contractAddress = "0x932dA8a6c2502b07D7211868da81e65415FcCEEB";
+var contractAddress = "0xb589039292811AA13f7eA8dA1463EA38857900DE";
 
 // Contract address for marketplace contract, has to be updated when migrating => i.e. contract address is changing
-var marketContractAddress = "0x3134C3A1524989ACEa70cdf8af665971662B6e05";
+var marketContractAddress = "0xbc2942628230376c6F376B8d5b33efB60ceA9E9c";
 
 var accounts;
 
@@ -199,21 +199,39 @@ $("#switchToMarketButton").click( async () => {
   */  
 });
 
-// XXXX
-$("#showUsersOffersButton").click( async () => { 
-  
-  // XXX BUYING FUNCTIONALITY - USERS ACTIVE OFFERS
 
-  // offersArrayRaw still includes inactive offers (offers for tokenId 0 )
+$("#removeOfferButton").click( async () => {
+tokenIdToRemoveOffer = $("#removeOffTokenIdInputField").val(); 
+console.log(tokenIdToRemoveOffer);
+
+await marketInstance.methods.removeOffer(tokenIdToRemoveOffer).send();
+$("#removeOffTokenIdInputField").val("");
+});
+
+// XXXXX make only for user: if...
+$("#showUsersOffersButton").click( async () => { 
+
+  // clean up navbar
+  $("#offerButtonHolderArea").hide(); 
+
+  // empty display area
+  $("#monkeyDisplayArea").empty(); 
+
+  $("#removeOffButtonHolderArea").css("display", "flex");
+  $("#removeOffButtonHolderArea").show(); 
+  
+  // selling functionality - USERS ACTIVE OFFERS
+
+  // offersArrayRaw still includes offers for tokenId 0 and deleted ones, set to 0
   var offersArrayRaw = await marketInstance.methods.getAllTokenOnSale().call();
-  console.log("Offers Array including inactive offers: ");
+  console.log("Offers Array including offers for tokenId 0: ");
   console.log(offersArrayRaw);
 
   // Array of tokenIds for which an active order exists 
-  var offerTokenIdsArray;
+  var offerTokenIdsArray = [];
 
   // Array of the complete offers
-  var completeOffersArray;
+  var completeOffersArray = [];
 
   for (let index = 0; index < offersArrayRaw.length; index++) {
     const tokenId = offersArrayRaw[index];
@@ -223,64 +241,69 @@ $("#showUsersOffersButton").click( async () => {
       offerTokenIdsArray.push(tokenId);
 
       // querying the complete offer for this tokenId from the blockchain
-      var completeOffer = await marketInstance.methods.getOffer(tokenId).call(); 
+      var completeOffer = await marketInstance.methods.getOffer(tokenId).call();      
 
-      // adding all active, complete offers to completeOffersArray
-      completeOffersArray.push(completeOffer);
+      var offerOwner = completeOffer.seller;     
 
-      var offerPrice = completeOffer.price;
+      if ( web3.utils.toChecksumAddress(offerOwner) == web3.utils.toChecksumAddress(user1) ) {
 
-      var offerOwner = completeOffer.seller;
+        // adding all active, complete offers to completeOffersArray
+        completeOffersArray.push(completeOffer);
 
-      if (offerOwner.length > 18) {
-        offerOwner = offerOwner.substring(0, 17) + "...";
+        var offerPrice = web3.utils.fromWei(completeOffer.price);
+
+        if (offerOwner.length > 18) {
+          offerOwner = offerOwner.substring(0, 17) + "...";
+        }
+
+        var monkeyInOffer = await instance.methods.getMonkeyDetails(tokenId).call();
+
+        const dnaObject = await decipherDNAtoObject(monkeyInOffer);   
+
+        const tokenGeneration = monkeyInOffer.generation;
+
+        const boxtype = "offerBox";
+
+        // Call to create and append HTML for each offer, marks built monkeyboxes with class boxtype, i.e. "offerBox"
+        $("#monkeyDisplayArea").append(buildMonkeyBoxes(tokenId, boxtype)); 
+            
+        console.log("tokenIdDNA: ");
+        console.log(dnaObject);   
+
+        $(`#generationDisplayLine${tokenId}`).html(tokenGeneration);
+
+        $(`#offerPriceDisplayLine${tokenId}`).html(offerPrice);
+
+        $(`#offerOwnerDisplayLine${tokenId}`).html(offerOwner); 
+
+        
+        // Call to apply CSS on the HTML structure, effect is styling and showing the next monkey
+        // needs a set of DNA, if no tokenId is given, reverts to "Creation" in the receiving functions
+        renderMonkey(dnaObject, tokenId);
+        
+        showPrices(tokenId);
       }
-
-      var monkeyInOffer = await instance.methods.getMonkeyDetails(tokenId).call();
-
-      const dnaObject = await decipherDNAtoObject(monkeyInOffer);   
-
-      const tokenGeneration = monkeyInOffer.generation;
-
-      const boxtype = "offerBox";
-
-      // Call to create and append HTML for each offer, marks built monkeyboxes with class boxtype, i.e. "offerBox"
-      $("#monkeyDisplayArea").append(buildMonkeyBoxes(tokenId, boxtype)); 
-          
-      console.log("tokenIdDNA: ");
-      console.log(dnaObject);   
-
-      $(`#generationDisplayLine${tokenId}`).html(tokenGeneration);
-
-      $(`#offerPriceDisplayLine${tokenId}`).html(offerPrice);
-
-      $(`#offerOwnerDisplayLine${tokenId}`).html(offerOwner); 
-
-      
-      // Call to apply CSS on the HTML structure, effect is styling and showing the next monkey
-      // needs a set of DNA, if no tokenId is given, reverts to "Creation" in the receiving functions
-      renderMonkey(dnaObject, tokenId);
-      
-      showPrices(tokenId);
 
     }    
   }
 
-  console.log("Active offers exist for these tokenIds: ");
-  console.log(offerTokenIdsArray);
+  $("#removeOffTokenIdInputField").val("");
 });
 
-
-
 $("#showSellAreaButton").click( async () => { 
+
+  $("#removeOffButtonHolderArea").hide();
+
+  $("#offerTokenIdInputField").val("");
+  $("#offerPriceInputField").val("");
 
   $("#offerButtonHolderArea").css("display", "flex");  
 
   $("#offerButtonHolderArea").show(); 
   $(`#monkeyDisplayArea`).empty();
+  $("#removeOffTokenIdInputField").val("");
 
   galleryLogic(`#monkeyDisplayArea`);
-
   
 
   /*
@@ -318,7 +341,7 @@ $("#showSellAreaButton").click( async () => {
 
 });
 
-// XXXXX
+// XXXX
 function showPrices(tokenId) {
   $(`#monkeyBox${tokenId}.monkey`).css("top", "29%");  
 
@@ -354,9 +377,12 @@ $("#showBuyAreaButton").click( async () => {
   $("#marketRow").css("display", "block"); 
   $("#marketButtonHolderArea").css("display", "flex");   
   $("#marketButtonHolderArea").show();
+
+  // empty display area
+  $("#monkeyDisplayArea").empty(); 
   
-  // XXX BUYING FUNCTIONALITY - ALL ACTIVE OFFERS
-  // offersArrayRaw still includes inactive offers (offers for tokenId 0 )
+  // XXX BUYING FUNCTIONALITY - ALL ACTIVE OFFERS without user's
+  // offersArrayRaw still includes offers for tokenId 0 and deleted ones, set to 0
   var offersArrayRaw = await marketInstance.methods.getAllTokenOnSale().call();
   console.log("Offers Array including zero monkey: ");
   console.log(offersArrayRaw);
@@ -377,44 +403,46 @@ $("#showBuyAreaButton").click( async () => {
       // querying the complete offer for this tokenId from the blockchain
       var completeOffer = await marketInstance.methods.getOffer(tokenId).call(); 
 
-      // adding all active, complete offers to completeOffersArray
-      completeOffersArray.push(completeOffer);
-
-      var offerPrice = completeOffer.price;
-
       var offerOwner = completeOffer.seller;
 
-      if (offerOwner.length > 18) {
-        offerOwner = offerOwner.substring(0, 17) + "...";
+      if ( web3.utils.toChecksumAddress(offerOwner) != web3.utils.toChecksumAddress(user1) ) {
+
+        var offerPrice = web3.utils.fromWei(completeOffer.price);
+
+        // adding all active, complete offers to completeOffersArray
+        completeOffersArray.push(completeOffer);
+
+        if (offerOwner.length > 18) {
+          offerOwner = offerOwner.substring(0, 17) + "...";
+        }
+
+        var monkeyInOffer = await instance.methods.getMonkeyDetails(tokenId).call();
+
+        const dnaObject = await decipherDNAtoObject(monkeyInOffer);   
+
+        const tokenGeneration = monkeyInOffer.generation;
+
+        const boxtype = "offerBox";
+
+        // Call to create and append HTML for each offer, marks built monkeyboxes with class boxtype, i.e. "offerBox"
+        $("#monkeyDisplayArea").append(buildMonkeyBoxes(tokenId, boxtype)); 
+            
+        console.log("tokenIdDNA: ");
+        console.log(dnaObject);   
+
+
+        $(`#generationDisplayLine${tokenId}`).html(tokenGeneration);
+
+        $(`#offerPriceDisplayLine${tokenId}`).html(offerPrice);
+
+        $(`#offerOwnerDisplayLine${tokenId}`).html(offerOwner); 
+        
+        // Call to apply CSS on the HTML structure, effect is styling and showing the next monkey
+        // needs a set of DNA, if no tokenId is given, reverts to "Creation" in the receiving functions
+        renderMonkey(dnaObject, tokenId);
+        
+        showPrices(tokenId);
       }
-
-      var monkeyInOffer = await instance.methods.getMonkeyDetails(tokenId).call();
-
-      const dnaObject = await decipherDNAtoObject(monkeyInOffer);   
-
-      const tokenGeneration = monkeyInOffer.generation;
-
-      const boxtype = "offerBox";
-
-      // Call to create and append HTML for each offer, marks built monkeyboxes with class boxtype, i.e. "offerBox"
-      $("#monkeyDisplayArea").append(buildMonkeyBoxes(tokenId, boxtype)); 
-          
-      console.log("tokenIdDNA: ");
-      console.log(dnaObject);   
-
-
-      $(`#generationDisplayLine${tokenId}`).html(tokenGeneration);
-
-      $(`#offerPriceDisplayLine${tokenId}`).html(offerPrice);
-
-      $(`#offerOwnerDisplayLine${tokenId}`).html(offerOwner); 
-      
-      // Call to apply CSS on the HTML structure, effect is styling and showing the next monkey
-      // needs a set of DNA, if no tokenId is given, reverts to "Creation" in the receiving functions
-      renderMonkey(dnaObject, tokenId);
-      
-      showPrices(tokenId);
-
     }    
   }
 
@@ -459,12 +487,13 @@ function hideMarketElements() {
   $("#marketRow").css("display", "none"); 
   $("#marketButtonHolderArea").css("display", "none"); 
   $("#offerButtonHolderArea").css("display", "none");
+  $("#removeOffButtonHolderArea").css("display", "none");
   $("#monkeyDisplayArea").empty();   
   $("#chooseMonkeyForOfferInputField").val("");
   $("#choosePriceForOfferInputField").val("");  
 }
 
-// XXXX 
+// User must first give market contract address operator status, to put a monkey up for sale 
 $("#makeMarketOperatorButton").click(async () => {  
   let setOperatorRequest = await instance.methods.setApprovalForAll(marketContractAddress, true).send();
   console.log(setOperatorRequest);
@@ -473,13 +502,13 @@ $("#makeMarketOperatorButton").click(async () => {
 let tokenIdToCreateOffer;
 let priceToCreateOfferInWEI; 
 
-// XXXX
+// Create offer button
 $("#createOfferButton").click(async () => {  
 
-  tokenIdToCreateOffer = /*BigInt(*/$("#offerTokenIdInputField").val()/*)*/; 
+  tokenIdToCreateOffer = $("#offerTokenIdInputField").val(); 
   console.log(tokenIdToCreateOffer);
 
-  priceToCreateOfferInWEI = /*BigInt(*/(10**18)* $("#offerPriceInputField").val()/*)*/;   
+  priceToCreateOfferInWEI = web3.utils.toWei($("#offerPriceInputField").val());   
   console.log(priceToCreateOfferInWEI);
 
   await marketInstance.methods.setOffer(priceToCreateOfferInWEI, tokenIdToCreateOffer).send();
@@ -869,7 +898,7 @@ function buildMonkeyBoxes(tokenId, boxtype="") {
 
     <div class="dnaDiv offerPriceDiv" id="offerPriceDiv${tokenId}">
       <b>
-        Price in WEI:            
+        Price in ETH:            
         <span id="offerPriceDisplayLine${tokenId}"></span>              
       </b>
     </div>
