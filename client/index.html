@@ -120,22 +120,32 @@
            
         </div>         
 
-        <div class="m-2 light-b-shadow" id="offerButtonHolderArea">
-          <div class="holderDiv" id="offerbuttonHolderDiv">         
+        <div class="light-b-shadow" id="offerButtonHolderArea">
+          <div class="holderDiv" id="offerbuttonHolderDiv">       
+            
+            <button type="button" class="btn btn-primary" id="makeMarketOperatorButton">
+              Allow Market to handle NFTs
+            </button>
   
             <form>
               <div class="form-row" id="offerInputfieldHolderDiv">
-                <div class="col">
-                  <input type="text" class="form-control" placeholder="Choose Monkey TokenId" id="offerTokenIdInputField">
+                <div class="col offerHoldCol">
+                  <input type="text" class="form-control" placeholder="Monkey TokenId" id="offerTokenIdInputField">
                 </div>
-                <div class="col">
+                <div class="col offerHoldCol">
                   <input type="text" class="form-control" placeholder="Set price in ETH" id="offerPriceInputField">
                 </div>
               </div>
-            </form>          
+            </form>    
            
             <button type="button" class="btn btn-primary importantButton" id="createOfferButton">
               Put this monkey up for sale
+            </button>  
+
+            
+
+            <button type="button" class="btn btn-success" id="showUsersOffersButton">
+              My monkeys on sale
             </button>  
 
           </div>

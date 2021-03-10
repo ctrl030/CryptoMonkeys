@@ -191,20 +191,86 @@ $("#switchToMarketButton").click( async () => {
   need:
 
   different kind of monkey boxes
-    offerboxes
-
-
-  */
-
-
-
-
+    offerboxes  */
 
   /*
   user2 = accounts[1];
   console.log("user2 is " + user2);
   */  
 });
+
+// XXXX
+$("#showUsersOffersButton").click( async () => { 
+  
+  // XXX BUYING FUNCTIONALITY - USERS ACTIVE OFFERS
+
+  // offersArrayRaw still includes inactive offers (offers for tokenId 0 )
+  var offersArrayRaw = await marketInstance.methods.getAllTokenOnSale().call();
+  console.log("Offers Array including inactive offers: ");
+  console.log(offersArrayRaw);
+
+  // Array of tokenIds for which an active order exists 
+  var offerTokenIdsArray;
+
+  // Array of the complete offers
+  var completeOffersArray;
+
+  for (let index = 0; index < offersArrayRaw.length; index++) {
+    const tokenId = offersArrayRaw[index];
+    // filtering out inactive offers
+    if (tokenId != 0) {
+      // adding active offers to offerTokenIdsArray
+      offerTokenIdsArray.push(tokenId);
+
+      // querying the complete offer for this tokenId from the blockchain
+      var completeOffer = await marketInstance.methods.getOffer(tokenId).call(); 
+
+      // adding all active, complete offers to completeOffersArray
+      completeOffersArray.push(completeOffer);
+
+      var offerPrice = completeOffer.price;
+
+      var offerOwner = completeOffer.seller;
+
+      if (offerOwner.length > 18) {
+        offerOwner = offerOwner.substring(0, 17) + "...";
+      }
+
+      var monkeyInOffer = await instance.methods.getMonkeyDetails(tokenId).call();
+
+      const dnaObject = await decipherDNAtoObject(monkeyInOffer);   
+
+      const tokenGeneration = monkeyInOffer.generation;
+
+      const boxtype = "offerBox";
+
+      // Call to create and append HTML for each offer, marks built monkeyboxes with class boxtype, i.e. "offerBox"
+      $("#monkeyDisplayArea").append(buildMonkeyBoxes(tokenId, boxtype)); 
+          
+      console.log("tokenIdDNA: ");
+      console.log(dnaObject);   
+
+      $(`#generationDisplayLine${tokenId}`).html(tokenGeneration);
+
+      $(`#offerPriceDisplayLine${tokenId}`).html(offerPrice);
+
+      $(`#offerOwnerDisplayLine${tokenId}`).html(offerOwner); 
+
+      
+      // Call to apply CSS on the HTML structure, effect is styling and showing the next monkey
+      // needs a set of DNA, if no tokenId is given, reverts to "Creation" in the receiving functions
+      renderMonkey(dnaObject, tokenId);
+      
+      showPrices(tokenId);
+
+    }    
+  }
+
+  console.log("Active offers exist for these tokenIds: ");
+  console.log(offerTokenIdsArray);
+});
+
+
 
 $("#showSellAreaButton").click( async () => { 
 
@@ -252,16 +318,19 @@ $("#showSellAreaButton").click( async () => {
 
 });
 
+// XXXXX
 function showPrices(tokenId) {
   $(`#monkeyBox${tokenId}.monkey`).css("top", "29%");  
 
-  $(`#monkeyTokenIdDiv${tokenId}`).css("bottom", "100px");
+  $(`#monkeyTokenIdDiv${tokenId}`).css("bottom", "130px");
 
-  $(`#monkeyGenerationDiv${tokenId}`).css("bottom", "70px");
+  $(`#monkeyGenerationDiv${tokenId}`).css("bottom", "100px");
 
-  $(`#monkeyDNALine${tokenId}`).css("bottom", "40px");  
+  $(`#monkeyDNALine${tokenId}`).css("bottom", "70px");  
 
   $(`#offerPriceDiv${tokenId}`).css("display", "flex"); 
+
+  $(`#offerOwnerDiv${tokenId}`).css("display", "flex"); 
 }
 
 function withoutPrices() {
@@ -274,25 +343,33 @@ function withoutPrices() {
   $(`#monkeyDNALine`).css("bottom", "10px");  
 
   $(`#offerPriceDiv`).css("display", "none"); 
+
+  $(`#offerOwnerDiv`).css("display", "none");
 }
 
 $("#showBuyAreaButton").click( async () => { 
+
+  //resetting market
+  hideMarketElements(); 
+  $("#marketRow").css("display", "block"); 
+  $("#marketButtonHolderArea").css("display", "flex");   
+  $("#marketButtonHolderArea").show();
   
   // XXX BUYING FUNCTIONALITY - ALL ACTIVE OFFERS
   // offersArrayRaw still includes inactive offers (offers for tokenId 0 )
   var offersArrayRaw = await marketInstance.methods.getAllTokenOnSale().call();
-  console.log("Offers Array including inactive offers: ");
+  console.log("Offers Array including zero monkey: ");
   console.log(offersArrayRaw);
 
   // Array of tokenIds for which an active order exists 
-  var offerTokenIdsArray;
+  var offerTokenIdsArray = [];
 
   // Array of the complete offers
-  var completeOffersArray;
+  var completeOffersArray = [];
 
   for (let index = 0; index < offersArrayRaw.length; index++) {
     const tokenId = offersArrayRaw[index];
-    // filtering out inactive offers
+    // filtering out zero monkey
     if (tokenId != 0) {
       // adding active offers to offerTokenIdsArray
       offerTokenIdsArray.push(tokenId);
@@ -305,6 +382,11 @@ $("#showBuyAreaButton").click( async () => {
 
       var offerPrice = completeOffer.price;
 
+      var offerOwner = completeOffer.seller;
+
+      if (offerOwner.length > 18) {
+        offerOwner = offerOwner.substring(0, 17) + "...";
+      }
 
       var monkeyInOffer = await instance.methods.getMonkeyDetails(tokenId).call();
 
@@ -312,8 +394,10 @@ $("#showBuyAreaButton").click( async () => {
 
       const tokenGeneration = monkeyInOffer.generation;
 
-      // Call to create and append HTML for each cryptomonkey of the connected user
-      $("#monkeyDisplayArea").append(buildMonkeyBoxes(tokenId)); 
+      const boxtype = "offerBox";
+
+      // Call to create and append HTML for each offer, marks built monkeyboxes with class boxtype, i.e. "offerBox"
+      $("#monkeyDisplayArea").append(buildMonkeyBoxes(tokenId, boxtype)); 
           
       console.log("tokenIdDNA: ");
       console.log(dnaObject);   
@@ -323,6 +407,7 @@ $("#showBuyAreaButton").click( async () => {
 
       $(`#offerPriceDisplayLine${tokenId}`).html(offerPrice);
 
+      $(`#offerOwnerDisplayLine${tokenId}`).html(offerOwner); 
       
       // Call to apply CSS on the HTML structure, effect is styling and showing the next monkey
       // needs a set of DNA, if no tokenId is given, reverts to "Creation" in the receiving functions
@@ -379,15 +464,23 @@ function hideMarketElements() {
   $("#choosePriceForOfferInputField").val("");  
 }
 
+// XXXX 
+$("#makeMarketOperatorButton").click(async () => {  
+  let setOperatorRequest = await instance.methods.setApprovalForAll(marketContractAddress, true).send();
+  console.log(setOperatorRequest);
+});
+
 let tokenIdToCreateOffer;
 let priceToCreateOfferInWEI; 
 
 // XXXX
 $("#createOfferButton").click(async () => {  
 
-  tokenIdToCreateOffer = $("#chooseMonkeyForOfferInputField").val();
+  tokenIdToCreateOffer = /*BigInt(*/$("#offerTokenIdInputField").val()/*)*/; 
+  console.log(tokenIdToCreateOffer);
 
-  priceToCreateOfferInWEI = (10**18) * $("#choosePriceForOfferInputField").val();  
+  priceToCreateOfferInWEI = /*BigInt(*/(10**18)* $("#offerPriceInputField").val()/*)*/;   
+  console.log(priceToCreateOfferInWEI);
 
   await marketInstance.methods.setOffer(priceToCreateOfferInWEI, tokenIdToCreateOffer).send();
 
@@ -684,12 +777,12 @@ async function galleryLogic(divToAppendTo) {
 // Procedurally creating an HTML structure for each cryptomonkey of the connected user
 // Note: Each monkeyBox has the monkeys tokenId concatted into its unique id, for saving, styling and accessing,
 // and also the DNA variables are named uniquely with the tokenId
-function buildMonkeyBoxes(tokenId) {    
+function buildMonkeyBoxes(tokenId, boxtype="") {    
 
   console.log("tokenId incoming: " + tokenId);
 
   return `
-  <div class="monkeyBox m-2 light-b-shadow" id="monkeyBox${tokenId}">
+  <div class="monkeyBox ${boxtype} m-2 light-b-shadow" id="monkeyBox${tokenId}">
     <div class="monkey" id="monkey">
       <div id="mbody">
         <div id="mHead">
@@ -776,8 +869,15 @@ function buildMonkeyBoxes(tokenId) {
 
     <div class="dnaDiv offerPriceDiv" id="offerPriceDiv${tokenId}">
       <b>
-        Price:            
+        Price in WEI:            
         <span id="offerPriceDisplayLine${tokenId}"></span>              
+      </b>
+    </div>
+
+    <div class="dnaDiv offerOwnerDiv" id="offerOwnerDiv${tokenId}">
+      <b>
+        Owner:            
+        <span id="offerOwnerDisplayLine${tokenId}"></span>              
       </b>
     </div>
   </div>   

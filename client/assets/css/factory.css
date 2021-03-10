@@ -168,6 +168,12 @@ body {
   bottom: 10px
 }
 
+.offerOwnerDiv {
+  display: none;
+  padding-left: 25px;
+  bottom: 40px
+}
+
 .monkeyTokenIdDiv {
   bottom:70px;
   padding-left: 25px;
@@ -250,7 +256,7 @@ body {
 }
 
 #offerbuttonHolderDiv {
-  width: 1000px;
+  width: 1100px;
   align-self: center;
   display: flex;
   justify-content: space-around;
@@ -350,4 +356,18 @@ body {
 #jungleIslandFooter p {
   font-size: 16px;
   font-weight: bold;
+}
+
+.offerHoldCol{
+  width: 160px;
+}
+
+.offerBox {
+  position: relative;
+  height: 720px !important;
+  width: 400px !important;
+  /*background-color: #93fc7c;*/
+  background-image: url("https://i.ibb.co/k5qGZ8w/mock-Background-Bigger.jpg") !important;
+  border-radius: 10px;
+  z-index: 1;
 }

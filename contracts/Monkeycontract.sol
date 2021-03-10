@@ -106,6 +106,9 @@ contract MonkeyContract is IERC721, Ownable {
         uint256 indexed tokenId
     );
 
+    // Operator status event
+    event ApprovalForAll (address msgsender, address operator, bool _approved);
+
     // Creation event, emitted after successful CMO creation with these parameters
     event MonkeyCreated(
         address owner,
