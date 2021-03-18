@@ -262,6 +262,23 @@ body {
   justify-content: space-around;
 }
 
+#buyButtonHolderArea {
+  margin-bottom: 8px !important;  
+  height: 60px;
+  border-radius: 10px;
+  background-color: #ededed;
+  display: none;
+  justify-content: center;  
+  opacity: 0.95;
+}
+
+#buyButtonHolderDiv {
+  width: 1100px;
+  align-self: center;
+  display: flex;
+  justify-content: space-around;
+}
+
 #removeOffButtonHolderArea {
   margin-bottom: 8px !important;  
   height: 60px;

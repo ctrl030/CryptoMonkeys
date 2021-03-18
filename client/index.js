@@ -10,16 +10,16 @@ var marketInstance;
 // User1 will be set to the correct account from Ganache (it's necessary to log in to this account via Metamask)
 var user1;
 
-/*F
+/*
 // xxx for marketplace
 var user2;
 */
 
 // Contract address for main contract, has to be updated when migrating => i.e. contract address is changing
-var contractAddress = "0xb589039292811AA13f7eA8dA1463EA38857900DE";
+var contractAddress = "0x22aa0519969d3670D2F3e3F9fC1aCd0898d429AC";
 
 // Contract address for marketplace contract, has to be updated when migrating => i.e. contract address is changing
-var marketContractAddress = "0xbc2942628230376c6F376B8d5b33efB60ceA9E9c";
+var marketContractAddress = "0x203244B03b2Cff91c93B049EdbB8E0151153ddB6";
 
 var accounts;
 
@@ -148,6 +148,7 @@ $("#switchToMarketButton").click( async () => {
   console.log("marketInstance is");
   console.log(marketInstance);  
 
+  // XXX check and finish
   marketInstance.events
     .MarketTransaction()
     .on("data", function (event) {
@@ -163,36 +164,7 @@ $("#switchToMarketButton").click( async () => {
     .on("error", function (error) {
       console.log(error);
   });
-  /*
   
-  append button holder area with 3 buttons and 1 field: show offer + tokenId field, sell, my offers
-    if you click on show offer, 
-      must have filled out field with tokenId
-      empty all offers
-      show only selected offer (offerbox)
-      show new instructions 
-      2 buttons: buy (metamask will open with payment), back (back to all offers, same as clicking on buy before, emptying) 
-      
-
-    if you click on sell
-      empty all offers
-      show all monkeys you own
-      append button holder area with 2 fields and 1 button: tokenId and price, create offer
-
-    if you click on my offers
-      show all your offers (offerboxes)
-
-  text explainer box with instructions how to use
-
-  load all offers atm and show (offerboxes)
-
-
-
-  need:
-
-  different kind of monkey boxes
-    offerboxes  */
-
   /*
   user2 = accounts[1];
   console.log("user2 is " + user2);
@@ -213,6 +185,7 @@ $("#showUsersOffersButton").click( async () => {
 
   // clean up navbar
   $("#offerButtonHolderArea").hide(); 
+  $("#buyButtonHolderArea").hide();
 
   // empty display area
   $("#monkeyDisplayArea").empty(); 
@@ -220,11 +193,10 @@ $("#showUsersOffersButton").click( async () => {
   $("#removeOffButtonHolderArea").css("display", "flex");
   $("#removeOffButtonHolderArea").show(); 
   
-  // selling functionality - USERS ACTIVE OFFERS
-
-  // offersArrayRaw still includes offers for tokenId 0 and deleted ones, set to 0
+  // selling functionality - user's active offers
+  // offersArrayRaw still includes old/deleted offers, set to 0
   var offersArrayRaw = await marketInstance.methods.getAllTokenOnSale().call();
-  console.log("Offers Array including offers for tokenId 0: ");
+  console.log("offersArrayRaw, unfiltered yet: ");
   console.log(offersArrayRaw);
 
   // Array of tokenIds for which an active order exists 
@@ -235,7 +207,7 @@ $("#showUsersOffersButton").click( async () => {
 
   for (let index = 0; index < offersArrayRaw.length; index++) {
     const tokenId = offersArrayRaw[index];
-    // filtering out inactive offers
+    // filtering out inactive offers (old/deleted offers, set to 0)
     if (tokenId != 0) {
       // adding active offers to offerTokenIdsArray
       offerTokenIdsArray.push(tokenId);
@@ -293,6 +265,7 @@ $("#showUsersOffersButton").click( async () => {
 $("#showSellAreaButton").click( async () => { 
 
   $("#removeOffButtonHolderArea").hide();
+  $("#buyButtonHolderArea").hide();
 
   $("#offerTokenIdInputField").val("");
   $("#offerPriceInputField").val("");
@@ -304,40 +277,6 @@ $("#showSellAreaButton").click( async () => {
   $("#removeOffTokenIdInputField").val("");
 
   galleryLogic(`#monkeyDisplayArea`);
-  
-
-  /*
-    
-    // Looping through the user's tokenIds and for each:
-    // reading the "DNA string",
-    // creating the correct CSS data from it
-    // creating an unique HTML structure in the gallery 
-    // applying the CSS to it
-
-    for (let m = 0; m < userBalance; m++) {
-      const offer = offersArray[m];
-      let myCryptoMonkey = await instance.methods.getMonkeyDetails(offer).call();
-      const dnaObject = await decipherDNAtoObject(myCryptoMonkey);   
-
-      const tokenGeneration = myCryptoMonkey.generation;
-
-      // Call to create and append HTML for each cryptomonkey of the connected user
-      $("#marketRow").append(buildMonkeyBoxes(tokenId));
-
-      $(`#generationDisplayLine${tokenId}`).html(tokenGeneration);
-
-      console.log("tokenIdDNA: ");
-      console.log(dnaObject);   
-
-      // Call to apply CSS on the HTML structure, effect is styling and showing the next monkey
-      // needs a set of DNA, if no tokenId is given, reverts to "Creation" in the receiving functions
-      renderMonkey(dnaObject, tokenId);      
-
-
-    }; 
-  });
-
-  */ 
 
 });
 
@@ -380,11 +319,18 @@ $("#showBuyAreaButton").click( async () => {
 
   // empty display area
   $("#monkeyDisplayArea").empty(); 
+
+  // Reset and show buttons to buy
+  $("#buyMonkeyTokenIdInputField").val("");
+  $("#confirmPriceInputField").val("");
+  $("#buyButtonHolderArea").css("display", "flex");
+  $("#buyButtonHolderArea").show(); 
   
-  // XXX BUYING FUNCTIONALITY - ALL ACTIVE OFFERS without user's
-  // offersArrayRaw still includes offers for tokenId 0 and deleted ones, set to 0
+  
+  // buying functionality - all active offers, without user's
+  // offersArrayRaw still includes old/deleted offers, set to 0
   var offersArrayRaw = await marketInstance.methods.getAllTokenOnSale().call();
-  console.log("Offers Array including zero monkey: ");
+  console.log("offersArrayRaw, unfiltered yet: ");
   console.log(offersArrayRaw);
 
   // Array of tokenIds for which an active order exists 
@@ -395,7 +341,7 @@ $("#showBuyAreaButton").click( async () => {
 
   for (let index = 0; index < offersArrayRaw.length; index++) {
     const tokenId = offersArrayRaw[index];
-    // filtering out zero monkey
+    // filtering out inactive offers (old/deleted offers, set to 0)
     if (tokenId != 0) {
       // adding active offers to offerTokenIdsArray
       offerTokenIdsArray.push(tokenId);
@@ -451,8 +397,34 @@ $("#showBuyAreaButton").click( async () => {
 
 }); 
 
+$("#buyMonkeyButton").click( async () => {  
 
+  let tokenIdToBuy = $("#buyMonkeyTokenIdInputField").val();
+  console.log("tokenIdToBuy:"); 
+  console.log(tokenIdToBuy);
 
+  let buyersConfirmedPriceToPay = $("#confirmPriceInputField").val();  
+  console.log("buyersConfirmedPriceToPay:"); 
+  console.log(buyersConfirmedPriceToPay);
+
+  let confirmedInWEI = web3.utils.toWei(buyersConfirmedPriceToPay);
+
+  // find offer
+  let offerDetails = await marketInstance.methods.getOffer(tokenIdToBuy).call();
+  console.log("offerDetails:");
+  console.log(offerDetails);      
+
+  let correctPrice = web3.utils.fromWei(offerDetails.price);
+  console.log("correctPrice:");
+  console.log(correctPrice);
+  
+
+  if (buyersConfirmedPriceToPay == correctPrice) {
+    await marketInstance.methods.buyMonkey(tokenIdToBuy).send({value: `${confirmedInWEI}` });
+
+  }
+
+}); 
 
 
 
@@ -492,6 +464,7 @@ function hideMarketElements() {
   $("#chooseMonkeyForOfferInputField").val("");
   $("#choosePriceForOfferInputField").val("");  
 }
+
 
 // User must first give market contract address operator status, to put a monkey up for sale 
 $("#makeMarketOperatorButton").click(async () => {  
@@ -599,9 +572,7 @@ async function showLastBornChildMonkey(tokenId) {
   const tokenGeneration = myCryptoMonkey.generation; 
 
   // Call to create and append HTML 
-  $("#childArea").append(buildMonkeyBoxes(tokenId));  
-
-  $(`#childArea #generationDisplayLine${tokenId}`).html(tokenGeneration);
+  await $("#childArea").append(buildMonkeyBoxes(tokenId));    
                        
   console.log("tokenIdDNA: ");
   console.log(dnaObject);   
@@ -609,7 +580,10 @@ async function showLastBornChildMonkey(tokenId) {
   // Call to apply CSS on the HTML structure, effect is styling and showing the next monkey
   // needs a set of DNA, if no tokenId is given, reverts to "Creation" in the receiving functions
   renderMonkey(dnaObject, tokenId);         
+
+  $(`#generationDisplayLine${tokenId}`).html(tokenGeneration);
 }
+
 
 
 
