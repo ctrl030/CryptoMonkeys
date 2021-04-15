@@ -1,25 +1,20 @@
 // Connecting with Web3.js functionalities
 var web3 = new Web3(Web3.givenProvider);
 
-// This "instance" variable is a representation of the smart contract
+// Representation of the main smart contract
 var instance;
 
-// xxx for marketplace
+// Representation of the marketplace contract
 var marketInstance;
 
 // User1 will be set to the correct account from Ganache (it's necessary to log in to this account via Metamask)
 var user1;
 
-/*
-// xxx for marketplace
-var user2;
-*/
-
 // Contract address for main contract, has to be updated when migrating => i.e. contract address is changing
-var contractAddress = "0x22aa0519969d3670D2F3e3F9fC1aCd0898d429AC";
+var contractAddress = "0x5fB0619254FDc2B854640E57648D60E7fd773A9a";
 
 // Contract address for marketplace contract, has to be updated when migrating => i.e. contract address is changing
-var marketContractAddress = "0x203244B03b2Cff91c93B049EdbB8E0151153ddB6";
+var marketContractAddress = "0x24869A3a0e51753e57E4254C56c165E0D67A8eee";
 
 var accounts;
 
