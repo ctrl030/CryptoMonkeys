@@ -38,15 +38,15 @@
       "type": "function"
     }
   ],
-  "metadata": "{\"compiler\":{\"version\":\"0.5.12+commit.7709ece9\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"}],\"name\":\"onERC721Received\",\"outputs\":[{\"internalType\":\"bytes4\",\"name\":\"\",\"type\":\"bytes4\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"methods\":{}},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/D/8 Github/CryptoMonkeys/contracts/IERC721Receiver.sol\":\"IERC721Receiver\"},\"evmVersion\":\"petersburg\",\"libraries\":{},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/D/8 Github/CryptoMonkeys/contracts/IERC721Receiver.sol\":{\"keccak256\":\"0x775adb4c06e65ae6e091d0cb279a8a33bcf2de7dc7abaeeafde8d149154cec24\",\"urls\":[\"bzz-raw://0eae1b4ae5556e5c9ae567f0fb1bcca7be0f929222c99393f92404b47420ebf1\",\"dweb:/ipfs/QmYcZMJTgvLvJBqJFbgXEuVjh6eZi847Mhz5ENzFnixhrB\"]}},\"version\":1}",
+  "metadata": "{\"compiler\":{\"version\":\"0.5.12+commit.7709ece9\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"}],\"name\":\"onERC721Received\",\"outputs\":[{\"internalType\":\"bytes4\",\"name\":\"\",\"type\":\"bytes4\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"methods\":{}},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/D/8Github/CryptoMonkeys/contracts/IERC721Receiver.sol\":\"IERC721Receiver\"},\"evmVersion\":\"petersburg\",\"libraries\":{},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/D/8Github/CryptoMonkeys/contracts/IERC721Receiver.sol\":{\"keccak256\":\"0x775adb4c06e65ae6e091d0cb279a8a33bcf2de7dc7abaeeafde8d149154cec24\",\"urls\":[\"bzz-raw://0eae1b4ae5556e5c9ae567f0fb1bcca7be0f929222c99393f92404b47420ebf1\",\"dweb:/ipfs/QmYcZMJTgvLvJBqJFbgXEuVjh6eZi847Mhz5ENzFnixhrB\"]}},\"version\":1}",
   "bytecode": "0x",
   "deployedBytecode": "0x",
   "sourceMap": "",
   "deployedSourceMap": "",
   "source": "pragma solidity ^0.5.12;\r\n\r\ninterface IERC721Receiver {\r\n  function onERC721Received(address operator, address from, uint tokenId, bytes calldata data) external returns (bytes4);\r\n}",
-  "sourcePath": "D:\\8 Github\\CryptoMonkeys\\contracts\\IERC721Receiver.sol",
+  "sourcePath": "D:\\8Github\\CryptoMonkeys\\contracts\\IERC721Receiver.sol",
   "ast": {
-    "absolutePath": "/D/8 Github/CryptoMonkeys/contracts/IERC721Receiver.sol",
+    "absolutePath": "/D/8Github/CryptoMonkeys/contracts/IERC721Receiver.sol",
     "exportedSymbols": {
       "IERC721Receiver": [
         137
@@ -248,7 +248,7 @@
     "src": "0:181:1"
   },
   "legacyAST": {
-    "absolutePath": "/D/8 Github/CryptoMonkeys/contracts/IERC721Receiver.sol",
+    "absolutePath": "/D/8Github/CryptoMonkeys/contracts/IERC721Receiver.sol",
     "exportedSymbols": {
       "IERC721Receiver": [
         137
@@ -455,7 +455,7 @@
   },
   "networks": {},
   "schemaVersion": "3.2.0",
-  "updatedAt": "2021-03-21T02:36:19.225Z",
+  "updatedAt": "2021-04-15T21:16:58.784Z",
   "devdoc": {
     "methods": {}
   },

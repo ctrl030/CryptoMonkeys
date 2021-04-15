@@ -10,11 +10,11 @@ var marketInstance;
 // User1 will be set to the correct account from Ganache (it's necessary to log in to this account via Metamask)
 var user1;
 
-// Contract address for main contract, has to be updated when migrating => i.e. contract address is changing
-var contractAddress = "0x5fB0619254FDc2B854640E57648D60E7fd773A9a";
+// Contract address for main contract "MonkeyContract", has to be updated when migrating => i.e. contract address is changing
+var contractAddress = "0xC796434900816FaB208Cb34b79AC2C16ad62EB46";
 
-// Contract address for marketplace contract, has to be updated when migrating => i.e. contract address is changing
-var marketContractAddress = "0x24869A3a0e51753e57E4254C56c165E0D67A8eee";
+// Contract address for marketplace contract "MonkeyMarketplace", has to be updated when migrating => i.e. contract address is changing
+var marketContractAddress = "0x356AC3bE4e6238C0DaEf46a57f30f17ad25C66ac";
 
 var accounts;
 
@@ -60,13 +60,13 @@ $(document).ready(async function () {
       $("#monkeyCreatedDiv").append(
         `        
           <ul id="monkeyCreatedDivUnorderedList">
-            <li>Crypto Monkey created successfully!</li>
+            <li>Crypto Monkey NFT created successfully!</li>
             <li>Here are the details: </li>
-            <li>owner:  ${owner}</li> 
-            <li>tokenId:  ${tokenId}</li>  
-            <li>parent1Id: ${parent1Id}</li>
-            <li>parent2Id: ${parent2Id}</li>
-            <li>genes: ${genes}</li>
+            <li>Owning address:  ${owner}</li> 
+            <li>Token ID: ${tokenId}</li>  
+            <li>Parent Nr 1 ID: ${parent1Id}</li>
+            <li>Parent Nr 2 ID: ${parent2Id}</li>
+            <li>Genes: ${genes}</li>
           </ul>
         `      
       );
@@ -566,17 +566,21 @@ async function showLastBornChildMonkey(tokenId) {
 
   const tokenGeneration = myCryptoMonkey.generation; 
 
+  const boxtype = "childBox";
+
   // Call to create and append HTML 
-  await $("#childArea").append(buildMonkeyBoxes(tokenId));    
+  await $("#childArea").append(buildMonkeyBoxes(tokenId, boxtype));    
                        
   console.log("tokenIdDNA: ");
   console.log(dnaObject);   
+
+  $(`#generationDisplayLine${tokenId}`).html(tokenGeneration);
 
   // Call to apply CSS on the HTML structure, effect is styling and showing the next monkey
   // needs a set of DNA, if no tokenId is given, reverts to "Creation" in the receiving functions
   renderMonkey(dnaObject, tokenId);         
 
-  $(`#generationDisplayLine${tokenId}`).html(tokenGeneration);
+  
 }
 
 

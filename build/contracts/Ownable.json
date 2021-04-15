@@ -23,15 +23,15 @@
       "type": "function"
     }
   ],
-  "metadata": "{\"compiler\":{\"version\":\"0.5.12+commit.7709ece9\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"constant\":true,\"inputs\":[],\"name\":\"contractOwner\",\"outputs\":[{\"internalType\":\"address payable\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"methods\":{}},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/D/8 Github/CryptoMonkeys/contracts/Ownable.sol\":\"Ownable\"},\"evmVersion\":\"petersburg\",\"libraries\":{},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/D/8 Github/CryptoMonkeys/contracts/Ownable.sol\":{\"keccak256\":\"0xf6c9dbce372e1c6aa6fb65fb29928fe1363893fafe30d03071dda6450d1bbda9\",\"urls\":[\"bzz-raw://411722a72b6a9d0e39953c3328fe312b29cd0fa172de06c563fe83fdaaaeaeaf\",\"dweb:/ipfs/QmV7M6nAa5vpEGkByPgFumzaqEnqwLgG8NqWYbZDaE8Q2U\"]}},\"version\":1}",
-  "bytecode": "0x608060405234801561001057600080fd5b50336000806101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff16021790555060cf8061005f6000396000f3fe6080604052348015600f57600080fd5b506004361060285760003560e01c8063ce606ee014602d575b600080fd5b60336075565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff168156fea265627a7a723158200af2aec94863f874adf58bc01d983ba923516e243d7f64c6431f08ea94ed0a3a64736f6c634300050c0032",
-  "deployedBytecode": "0x6080604052348015600f57600080fd5b506004361060285760003560e01c8063ce606ee014602d575b600080fd5b60336075565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff168156fea265627a7a723158200af2aec94863f874adf58bc01d983ba923516e243d7f64c6431f08ea94ed0a3a64736f6c634300050c0032",
+  "metadata": "{\"compiler\":{\"version\":\"0.5.12+commit.7709ece9\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"constant\":true,\"inputs\":[],\"name\":\"contractOwner\",\"outputs\":[{\"internalType\":\"address payable\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"methods\":{}},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/D/8Github/CryptoMonkeys/contracts/Ownable.sol\":\"Ownable\"},\"evmVersion\":\"petersburg\",\"libraries\":{},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/D/8Github/CryptoMonkeys/contracts/Ownable.sol\":{\"keccak256\":\"0xf6c9dbce372e1c6aa6fb65fb29928fe1363893fafe30d03071dda6450d1bbda9\",\"urls\":[\"bzz-raw://411722a72b6a9d0e39953c3328fe312b29cd0fa172de06c563fe83fdaaaeaeaf\",\"dweb:/ipfs/QmV7M6nAa5vpEGkByPgFumzaqEnqwLgG8NqWYbZDaE8Q2U\"]}},\"version\":1}",
+  "bytecode": "0x608060405234801561001057600080fd5b50336000806101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff16021790555060cf8061005f6000396000f3fe6080604052348015600f57600080fd5b506004361060285760003560e01c8063ce606ee014602d575b600080fd5b60336075565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff168156fea265627a7a72315820cbf82ab4a6fc396292ff5b2173a4334c1a1cb8e5e658c09bd5205c59582765d764736f6c634300050c0032",
+  "deployedBytecode": "0x6080604052348015600f57600080fd5b506004361060285760003560e01c8063ce606ee014602d575b600080fd5b60336075565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff168156fea265627a7a72315820cbf82ab4a6fc396292ff5b2173a4334c1a1cb8e5e658c09bd5205c59582765d764736f6c634300050c0032",
   "sourceMap": "25:413:6:-;;;177:65;8:9:-1;5:2;;;30:1;27;20:12;5:2;177:65:6;225:10;209:13;;:26;;;;;;;;;;;;;;;;;;25:413;;;;;;",
   "deployedSourceMap": "25:413:6:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;25:413:6;;;;;;;;;;;;;;;;;;;130:36;;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::o",
   "source": "pragma solidity 0.5.12;\n\ncontract Ownable {\n    \n    //\"contractOwner\" as not to confuse with \"owner\"s in the Monkeycontract \n    address payable public contractOwner;\n    \n    constructor () public {\n        contractOwner = msg.sender;\n    }\n    \n    modifier onlyOwner(){\n        require (msg.sender == contractOwner);\n        _; // orders execution to continue, if this line is reached (i.e. the require above was passed) \n    }\n    \n}",
-  "sourcePath": "D:\\8 Github\\CryptoMonkeys\\contracts\\Ownable.sol",
+  "sourcePath": "D:\\8Github\\CryptoMonkeys\\contracts\\Ownable.sol",
   "ast": {
-    "absolutePath": "/D/8 Github/CryptoMonkeys/contracts/Ownable.sol",
+    "absolutePath": "/D/8Github/CryptoMonkeys/contracts/Ownable.sol",
     "exportedSymbols": {
       "Ownable": [
         1962
@@ -324,7 +324,7 @@
     "src": "0:438:6"
   },
   "legacyAST": {
-    "absolutePath": "/D/8 Github/CryptoMonkeys/contracts/Ownable.sol",
+    "absolutePath": "/D/8Github/CryptoMonkeys/contracts/Ownable.sol",
     "exportedSymbols": {
       "Ownable": [
         1962
@@ -622,7 +622,7 @@
   },
   "networks": {},
   "schemaVersion": "3.2.0",
-  "updatedAt": "2021-03-21T02:36:19.286Z",
+  "updatedAt": "2021-04-15T21:16:58.849Z",
   "devdoc": {
     "methods": {}
   },
