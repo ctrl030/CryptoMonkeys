@@ -1,22 +1,25 @@
 // Connecting with Web3.js functionalities
-var web3 = new Web3(Web3.givenProvider);
+const web3 = new Web3(Web3.givenProvider);
 
 // Representation of the main smart contract
-var instance;
+let instance;
 
 // Representation of the marketplace contract
-var marketInstance;
+let marketInstance;
 
 // User1 will be set to the correct account from Ganache (it's necessary to log in to this account via Metamask)
-var user1;
+let user1;
+
+// variable to check if user has approved market as operator yet
+let user1MarketAllowed = false;
 
 // Contract address for main contract "MonkeyContract", has to be updated when migrating => i.e. contract address is changing
-var contractAddress = "0xC796434900816FaB208Cb34b79AC2C16ad62EB46";
+const contractAddress = "0xC796434900816FaB208Cb34b79AC2C16ad62EB46";
 
 // Contract address for marketplace contract "MonkeyMarketplace", has to be updated when migrating => i.e. contract address is changing
-var marketContractAddress = "0x356AC3bE4e6238C0DaEf46a57f30f17ad25C66ac";
+const marketContractAddress = "0x356AC3bE4e6238C0DaEf46a57f30f17ad25C66ac";
 
-var accounts;
+let accounts;
 
 // When ready, during page load 
 $(document).ready(async function () {
@@ -66,7 +69,7 @@ $(document).ready(async function () {
             <li>Token ID: ${tokenId}</li>  
             <li>Parent Nr 1 ID: ${parent1Id}</li>
             <li>Parent Nr 2 ID: ${parent2Id}</li>
-            <li>Genes: ${genes}</li>
+            <li>DNA: ${genes}</li>
           </ul>
         `      
       );
@@ -95,24 +98,64 @@ $(document).ready(async function () {
           <ul id="breedingSuccessfulDivUnorderedList">
             <li>Crypto Monkey breeding successfully!</li>
             <li>Here are the details: </li>
-            <li>tokenId:  ${tokenId}</li>  
-            <li>generation: ${generation}</li>
-            <li>genes: ${genes}</li>
-            <li>owner:  ${owner}</li>            
-            <li>parent1Id: ${parent1Id}</li>
-            <li>parent2Id: ${parent2Id}</li>            
+            <li>Token ID:  ${tokenId}</li>  
+            <li>Generation: ${generation}</li>
+            <li>DNA: ${genes}</li>
+            <li>Owning address: ${owner}</li>            
+            <li>Parent 1 ID: ${parent1Id}</li>
+            <li>Parent 2 ID: ${parent2Id}</li>            
           </ul>
         `
-      );
+      );      
     })
     .on("error", function (error) {
       console.log(error);
   });
 
+  instance.events
+    .ApprovalForAll()
+    .on("data", function (event) {
+      console.log(event);
+      let messageSender = event.returnValues.msgsender;
+      console.log(messageSender);      
+      console.log(user1);
+      // check if both addresses are the same (also use checksum because of format), if not same, don't show to this user (CMO created by other user)
+      if (web3.utils.toChecksumAddress(messageSender) != web3.utils.toChecksumAddress(user1)) {
+        return;
+      }      
+      $("#marketOperatorApprovedArea").css("display", "flex");
+      $("#marketOperatorApprovedArea").empty();
+      $("#marketOperatorApprovedArea").append(
+        `        
+          <span id="marketOperatorApprovedText">
+            Your address ${messageSender} has approved the market contract as operator and you can sell your Crypto Monkey NFTs now.
+          </span>
+        `      
+      );
+      setTimeout(hideAndEmptyAlerts, 10000);
+    })
+    .on("error", function (error) {
+      console.log(error);
+  });
+
+
+
+
 });
 
+async function hideAndEmptyAlerts() {
+  $("#marketOperatorApprovedArea").css("display", "none");
+  $("#marketOperatorApprovedArea").empty();
 
+  $("#monkeyMultipliedSuccessDiv").css("display", "none");
+  $("#monkeyMultipliedSuccessDiv").empty();
 
+  $("#monkeyCreatedDiv").css("display", "none");
+  $("#monkeyCreatedDiv").empty();
+  
+  $("#marketActivityDiv").css("display", "none");
+  $("#marketActivityDiv").empty();
+}
 
 // 
 $("#switchToMarketButton").click( async () => { 
@@ -155,6 +198,7 @@ $("#switchToMarketButton").click( async () => {
           Market activity registered. Click "Market" again to refresh the offers. 
         `
       );
+      setTimeout(hideAndEmptyAlerts, 6000);
     })
     .on("error", function (error) {
       console.log(error);
@@ -173,11 +217,16 @@ console.log(tokenIdToRemoveOffer);
 
 await marketInstance.methods.removeOffer(tokenIdToRemoveOffer).send();
 $("#removeOffTokenIdInputField").val("");
+showUsersOffersButtonFunct();
 });
 
 // XXXXX make only for user: if...
 $("#showUsersOffersButton").click( async () => { 
+  showUsersOffersButtonFunct();  
+});
 
+
+async function showUsersOffersButtonFunct () {
   // clean up navbar
   $("#offerButtonHolderArea").hide(); 
   $("#buyButtonHolderArea").hide();
@@ -255,25 +304,44 @@ $("#showUsersOffersButton").click( async () => {
   }
 
   $("#removeOffTokenIdInputField").val("");
-});
+
+}
+
 
 $("#showSellAreaButton").click( async () => { 
+  showSellAreaButtonFunct();
+});
 
+
+async function showSellAreaButtonFunct () {
   $("#removeOffButtonHolderArea").hide();
   $("#buyButtonHolderArea").hide();
 
   $("#offerTokenIdInputField").val("");
   $("#offerPriceInputField").val("");
 
-  $("#offerButtonHolderArea").css("display", "flex");  
+  if ( user1MarketAllowed == false) {
+    $("#offerInputfieldHolderDiv").hide();
+    $("#createOfferButton").hide(); 
 
+    $("#makeMarketOperatorButton").show();  
+    }
+  else if (user1MarketAllowed == true) {
+    $("#offerInputfieldHolderDiv").show();
+    $("#createOfferButton").show();  
+
+    $("#makeMarketOperatorButton").hide();  
+    
+  }
+
+  $("#offerButtonHolderArea").css("display", "flex");
   $("#offerButtonHolderArea").show(); 
+
   $(`#monkeyDisplayArea`).empty();
   $("#removeOffTokenIdInputField").val("");
 
   galleryLogic(`#monkeyDisplayArea`);
-
-});
+}
 
 // XXXX
 function showPrices(tokenId) {
@@ -465,6 +533,13 @@ function hideMarketElements() {
 $("#makeMarketOperatorButton").click(async () => {  
   let setOperatorRequest = await instance.methods.setApprovalForAll(marketContractAddress, true).send();
   console.log(setOperatorRequest);
+
+  let isMarketOperator = await instance.methods.isApprovedForAll(user1, marketContractAddress).call();
+  console.log('isMarketOperator: ');
+  console.log(isMarketOperator);
+
+  user1MarketAllowed = isMarketOperator;
+  showSellAreaButtonFunct();
 });
 
 let tokenIdToCreateOffer;

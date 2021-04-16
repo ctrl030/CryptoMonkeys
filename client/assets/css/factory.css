@@ -347,6 +347,29 @@ body {
   margin-bottom: 0px !important; 
 }
 
+#marketOperatorApprovedArea {
+  display: none;  
+  width: 100%;
+  justify-content: center;
+  border-radius: 10px;
+  font-size: 16px !important;
+  font-weight: bold !important;    
+  margin-bottom: 8px !important;   
+}
+
+#marketActivityDiv {
+  display: none;  
+  width: 100%;
+  justify-content: center;
+  border-radius: 10px;
+  font-size: 16px !important;
+  font-weight: bold !important;    
+  margin-bottom: 8px !important;   
+}
+
+
+
+
 #breedingSuccessfulDivUnorderedList { 
   margin-top: 16px !important; 
   margin-bottom: 16px !important; 
