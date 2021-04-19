@@ -14,10 +14,10 @@ let user1;
 let user1MarketAllowed = false;
 
 // Contract address for main contract "MonkeyContract", has to be updated when migrating => i.e. contract address is changing
-const contractAddress = "0xC796434900816FaB208Cb34b79AC2C16ad62EB46";
+const contractAddress = "0xa97D5Cb17f21bCDFaAf0D39C32d5D63fBe1f5f15";
 
 // Contract address for marketplace contract "MonkeyMarketplace", has to be updated when migrating => i.e. contract address is changing
-const marketContractAddress = "0x356AC3bE4e6238C0DaEf46a57f30f17ad25C66ac";
+const marketContractAddress = "0xa61253D7bd676374aF3DC6a9fBCEa87Db31D1aD6";
 
 let accounts;
 
@@ -45,19 +45,20 @@ $(document).ready(async function () {
   // I.e. only this user's created monkeys will trigger it.
   instance.events
     .MonkeyCreated()
-    .on("data", function (event) {
-      console.log(event);
-      let owner = event.returnValues.owner;
-      console.log(owner);
-      console.log(user1);
+    .on("data", function (createdEvent) {
+      console.log('createdEvent: ');
+      console.log(createdEvent);
+      let owner = createdEvent.returnValues.owner;
+      console.log('createdEvent owner: ' + owner);
+      console.log('createdEvent user1: ' + user1);
       // check if both addresses are the same (also use checksum because of format), if not same, don't show to this user (CMO created by other user)
       if (web3.utils.toChecksumAddress(owner) != web3.utils.toChecksumAddress(user1)) {
         return;
       }
-      let tokenId = event.returnValues.tokenId;
-      let parent1Id = event.returnValues.parent1Id;
-      let parent2Id = event.returnValues.parent2Id;
-      let genes = event.returnValues.genes;
+      let tokenId = createdEvent.returnValues.tokenId;
+      let parent1Id = createdEvent.returnValues.parent1Id;
+      let parent2Id = createdEvent.returnValues.parent2Id;
+      let genes = createdEvent.returnValues.genes;
       $("#monkeyCreatedDiv").css("display", "flex");
       $("#monkeyCreatedDiv").empty();
       $("#monkeyCreatedDiv").append(
@@ -65,7 +66,7 @@ $(document).ready(async function () {
           <ul id="monkeyCreatedDivUnorderedList">
             <li>Crypto Monkey NFT created successfully!</li>
             <li>Here are the details: </li>
-            <li>Owning address:  ${owner}</li> 
+            <li>Owner:  ${owner}</li> 
             <li>Token ID: ${tokenId}</li>  
             <li>Parent Nr 1 ID: ${parent1Id}</li>
             <li>Parent Nr 2 ID: ${parent2Id}</li>
@@ -73,6 +74,7 @@ $(document).ready(async function () {
           </ul>
         `      
       );
+      setTimeout(hideAndEmptyAlerts, 10000);
     })
     .on("error", function (error) {
       console.log(error);
@@ -82,14 +84,15 @@ $(document).ready(async function () {
 
   instance.events
     .BreedingSuccessful()
-    .on("data", function (event) {
-      console.log(event);      
-      let tokenId = event.returnValues.tokenId;      
-      let generation = event.returnValues.generation;
-      let genes = event.returnValues.genes;
-      let owner = event.returnValues.owner;
-      let parent1Id = event.returnValues.parent1Id;
-      let parent2Id = event.returnValues.parent2Id;
+    .on("data", function (breedEvent) {
+      console.log('breedEvent: ');  
+      console.log(breedEvent);      
+      let tokenId = breedEvent.returnValues.tokenId;      
+      let generation = breedEvent.returnValues.generation;
+      let genes = breedEvent.returnValues.genes;
+      let owner = breedEvent.returnValues.owner;
+      let parent1Id = breedEvent.returnValues.parent1Id;
+      let parent2Id = breedEvent.returnValues.parent2Id;
       showLastBornChildMonkey(tokenId);
       $("#monkeyMultipliedSuccessDiv").css("display", "flex");
       $("#monkeyMultipliedSuccessDiv").empty();
@@ -101,12 +104,13 @@ $(document).ready(async function () {
             <li>Token ID:  ${tokenId}</li>  
             <li>Generation: ${generation}</li>
             <li>DNA: ${genes}</li>
-            <li>Owning address: ${owner}</li>            
+            <li>Owner: ${owner}</li>            
             <li>Parent 1 ID: ${parent1Id}</li>
             <li>Parent 2 ID: ${parent2Id}</li>            
           </ul>
         `
       );      
+      setTimeout(hideAndEmptyAlerts, 10000);
     })
     .on("error", function (error) {
       console.log(error);
@@ -114,11 +118,12 @@ $(document).ready(async function () {
 
   instance.events
     .ApprovalForAll()
-    .on("data", function (event) {
-      console.log(event);
-      let messageSender = event.returnValues.msgsender;
-      console.log(messageSender);      
-      console.log(user1);
+    .on("data", function (operatorEvent) {
+      console.log('operatorEvent: ');
+      console.log(operatorEvent);
+      let messageSender = operatorEvent.returnValues.msgsender;
+      console.log('operatorEvent messageSender: ' + messageSender);      
+      console.log('operatorEvent user1: ' + user1);
       // check if both addresses are the same (also use checksum because of format), if not same, don't show to this user (CMO created by other user)
       if (web3.utils.toChecksumAddress(messageSender) != web3.utils.toChecksumAddress(user1)) {
         return;
@@ -137,27 +142,27 @@ $(document).ready(async function () {
     .on("error", function (error) {
       console.log(error);
   });
-
-
-
-
 });
 
 async function hideAndEmptyAlerts() {
-  $("#marketOperatorApprovedArea").css("display", "none");
-  $("#marketOperatorApprovedArea").empty();
-
-  $("#monkeyMultipliedSuccessDiv").css("display", "none");
-  $("#monkeyMultipliedSuccessDiv").empty();
-
-  $("#monkeyCreatedDiv").css("display", "none");
-  $("#monkeyCreatedDiv").empty();
-  
-  $("#marketActivityDiv").css("display", "none");
-  $("#marketActivityDiv").empty();
+  await fadeOutAlerts(); 
+  setTimeout(emptyAlerts, 3000); 
 }
 
-// 
+async function emptyAlerts() {
+  $("#marketOperatorApprovedArea").empty();
+  $("#monkeyMultipliedSuccessDiv").empty();
+  $("#monkeyCreatedDiv").empty();
+  $("#marketActivityDiv").empty();  
+}
+
+async function fadeOutAlerts() {
+  $("#marketOperatorApprovedArea").fadeOut();
+  $("#monkeyMultipliedSuccessDiv").fadeOut();
+  $("#monkeyCreatedDiv").fadeOut();
+  $("#marketActivityDiv").fadeOut();   
+}
+
 $("#switchToMarketButton").click( async () => { 
   // hides breeding functionalities
   hideBreedingElements();  
@@ -167,17 +172,13 @@ $("#switchToMarketButton").click( async () => {
   // emptying gallery
   $("#monkeyRowGallery").empty();     
 
-  //resetting market
+  // resetting market
   hideMarketElements();
  
+  // show market functionality
   $("#marketRow").css("display", "block"); 
-
   $("#marketButtonHolderArea").css("display", "flex");   
-
   $("#marketButtonHolderArea").show();
-  
-  
-  
 
   // Setting the representation of the market smart contract, specifying abi, contractAddress and first account from Ganache's list at this moment
   marketInstance = new web3.eth.Contract(marketAbi, marketContractAddress, {
@@ -189,21 +190,61 @@ $("#switchToMarketButton").click( async () => {
   // XXX check and finish
   marketInstance.events
     .MarketTransaction()
-    .on("data", function (event) {
-      console.log(event);
+    .on("data", function (marketActivityEvent) {
+      console.log('marketActivityEvent: ');
+      console.log(marketActivityEvent);
       $("#marketActivityDiv").css("display", "flex");
       $("#marketActivityDiv").empty();
       $("#marketActivityDiv").append(
-        `        
-          Market activity registered. Click "Market" again to refresh the offers. 
         `
+          <span id="marketActivityApprovedText">        
+            Market activity registered. Click "Market" again to refresh the offers. 
+          </span>
+         `
       );
-      setTimeout(hideAndEmptyAlerts, 6000);
+      //setTimeout(hideAndEmptyAlerts, 6000);
     })
     .on("error", function (error) {
       console.log(error);
-  });
-  
+  });  
+
+  marketInstance.events.MarketTransaction({
+    filter: {TxType: 'Remove offer'}})
+    .on("data", function (RemoveOfferEvent) {
+      console.log('TxType: "Remove offer" registered')
+      console.log(RemoveOfferEvent);      
+      $("#marketActivityDiv").empty();
+      $("#marketActivityDiv").css("display", "flex");
+      $("#marketActivityDiv").append(
+        `        
+        TxType: "Remove offer" registered
+        `
+      );
+      //setTimeout(hideAndEmptyAlerts, 6000);
+    })
+    .on("error", function (error) {
+      console.log(error);
+    })
+  ;
+ 
+
+
+/*
+  marketInstance.events.MarketTransaction({
+    filter: {TxType: "Remove offer"}})
+    .on('data', function(RemoveOfferEvent){
+    console.log(RemoveOfferEvent); // same results as the optional callback above
+    })
+.on('error', function(error, receipt) { // If the transaction was rejected by the network with a receipt, the second parameter will be the receipt.
+    ...
+});*/
+
+
+
+
+
+
+
   /*
   user2 = accounts[1];
   console.log("user2 is " + user2);
@@ -310,6 +351,8 @@ async function showUsersOffersButtonFunct () {
 
 $("#showSellAreaButton").click( async () => { 
   showSellAreaButtonFunct();
+  $(`#monkeyDisplayArea`).empty();
+  galleryLogic(`#monkeyDisplayArea`);
 });
 
 
@@ -336,11 +379,9 @@ async function showSellAreaButtonFunct () {
 
   $("#offerButtonHolderArea").css("display", "flex");
   $("#offerButtonHolderArea").show(); 
-
-  $(`#monkeyDisplayArea`).empty();
   $("#removeOffTokenIdInputField").val("");
 
-  galleryLogic(`#monkeyDisplayArea`);
+  
 }
 
 // XXXX

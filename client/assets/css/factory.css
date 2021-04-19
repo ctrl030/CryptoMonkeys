@@ -388,16 +388,6 @@ body {
   margin-bottom: 8px;
 }
 
-#marketActivityDiv {
-  position:absolute;
-  width: 90%;
-  justify-content: center;
-  border-radius: 10px;
-  font-size: 16px !important;
-  font-weight: bold !important;    
-  margin-bottom: 0px !important; 
-  bottom: 20px; 
-}
 #jungleIslandFooter {
   height: 40px !important;
   margin-bottom: 8px;
