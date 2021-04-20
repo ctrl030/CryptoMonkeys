@@ -14,10 +14,10 @@ let user1;
 let user1MarketAllowed = false;
 
 // Contract address for main contract "MonkeyContract", has to be updated when migrating => i.e. contract address is changing
-const contractAddress = "0x5306b84A42f633Cb3f322Ff9F99fBbA97F2FDcB9";
+const contractAddress = "0x92FFF2acc9067A6B43c3eCb943E6Cf41e449a569";
 
 // Contract address for marketplace contract "MonkeyMarketplace", has to be updated when migrating => i.e. contract address is changing
-const marketContractAddress = "0x6B866eF92D0183196f26aaD3F2BFA4BA9fEe9d5C";
+const marketContractAddress = "0x6Daa192520308B25C0f7eB9db2c7F8Ac5CDe1DcA";
 
 let accounts;
 
@@ -43,6 +43,11 @@ $(document).ready(async function () {
   // To check in console if user is correct (shown in Metamask to be the same, for ex.)
   // console.log("user1: " + user1); 
 
+
+  let monkeyCreatedThrottler;
+  let breedThrottler;
+  let operatorThrottler;  
+
   // on pageload we subscribe to the MonkeyCreated event. From now on, whenever it is emitted, 
   // a notification is created and the css of the monkeyCreatedDiv will be emptied and then appended with the info
   // This only reacts to MonkeyCreated events triggered by "instance", which is specified to "from: accounts[0]"
@@ -50,36 +55,43 @@ $(document).ready(async function () {
   instance.events
     .MonkeyCreated()
     .on("data", function (createdEvent) {
-      console.log('createdEvent: ');
-      console.log(createdEvent);
-      let owner = createdEvent.returnValues.owner;
-      /*console.log('createdEvent owner: ' + owner);
-      console.log('createdEvent user1: ' + user1);*/
-      // check if both addresses are the same (also use checksum because of format), if not same, don't show to this user (CMO created by other user)
-      /*if (web3.utils.toChecksumAddress(owner) != web3.utils.toChecksumAddress(user1)) {
-        console.log('createdEvent not for this address');
-        return;
-      }*/
-      let tokenId = createdEvent.returnValues.tokenId;
-      let parent1Id = createdEvent.returnValues.parent1Id;
-      let parent2Id = createdEvent.returnValues.parent2Id;
-      let genes = createdEvent.returnValues.genes;
-      $("#monkeyCreatedDiv").css("display", "flex");
-      $("#monkeyCreatedDiv").empty();
-      $("#monkeyCreatedDiv").append(
-        `        
-          <ul id="monkeyCreatedDivUnorderedList">
-            <li>Crypto Monkey NFT created successfully!</li>
-            <li>Here are the details: </li>
-            <li>Owner:  ${owner}</li> 
-            <li>Token ID: ${tokenId}</li>  
-            <li>Parent Nr 1 ID: ${parent1Id}</li>
-            <li>Parent Nr 2 ID: ${parent2Id}</li>
-            <li>DNA: ${genes}</li>
-          </ul>
-        `      
-      );
-      setTimeout(hideAndEmptyAlerts, 10000, "#monkeyCreatedDiv");
+      console.log("monkeyCreatedThrottler is now at the start, set to: " + monkeyCreatedThrottler);
+      if (monkeyCreatedThrottler != createdEvent.returnValues.tokenId){
+        console.log('createdEvent: ');
+        console.log(createdEvent);
+        let owner = createdEvent.returnValues.owner;
+        /*console.log('createdEvent owner: ' + owner);
+        console.log('createdEvent user1: ' + user1);*/
+        // check if both addresses are the same (also use checksum because of format), if not same, don't show to this user (CMO created by other user)
+        /*if (web3.utils.toChecksumAddress(owner) != web3.utils.toChecksumAddress(user1)) {
+          console.log('createdEvent not for this address');
+          return;
+        }*/
+        let tokenId = createdEvent.returnValues.tokenId;
+        let parent1Id = createdEvent.returnValues.parent1Id;
+        let parent2Id = createdEvent.returnValues.parent2Id;
+        let genes = createdEvent.returnValues.genes;
+        $("#monkeyCreatedDiv").css("display", "flex");
+        $("#monkeyCreatedDiv").empty();
+        $("#monkeyCreatedDiv").append(
+          `        
+            <ul id="monkeyCreatedDivUnorderedList">
+              <li>Crypto Monkey NFT created successfully!</li>
+              <li>Here are the details: </li>
+              <li>Owner:  ${owner}</li> 
+              <li>Token ID: ${tokenId}</li>  
+              <li>Parent Nr 1 ID: ${parent1Id}</li>
+              <li>Parent Nr 2 ID: ${parent2Id}</li>
+              <li>DNA: ${genes}</li>
+            </ul>
+          `      
+        );        
+        monkeyCreatedThrottler = tokenId;
+        // console.log("monkeyCreatedThrottler is now at the end, set to: " + monkeyCreatedThrottler);
+        setTimeout(hideAndEmptyAlerts, 10000, "#monkeyCreatedDiv");
+      }
+      
+
     })
     .on("error", function (error) {
       console.log(error);
@@ -90,32 +102,37 @@ $(document).ready(async function () {
   instance.events
     .BreedingSuccessful()
     .on("data", function (breedEvent) {
-      console.log('breedEvent: ');  
-      console.log(breedEvent);      
-      let tokenId = breedEvent.returnValues.tokenId;      
-      let generation = breedEvent.returnValues.generation;
-      let genes = breedEvent.returnValues.genes;
-      let owner = breedEvent.returnValues.owner;
-      let parent1Id = breedEvent.returnValues.parent1Id;
-      let parent2Id = breedEvent.returnValues.parent2Id;
-      showLastBornChildMonkey(tokenId);
-      $("#monkeyMultipliedSuccessDiv").css("display", "flex");
-      $("#monkeyMultipliedSuccessDiv").empty();
-      $("#monkeyMultipliedSuccessDiv").append(
-        `        
-          <ul id="breedingSuccessfulDivUnorderedList">
-            <li>Crypto Monkey breeding successfully!</li>
-            <li>Here are the details: </li>
-            <li>Token ID:  ${tokenId}</li>  
-            <li>Generation: ${generation}</li>
-            <li>DNA: ${genes}</li>
-            <li>Owner: ${owner}</li>            
-            <li>Parent 1 ID: ${parent1Id}</li>
-            <li>Parent 2 ID: ${parent2Id}</li>            
-          </ul>
-        `
-      );      
-      setTimeout(hideAndEmptyAlerts, 10000, "#monkeyMultipliedSuccessDiv");
+      console.log("breedThrottler is now at the start, set to: " + breedThrottler);
+      if (breedThrottler != breedEvent.returnValues.tokenId){
+        console.log('breedEvent: ');  
+        console.log(breedEvent);      
+        let tokenId = breedEvent.returnValues.tokenId;      
+        let generation = breedEvent.returnValues.generation;
+        let genes = breedEvent.returnValues.genes;
+        let owner = breedEvent.returnValues.owner;
+        let parent1Id = breedEvent.returnValues.parent1Id;
+        let parent2Id = breedEvent.returnValues.parent2Id;
+        showLastBornChildMonkey(tokenId);
+        $("#monkeyMultipliedSuccessDiv").css("display", "flex");
+        $("#monkeyMultipliedSuccessDiv").empty();
+        $("#monkeyMultipliedSuccessDiv").append(
+          `        
+            <ul id="breedingSuccessfulDivUnorderedList">
+              <li>Crypto Monkey breeding successfully!</li>
+              <li>Here are the details: </li>
+              <li>Token ID:  ${tokenId}</li>  
+              <li>Generation: ${generation}</li>
+              <li>DNA: ${genes}</li>
+              <li>Owner: ${owner}</li>            
+              <li>Parent 1 ID: ${parent1Id}</li>
+              <li>Parent 2 ID: ${parent2Id}</li>            
+            </ul>
+          `
+        );
+        breedThrottler = tokenId;
+        // console.log("breedThrottler is now at the end, set to: " + breedThrottler);
+        setTimeout(hideAndEmptyAlerts, 10000, "#monkeyMultipliedSuccessDiv");      
+      }  
     })
     .on("error", function (error) {
       console.log(error);
@@ -124,25 +141,34 @@ $(document).ready(async function () {
   instance.events
     .ApprovalForAll()
     .on("data", async function (operatorEvent) {
-      console.log('operatorEvent: ');
-      console.log(operatorEvent);
-      let messageSender = operatorEvent.returnValues.msgsender;
-      // console.log('operatorEvent messageSender: ' + messageSender);      
-      // console.log('operatorEvent user1: ' + user1);
-      // check if both addresses are the same (also use checksum because of format), if not same, don't show to this user (CMO created by other user)
-      if (web3.utils.toChecksumAddress(messageSender) != web3.utils.toChecksumAddress(user1)) {
-        return;
-      }      
-      $("#marketOperatorApprovedArea").css("display", "flex");
-      // $("#marketOperatorApprovedArea").empty();
-      $("#marketOperatorApprovedArea").append(
-        `   
-          <span id="marketOperatorApprovedText">
-            Your address ${messageSender} has approved the market contract as operator and you can sell your Crypto Monkey NFTs now.
-          </span>
-        `     
-      )
-      setTimeout(hideAndEmptyAlerts, 10000, "#marketOperatorApprovedArea");
+      console.log("operatorThrottler is now at the start, set to: " + operatorThrottler);
+      console.log("operatorEvent.returnValues._approved is now at the start, set to: " + operatorEvent.returnValues._approved);
+      if (operatorThrottler != operatorEvent.returnValues._approved){        
+        console.log('operatorEvent: ');
+        console.log(operatorEvent);
+        let messageSender = operatorEvent.returnValues.msgsender;
+        let gaveOperator = operatorEvent.returnValues._approved;
+        // let operatorAddress =operatorEvent.returnValues.operator;
+        // console.log('operatorEvent messageSender: ' + messageSender);      
+        // console.log('operatorEvent user1: ' + user1);
+        // check if both addresses are the same (also use checksum because of format), if not same, don't show to this user (CMO created by other user)
+        if (web3.utils.toChecksumAddress(messageSender) != web3.utils.toChecksumAddress(user1)) {
+          return;
+        }      
+        $("#marketOperatorApprovedArea").css("display", "flex");
+        // $("#marketOperatorApprovedArea").empty();
+        $("#marketOperatorApprovedArea").append(
+          `   
+            <span id="marketOperatorApprovedText">
+              Your address ${messageSender} has approved the market contract as operator and you can sell your Crypto Monkey NFTs now.
+            </span>
+          `     
+        )
+        operatorThrottler = gaveOperator;
+        // console.log("operatorThrottler is now at the end, set to: " + operatorThrottler);
+        // console.log("operatorEvent.returnValues._approved is now at the end, set to: " + operatorEvent.returnValues._approved);
+        setTimeout(hideAndEmptyAlerts, 10000, "#marketOperatorApprovedArea");
+      }
     })
     .on("error", function (error) {
       console.log(error);
@@ -228,9 +254,10 @@ $("#switchToMarketButton").click( async () => {
     })
     .on("error", function (error) {
       console.log(error);
-    })
+    })    
   ;*/
- 
+  
+  /* needs to become filtered via TxType
   marketInstance.events.NewOfferCreated()
   .on("data", function (newOfferCreatedEvent) {
     console.log('newOfferCreatedEvent: ');
@@ -249,17 +276,9 @@ $("#switchToMarketButton").click( async () => {
   })
   .on("error", function (error) {
     console.log(error);
-});  
+  });  */
 
-/* experimenting with how to adapt web3 documentation
-  marketInstance.events.MarketTransaction({
-    filter: {TxType: "Remove offer"}})
-    .on('data', function(RemoveOfferEvent){
-    console.log(RemoveOfferEvent); // same results as the optional callback above
-    })
-.on('error', function(error, receipt) { // If the transaction was rejected by the network with a receipt, the second parameter will be the receipt.
-    ...
-});*/
+
 
 
 
@@ -596,8 +615,8 @@ function hideMarketElements() {
 // User must first give market contract address operator status, to put a monkey up for sale 
 $("#makeMarketOperatorButton").click(async () => {  
   let setOperatorRequest = await instance.methods.setApprovalForAll(marketContractAddress, true).send();
-  console.log("setOperatorRequest: ");
-  console.log(setOperatorRequest);
+  // console.log("setOperatorRequest: ");
+  // console.log(setOperatorRequest);
 
   let isMarketOperator = await instance.methods.isApprovedForAll(user1, marketContractAddress).call();
   // console.log('isMarketOperator: ');
