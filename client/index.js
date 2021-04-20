@@ -14,10 +14,10 @@ let user1;
 let user1MarketAllowed = false;
 
 // Contract address for main contract "MonkeyContract", has to be updated when migrating => i.e. contract address is changing
-const contractAddress = "0xa97D5Cb17f21bCDFaAf0D39C32d5D63fBe1f5f15";
+const contractAddress = "0x789648C7f1623CFA8E38dF802f45f05731109C9c";
 
 // Contract address for marketplace contract "MonkeyMarketplace", has to be updated when migrating => i.e. contract address is changing
-const marketContractAddress = "0xa61253D7bd676374aF3DC6a9fBCEa87Db31D1aD6";
+const marketContractAddress = "0xA1b6B637e3fC52ecee993571881e6373db97E0Ed";
 
 let accounts;
 
@@ -31,13 +31,17 @@ $(document).ready(async function () {
   instance = new web3.eth.Contract(abi, contractAddress, {
     from: accounts[0],
   });
-
+  
+  // console.log("instance: ")
+  // console.log(instance)
+  // console.log("instance.events: ")
+  // console.log(instance.events)
 
   // Setting user to first account from Ganache's list at this moment
   user1 = accounts[0];
 
   // To check in console if user is correct (shown in Metamask to be the same, for ex.)
-  console.log("user1: " + user1); 
+  // console.log("user1: " + user1); 
 
   // on pageload we subscribe to the MonkeyCreated event. From now on, whenever it is emitted, 
   // a notification is created and the css of the monkeyCreatedDiv will be emptied and then appended with the info
@@ -74,7 +78,7 @@ $(document).ready(async function () {
           </ul>
         `      
       );
-      setTimeout(hideAndEmptyAlerts, 10000);
+      setTimeout(hideAndEmptyAlerts, 10000, "#monkeyCreatedDiv");
     })
     .on("error", function (error) {
       console.log(error);
@@ -110,7 +114,7 @@ $(document).ready(async function () {
           </ul>
         `
       );      
-      setTimeout(hideAndEmptyAlerts, 10000);
+      setTimeout(hideAndEmptyAlerts, 10000, "#monkeyMultipliedSuccessDiv");
     })
     .on("error", function (error) {
       console.log(error);
@@ -118,49 +122,45 @@ $(document).ready(async function () {
 
   instance.events
     .ApprovalForAll()
-    .on("data", function (operatorEvent) {
+    .on("data", async function (operatorEvent) {
       console.log('operatorEvent: ');
       console.log(operatorEvent);
       let messageSender = operatorEvent.returnValues.msgsender;
-      console.log('operatorEvent messageSender: ' + messageSender);      
-      console.log('operatorEvent user1: ' + user1);
+      // console.log('operatorEvent messageSender: ' + messageSender);      
+      // console.log('operatorEvent user1: ' + user1);
       // check if both addresses are the same (also use checksum because of format), if not same, don't show to this user (CMO created by other user)
       if (web3.utils.toChecksumAddress(messageSender) != web3.utils.toChecksumAddress(user1)) {
         return;
       }      
       $("#marketOperatorApprovedArea").css("display", "flex");
-      $("#marketOperatorApprovedArea").empty();
+      // $("#marketOperatorApprovedArea").empty();
       $("#marketOperatorApprovedArea").append(
-        `        
+        `   
           <span id="marketOperatorApprovedText">
             Your address ${messageSender} has approved the market contract as operator and you can sell your Crypto Monkey NFTs now.
           </span>
-        `      
-      );
-      setTimeout(hideAndEmptyAlerts, 10000);
+        `     
+      )
+      setTimeout(hideAndEmptyAlerts, 10000, "#marketOperatorApprovedArea");
     })
     .on("error", function (error) {
       console.log(error);
   });
 });
 
-async function hideAndEmptyAlerts() {
-  await fadeOutAlerts(); 
-  setTimeout(emptyAlerts, 3000); 
+async function hideAndEmptyAlerts(alertBoxToHide) {
+  await fadeOutAlerts(alertBoxToHide); 
+  setTimeout(emptyAlerts, 3000, alertBoxToHide); 
 }
 
-async function emptyAlerts() {
-  $("#marketOperatorApprovedArea").empty();
-  $("#monkeyMultipliedSuccessDiv").empty();
-  $("#monkeyCreatedDiv").empty();
-  $("#marketActivityDiv").empty();  
+//passing on parameter and fadeying out that div
+async function fadeOutAlerts(alertBoxToFadeOut) {  
+  $(alertBoxToFadeOut).fadeOut();  
 }
 
-async function fadeOutAlerts() {
-  $("#marketOperatorApprovedArea").fadeOut();
-  $("#monkeyMultipliedSuccessDiv").fadeOut();
-  $("#monkeyCreatedDiv").fadeOut();
-  $("#marketActivityDiv").fadeOut();   
+//passing on parameter and emptying that div
+async function emptyAlerts(alertBoxToHide) {  
+  $(alertBoxToHide).empty();  
 }
 
 $("#switchToMarketButton").click( async () => { 
@@ -186,13 +186,15 @@ $("#switchToMarketButton").click( async () => {
   });  
   console.log("marketInstance is");
   console.log(marketInstance);  
+  console.log('marketInstance.events: ');  
+  console.log(marketInstance.events);  
 
   // XXX check and finish
   marketInstance.events
     .MarketTransaction()
     .on("data", function (marketActivityEvent) {
       console.log('marketActivityEvent: ');
-      console.log(marketActivityEvent);
+      console.log(marketActivityEvent);      
       $("#marketActivityDiv").css("display", "flex");
       $("#marketActivityDiv").empty();
       $("#marketActivityDiv").append(
@@ -202,34 +204,53 @@ $("#switchToMarketButton").click( async () => {
           </span>
          `
       );
-      //setTimeout(hideAndEmptyAlerts, 6000);
+      setTimeout(hideAndEmptyAlerts, 6000, "#marketActivityDiv")
     })
     .on("error", function (error) {
       console.log(error);
   });  
 
-  marketInstance.events.MarketTransaction({
+  //xxxx
+  /*marketInstance.events.MarketTransaction({
     filter: {TxType: 'Remove offer'}})
     .on("data", function (RemoveOfferEvent) {
       console.log('TxType: "Remove offer" registered')
-      console.log(RemoveOfferEvent);      
-      $("#marketActivityDiv").empty();
-      $("#marketActivityDiv").css("display", "flex");
-      $("#marketActivityDiv").append(
+      console.log(RemoveOfferEvent);         
+      $("#removeOfferAlertDiv").empty();
+      $("#removeOfferAlertDiv").css("display", "flex");
+      $("#removeOfferAlertDiv").append(
         `        
         TxType: "Remove offer" registered
         `
       );
-      //setTimeout(hideAndEmptyAlerts, 6000);
+      setTimeout(hideAndEmptyAlerts, 6000, "#removeOfferAlertDiv");
     })
     .on("error", function (error) {
       console.log(error);
     })
-  ;
+  ;*/
  
+  marketInstance.events.NewOfferCreated()
+  .on("data", function (newOfferCreatedEvent) {
+    console.log('newOfferCreatedEvent: ');
+    console.log(newOfferCreatedEvent);    
+    //let messageSender = newOfferCreatedEvent.returnValues.msgsender;
+    $("#newOfferCreatedAlertDiv").css("display", "flex");
+    $("#newOfferCreatedAlertDiv").empty();
+    $("#newOfferCreatedAlertDiv").append(
+      `
+        <span id="marketActivityApprovedText">        
+          New offer created!  
+        </span>
+       `
+    );
+    setTimeout(hideAndEmptyAlerts, 6000, "#newOfferCreatedAlertDiv");
+  })
+  .on("error", function (error) {
+    console.log(error);
+});  
 
-
-/*
+/* experimenting with how to adapt web3 documentation
   marketInstance.events.MarketTransaction({
     filter: {TxType: "Remove offer"}})
     .on('data', function(RemoveOfferEvent){
@@ -261,7 +282,7 @@ $("#removeOffTokenIdInputField").val("");
 showUsersOffersButtonFunct();
 });
 
-// XXXXX make only for user: if...
+// XXX make only for user: if...
 $("#showUsersOffersButton").click( async () => { 
   showUsersOffersButtonFunct();  
 });
@@ -281,8 +302,8 @@ async function showUsersOffersButtonFunct () {
   // selling functionality - user's active offers
   // offersArrayRaw still includes old/deleted offers, set to 0
   var offersArrayRaw = await marketInstance.methods.getAllTokenOnSale().call();
-  console.log("offersArrayRaw, unfiltered yet: ");
-  console.log(offersArrayRaw);
+  // console.log("offersArrayRaw, unfiltered yet: ");
+  // console.log(offersArrayRaw);
 
   // Array of tokenIds for which an active order exists 
   var offerTokenIdsArray = [];
@@ -324,8 +345,8 @@ async function showUsersOffersButtonFunct () {
         // Call to create and append HTML for each offer, marks built monkeyboxes with class boxtype, i.e. "offerBox"
         $("#monkeyDisplayArea").append(buildMonkeyBoxes(tokenId, boxtype)); 
             
-        console.log("tokenIdDNA: ");
-        console.log(dnaObject);   
+        // console.log("tokenIdDNA: ");
+        // console.log(dnaObject);   
 
         $(`#generationDisplayLine${tokenId}`).html(tokenGeneration);
 
@@ -477,8 +498,8 @@ $("#showBuyAreaButton").click( async () => {
         // Call to create and append HTML for each offer, marks built monkeyboxes with class boxtype, i.e. "offerBox"
         $("#monkeyDisplayArea").append(buildMonkeyBoxes(tokenId, boxtype)); 
             
-        console.log("tokenIdDNA: ");
-        console.log(dnaObject);   
+        // console.log("tokenIdDNA: ");
+        // console.log(dnaObject);   
 
 
         $(`#generationDisplayLine${tokenId}`).html(tokenGeneration);
@@ -573,11 +594,12 @@ function hideMarketElements() {
 // User must first give market contract address operator status, to put a monkey up for sale 
 $("#makeMarketOperatorButton").click(async () => {  
   let setOperatorRequest = await instance.methods.setApprovalForAll(marketContractAddress, true).send();
+  console.log("setOperatorRequest: ");
   console.log(setOperatorRequest);
 
   let isMarketOperator = await instance.methods.isApprovedForAll(user1, marketContractAddress).call();
-  console.log('isMarketOperator: ');
-  console.log(isMarketOperator);
+  // console.log('isMarketOperator: ');
+  // console.log(isMarketOperator);
 
   user1MarketAllowed = isMarketOperator;
   showSellAreaButtonFunct();
@@ -687,8 +709,8 @@ async function showLastBornChildMonkey(tokenId) {
   // Call to create and append HTML 
   await $("#childArea").append(buildMonkeyBoxes(tokenId, boxtype));    
                        
-  console.log("tokenIdDNA: ");
-  console.log(dnaObject);   
+  // console.log("tokenIdDNA: ");
+  // console.log(dnaObject);   
 
   $(`#generationDisplayLine${tokenId}`).html(tokenGeneration);
 
@@ -714,8 +736,8 @@ $("#showParentsButton").click(async () => {
 
  // An array that holds all of the user's tokenIds
  let myMonkeyIdsArray = await instance.methods.findMonkeyIdsOfAddress(user1).call();       
- console.log("myMonkeyIdsArray: ");
- console.log(myMonkeyIdsArray);
+ // console.log("myMonkeyIdsArray: ");
+ // console.log(myMonkeyIdsArray);
 
  var parent1IsOwnedBool = false;
  var parent2IsOwnedBool = false;
@@ -774,8 +796,8 @@ $("#showParentsButton").click(async () => {
 
       $(`#generationDisplayLine${tokenId}`).html(tokenGeneration);
 
-      console.log("tokenIdDNA: ");
-      console.log(dnaObject);   
+      // console.log("tokenIdDNA: ");
+      // console.log(dnaObject);   
   
       // Call to apply CSS on the HTML structure, effect is styling and showing the next monkey
       // needs a set of DNA, if no tokenId is given, reverts to "Creation" in the receiving functions
@@ -860,8 +882,8 @@ async function galleryLogic(divToAppendTo) {
 
   // An array that holds all of user1's tokenIds
   let myMonkeyIdsArray = await instance.methods.findMonkeyIdsOfAddress(user1).call();       
-  console.log("myMonkeyIdsArray: ");
-  console.log(myMonkeyIdsArray);
+  // console.log("myMonkeyIdsArray: ");
+  // console.log(myMonkeyIdsArray);
   
   // Looping through the user's tokenIds and for each:
   // reading the "DNA string",
@@ -881,8 +903,8 @@ async function galleryLogic(divToAppendTo) {
 
     $(`#generationDisplayLine${tokenId}`).html(tokenGeneration);
 
-    console.log("tokenIdDNA: ");
-    console.log(dnaObject);   
+    // console.log("tokenIdDNA: ");
+    // console.log(dnaObject);   
 
     // Call to apply CSS on the HTML structure, effect is styling and showing the next monkey
     // needs a set of DNA, if no tokenId is given, reverts to "Creation" in the receiving functions

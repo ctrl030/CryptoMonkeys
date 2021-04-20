@@ -104,7 +104,7 @@ contract MonkeyMarketplace is Ownable, IMonkeyMarketplace  {
     Offer memory tokenOffer = tokenIdToOfferMapping[_tokenId];
 
     // There can only be one active offer for a token at a time.    
-    if (tokenOffer.active) {
+    if (tokenOffer.active == true) {
       
       // delete offer array entry 
       delete offersArray[tokenOffer.index]; 

@@ -347,7 +347,7 @@ body {
   margin-bottom: 0px !important; 
 }
 
-#marketOperatorApprovedArea {
+.monkeyAlertBox {
   display: none;  
   width: 100%;
   justify-content: center;
@@ -357,15 +357,7 @@ body {
   margin-bottom: 8px !important;   
 }
 
-#marketActivityDiv {
-  display: none;  
-  width: 100%;
-  justify-content: center;
-  border-radius: 10px;
-  font-size: 16px !important;
-  font-weight: bold !important;    
-  margin-bottom: 8px !important;   
-}
+
 
 
 
