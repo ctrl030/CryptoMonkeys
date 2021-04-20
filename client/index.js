@@ -14,10 +14,10 @@ let user1;
 let user1MarketAllowed = false;
 
 // Contract address for main contract "MonkeyContract", has to be updated when migrating => i.e. contract address is changing
-const contractAddress = "0x789648C7f1623CFA8E38dF802f45f05731109C9c";
+const contractAddress = "0x5306b84A42f633Cb3f322Ff9F99fBbA97F2FDcB9";
 
 // Contract address for marketplace contract "MonkeyMarketplace", has to be updated when migrating => i.e. contract address is changing
-const marketContractAddress = "0xA1b6B637e3fC52ecee993571881e6373db97E0Ed";
+const marketContractAddress = "0x6B866eF92D0183196f26aaD3F2BFA4BA9fEe9d5C";
 
 let accounts;
 
@@ -53,12 +53,13 @@ $(document).ready(async function () {
       console.log('createdEvent: ');
       console.log(createdEvent);
       let owner = createdEvent.returnValues.owner;
-      console.log('createdEvent owner: ' + owner);
-      console.log('createdEvent user1: ' + user1);
+      /*console.log('createdEvent owner: ' + owner);
+      console.log('createdEvent user1: ' + user1);*/
       // check if both addresses are the same (also use checksum because of format), if not same, don't show to this user (CMO created by other user)
-      if (web3.utils.toChecksumAddress(owner) != web3.utils.toChecksumAddress(user1)) {
+      /*if (web3.utils.toChecksumAddress(owner) != web3.utils.toChecksumAddress(user1)) {
+        console.log('createdEvent not for this address');
         return;
-      }
+      }*/
       let tokenId = createdEvent.returnValues.tokenId;
       let parent1Id = createdEvent.returnValues.parent1Id;
       let parent2Id = createdEvent.returnValues.parent2Id;
@@ -565,6 +566,7 @@ $("#mintMonkey").click(() => {
     if (error) {
       console.log(error);
     } else {
+      console.log('createGen0Monkey txHash: ');
       console.log(txHash);
     }
   });  
@@ -687,7 +689,7 @@ var parent2Input;
 
 $("#makeMoreMonkeysButton").click(async () => { 
   await instance.methods.breed(parent1Input, parent2Input).send();
-
+ 
   // let newDetails = await instance.methods.getMonkeyDetails(newMonkeyTokenId).call();
 
   // console.log(newDetails);

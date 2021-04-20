@@ -25,9 +25,7 @@ contract MonkeyMarketplace is Ownable, IMonkeyMarketplace  {
 
   event MarketTransaction(string TxType, address owner, uint256 tokenId);
 
-  event monkeySold (address seller, address buyer, uint256 priceInGwei, uint256 tokenId);
-
-  event NewOfferCreated (address offerCreatedBy, uint256 tokenId, uint256 price);
+  event monkeySold (address seller, address buyer, uint256 priceInGwei, uint256 tokenId);  
   
   /** 
   * Set the current MonkeyContract address and initialize the instance of Monkeycontract.
@@ -130,8 +128,6 @@ contract MonkeyMarketplace is Ownable, IMonkeyMarketplace  {
     offersArray.push(_newOffer);  
 
     emit MarketTransaction("Create offer", monkeyOwner, _tokenId);
-
-    emit NewOfferCreated(msg.sender, _tokenId, _price);
 
   }
 
