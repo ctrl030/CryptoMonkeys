@@ -19,6 +19,7 @@ const contractAddress = "0x80452f64761452A115248Aa5b006af5fED379Ccb";
 // Contract address for marketplace contract "MonkeyMarketplace", has to be updated when migrating => i.e. contract address is changing
 const marketContractAddress = "0xce34ad055BB978001eb8b6376AE5f50FF1cD051a";
 
+// preparing accounts variable
 let accounts;
 
 // for API throttling, prevent events from triggering reactions more than once
@@ -38,18 +39,10 @@ $(document).ready(async function () {
   instance = new web3.eth.Contract(abi, contractAddress, {
     from: accounts[0],
   });
-  
-  // console.log("instance: ")
-  // console.log(instance)
-  // console.log("instance.events: ")
-  // console.log(instance.events)
-
+    
   // Setting user to first account from Ganache's list at this moment
   user1 = accounts[0];
-
-  // To check in console if user is correct (shown in Metamask to be the same, for ex.)
-  // console.log("user1: " + user1); 
-
+  
   // on pageload we subscribe to the MonkeyCreated event. From now on, whenever it is emitted, 
   // a notification is created and the css of the monkeyCreatedDiv will be emptied and then appended with the info
   // This only reacts to MonkeyCreated events triggered by "instance", which is specified to "from: accounts[0]"
@@ -57,18 +50,21 @@ $(document).ready(async function () {
   instance.events
     .MonkeyCreated()
     .on("data", function (createdEvent) {
+      // for API throttling
       console.log("monkeyCreatedThrottler is now at the start, set to: " + monkeyCreatedThrottler);
       if (monkeyCreatedThrottler != createdEvent.returnValues.tokenId){
         console.log('createdEvent: ');
         console.log(createdEvent);
         let owner = createdEvent.returnValues.owner;
-        /*console.log('createdEvent owner: ' + owner);
-        console.log('createdEvent user1: ' + user1);*/
-        // check if both addresses are the same (also use checksum because of format), if not same, don't show to this user (CMO created by other user)
-        /*if (web3.utils.toChecksumAddress(owner) != web3.utils.toChecksumAddress(user1)) {
-          console.log('createdEvent not for this address');
-          return;
-        }*/
+        // left for later, multi-user version: 
+        // check if both addresses are the same (also use checksum because of format),      
+        // if not same, don't show to this user (CMO created by other user)  
+        /*
+          if (web3.utils.toChecksumAddress(owner) != web3.utils.toChecksumAddress(user1)) {
+            console.log('createdEvent not for this address');
+            return;
+          }
+        */
         let tokenId = createdEvent.returnValues.tokenId;
         let parent1Id = createdEvent.returnValues.parent1Id;
         let parent2Id = createdEvent.returnValues.parent2Id;
@@ -87,9 +83,10 @@ $(document).ready(async function () {
               <li>DNA: ${genes}</li>
             </ul>
           `      
-        );        
+        );
+        // for API throttling        
         monkeyCreatedThrottler = tokenId;
-        // console.log("monkeyCreatedThrottler is now at the end, set to: " + monkeyCreatedThrottler);
+        // take out alert after some time       
         setTimeout(hideAndEmptyAlerts, 10000, "#monkeyCreatedDiv");
       }
       
@@ -104,8 +101,10 @@ $(document).ready(async function () {
   instance.events
     .BreedingSuccessful()
     .on("data", function (breedEvent) {
+      // for API throttling
       console.log("breedThrottler is now at the start, set to: " + breedThrottler);
       if (breedThrottler != breedEvent.returnValues.tokenId){
+
         console.log('breedEvent: ');  
         console.log(breedEvent);      
         let tokenId = breedEvent.returnValues.tokenId;      
@@ -131,8 +130,9 @@ $(document).ready(async function () {
             </ul>
           `
         );
+        // for API throttling
         breedThrottler = tokenId;
-        // console.log("breedThrottler is now at the end, set to: " + breedThrottler);
+        // take out alert after some time
         setTimeout(hideAndEmptyAlerts, 10000, "#monkeyMultipliedSuccessDiv");      
       }  
     })
@@ -144,9 +144,10 @@ $(document).ready(async function () {
   instance.events
     .ApprovalForAll()
     .on("data", async function (operatorEvent) {
-      console.log("operatorThrottler is now at the start, set to: " + operatorThrottler);
-      // console.log("operatorEvent.returnValues._approved is now at the start, set to: " + operatorEvent.returnValues._approved);
-      if (operatorThrottler != operatorEvent.returnValues._approved){        
+      // for API throttling
+      console.log("operatorThrottler is now at the start, set to: " + operatorThrottler);      
+      if (operatorThrottler != operatorEvent.returnValues._approved){  
+
         console.log('operatorEvent: ');
         console.log(operatorEvent);
         let messageSender = operatorEvent.returnValues.msgsender;
@@ -167,9 +168,9 @@ $(document).ready(async function () {
             </span>
           `     
         )
+        // for API throttling
         operatorThrottler = gaveOperator;
-        // console.log("operatorThrottler is now at the end, set to: " + operatorThrottler);
-        // console.log("operatorEvent.returnValues._approved is now at the end, set to: " + operatorEvent.returnValues._approved);
+        // take out alert after some time
         setTimeout(hideAndEmptyAlerts, 10000, "#marketOperatorApprovedArea");
       }
     })
@@ -211,6 +212,7 @@ $("#switchToMarketButton").click( async () => {
   marketInstance.events
     .MarketTransaction()
     .on("data", function (marketTransactionEvent) {
+      // for API throttling
       console.log('marketTransactionThrottler is at the start and set to: ' + marketTransactionThrottler);
       if (marketTransactionThrottler != marketTransactionEvent.transactionHash){
         console.log('marketTransactionEvent: ');
@@ -229,6 +231,7 @@ $("#switchToMarketButton").click( async () => {
             </span>
           `
         );
+        // take out alert after some time
         setTimeout(hideAndEmptyAlerts, 6000, "#marketActivityDiv")
         if (eventType == 'Remove offer') {
           console.log('TxType: "Remove offer" registered')
@@ -239,6 +242,7 @@ $("#switchToMarketButton").click( async () => {
             TxType: "Remove offer" registered
             `
           );
+          // take out alert after some time
           setTimeout(hideAndEmptyAlerts, 6000, "#removeOfferAlertDiv");
         }  
         if (eventType == 'Create offer') {
@@ -252,12 +256,13 @@ $("#switchToMarketButton").click( async () => {
               </span>
             `
           );
+          // take out alert after some time
           setTimeout(hideAndEmptyAlerts, 6000, "#newOfferCreatedAlertDiv");
         }
         if (eventType == 'Buy') {
           console.log('TxType: "Buy" registered');        
         }
-        // setting marketTransactionThrottler to transaction hash, so event only triggers once
+        // for API throttling, setting marketTransactionThrottler to transaction hash, so event only triggers once
         marketTransactionThrottler = marketTransactionEvent.transactionHash;
       }
     })
@@ -269,6 +274,7 @@ $("#switchToMarketButton").click( async () => {
   marketInstance.events
   .monkeySold ()
   .on("data", function (monkeySoldEvent) {
+    // for API throttling
     console.log('monkeySoldThrottler is at the start and set to: ' + monkeySoldThrottler);     
     if (monkeySoldThrottler != monkeySoldEvent.transactionHash){    
       console.log('monkeySoldEvent: ');
@@ -288,7 +294,9 @@ $("#switchToMarketButton").click( async () => {
           </ul>        
         `
       );
+      // take out alert after some time
       setTimeout(hideAndEmptyAlerts, 6000, "#monkeySoldAlertDiv")
+      // for API throttling
       monkeySoldThrottler = monkeySoldEvent.transactionHash;
     }  
   })
@@ -298,6 +306,7 @@ $("#switchToMarketButton").click( async () => {
   
 });
 
+// taking out alerts after some time
 async function hideAndEmptyAlerts(alertBoxToHide) {
   await fadeOutAlerts(alertBoxToHide); 
   setTimeout(emptyAlerts, 3000, alertBoxToHide); 
@@ -336,8 +345,7 @@ async function showUsersOffersButtonFunct () {
   // empty display area
   $("#monkeyDisplayArea").empty(); 
 
-  $("#removeOffButtonHolderArea").css("display", "flex");
-  $("#removeOffButtonHolderArea").show(); 
+ 
   
   // selling functionality - user's active offers
   // offersArrayRaw still includes old/deleted offers, set to 0
@@ -389,11 +397,8 @@ async function showUsersOffersButtonFunct () {
         // console.log(dnaObject);   
 
         $(`#generationDisplayLine${tokenId}`).html(tokenGeneration);
-
         $(`#offerPriceDisplayLine${tokenId}`).html(offerPrice);
-
         $(`#offerOwnerDisplayLine${tokenId}`).html(offerOwner); 
-
         
         // Call to apply CSS on the HTML structure, effect is styling and showing the next monkey
         // needs a set of DNA, if no tokenId is given, reverts to "Creation" in the receiving functions
@@ -401,12 +406,28 @@ async function showUsersOffersButtonFunct () {
         
         showPrices(tokenId);
       }
-
     }    
   }
 
+  if($("#monkeyDisplayArea").children().length > 0){
+    // show buttons to remove offer
+    $("#removeOffButtonHolderArea").css("display", "flex");
+    $("#removeOffButtonHolderArea").show(); 
+  } else {
+    console.log("user has no monkeys on sale")
+    $("#noOwnedCMOsOnSaleDiv").css("display", "flex");
+    $("#noOwnedCMOsOnSaleDiv").empty();
+    $("#noOwnedCMOsOnSaleDiv").append(
+      `
+        <span>
+          You have no Crypto Monkeys on sale at the moment. Click on "Market" and "Sell Monkeys" to change that.                        
+        </span>        
+      `
+    );
+    // take out alert after some time
+    setTimeout(hideAndEmptyAlerts, 6000, "#noOwnedCMOsOnSaleDiv")
+  }
   $("#removeOffTokenIdInputField").val("");
-
 }
 
 
@@ -564,6 +585,17 @@ $("#showBuyAreaButton").click( async () => {
     $("#buyButtonHolderArea").show();         
   } else {
     console.log("no open offers to buy from")
+    $("#noOpenoffersAlertDiv").css("display", "flex");
+    $("#noOpenoffersAlertDiv").empty();
+    $("#noOpenoffersAlertDiv").append(
+      `
+        <span>
+          There are no open offers from other people at the moment. Share the game and come back later!                        
+        </span>        
+      `
+    );
+    // take out alert after some time
+    setTimeout(hideAndEmptyAlerts, 6000, "#noOpenoffersAlertDiv")
   }
 
 }); 
