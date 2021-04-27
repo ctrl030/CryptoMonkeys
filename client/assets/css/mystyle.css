@@ -8,11 +8,14 @@
   src        : url("Kavoon-Regular.ttf");
 }
 
+
 body {
   font-family: Poppins;
   font-weight: 500;
   letter-spacing: 1px; 
 }
+
+
 
 #jungleIslandTextDiv {
   font-family: 'Kavoon';  

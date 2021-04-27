@@ -1,8 +1,12 @@
-#monkey {
+.monkey {
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  top: 36%;
+  top: 32%;
+}
+
+.monkeyCreation{
+  top: 36% !important;
 }
 
 #mbody {

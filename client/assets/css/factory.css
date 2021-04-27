@@ -9,11 +9,15 @@ html {
   box-sizing: border-box;
   overflow-y: scroll;
 }
+
 body {
-  background: #ede15f;
-  line-height: 1 !important;
   background-image: url(https://img.elo7.com.br/product/zoom/22381A1/painel-de-festa-praia-por-do-sol-02-banner.jpg);
   background-size: cover;
+  background-attachment: fixed;
+  min-height: 500px;  
+  
+  line-height: 1.4 !important;
+  
 }
 
 .textOverBoxes {
@@ -21,17 +25,17 @@ body {
   font-weight: bold;
 }
 
-#jungleIslandContainer {
-  margin-top: 2vh;
-  width: 1260px !important;
-  max-width: 1260px !important;
-  padding-right: 0px !important;
-  padding-left: 0px !important;
+#jungleIslandContainer {  
+  width: 1460px !important;
+  max-width: 1460px !important;
+  padding: 0px !important; 
+  margin-top: 20px !important;
+  margin-bottom: 0px !important; 
 }
 
 #jungleIslandTextDiv {
   text-align: center;
-  padding: 16px;
+  padding: 10px;
   background-color: #ededed;
   border-radius: 10px;
   margin-right: 0px !important;
@@ -59,14 +63,22 @@ body {
   justify-content: space-around;
 }
 
-#switchToGalleryButton {
-  font-weight: bold; 
+.boldButton {
+  font-weight: bold;   
 }
 
-#switchToCreationButton {
-  font-weight: bold;
-  display: none; 
-} 
+.importantButton{
+  font-weight: bold !important;
+  font-size: 1.1rem !important;   
+}
+
+
+#monkeyRowGallery {
+  color: #4f3222 !important;
+  margin-right: 0px !important;
+  margin-left: 0px !important;
+  justify-content: space-around;
+}
 
 #monkeyRowCreation {
   color: #4f3222 !important;
@@ -75,13 +87,46 @@ body {
   justify-content: space-around;
 }
 
+#monkeyRowMultiply {
+  display: none; 
+  color: #4f3222 !important;
+  margin-right: 0px !important;
+  margin-left: 0px !important;
+  justify-content: space-around;
+}
+
+#marketRow{
+  display:none;
+  color: #4f3222 !important;
+  margin-left: 0px !important;
+  margin-right: 0px !important;
+  margin-top: 0px !important;
+  margin-bottom: 0px !important;  
+  justify-content: space-around;
+}
+
+
+
+#parentsArea {
+  justify-content: space-around;
+  display: none;
+}
+
 .monkeySliderArea {
   position:relative;
   padding: 25px;
+  margin-top: 0px !important;
+  margin-bottom: 0px !important; 
   background-color: #ededed;
   border-radius: 10px;
   z-index: 0;
   opacity: 0.95;
+}
+
+#monkeyBoxCreation{
+  margin-top: 0px !important;
+  margin-bottom: 0px !important;
+  height: 600px !important; 
 }
 
 #sliderButtonHolderDiv {
@@ -89,7 +134,7 @@ body {
   align-self: center;
   display: flex;
   justify-content: space-around;
-  margin-bottom: 20px;
+  margin-bottom: 25px;
 }
 
 .attributesSliders {
@@ -98,7 +143,7 @@ body {
 
 .monkeyBox {
   position: relative;
-  height: 580px;
+  height: 640px;
   width: 400px !important;
   /*background-color: #93fc7c;*/
   background-image: url("https://cdn.pixabay.com/photo/2016/11/28/18/37/the-1865639_960_720.jpg");
@@ -109,15 +154,45 @@ body {
 .dnaDiv {
   position: absolute;
   width: 300px !important;
-  height: 24px !important;
-  display: flex;
-  justify-content: center;
+  height: 25px !important;
+  display: flex;  
   align-items: center;
-  left: 50px;
-  bottom: 15px;
+  left: 50px;  
   background-color: #ededed;
   border-radius: 10px;
 }
+
+.offerPriceDiv {
+  display: none;
+  padding-left: 25px;
+  bottom: 10px
+}
+
+.offerOwnerDiv {
+  display: none;
+  padding-left: 25px;
+  bottom: 40px
+}
+
+.monkeyTokenIdDiv {
+  bottom:70px;
+  padding-left: 25px;
+}
+
+.monkeyGenerationDiv {
+  bottom: 40px;
+  padding-left: 25px;
+}
+
+.monkeyDNALine {
+  bottom: 10px;
+  justify-content: center;  
+}
+
+#monkeyDNALineCreation {
+  bottom: 15px;
+}
+
 
 #buttonHolderArea {
   margin-top: 8px;
@@ -132,16 +207,6 @@ body {
   opacity: 0.95;
 }
 
-#monkeyCreatedDiv {
-  position:absolute;
-  width: 90%;
-  justify-content: center;
-  border-radius: 10px;
-  font-size: 16px !important;
-  font-weight: bold !important;     
-  bottom:20px; 
-}
-
 #buttonHolderDiv {
   width: 1000px;
   align-self: center;
@@ -149,15 +214,173 @@ body {
   justify-content: space-around;
 }
 
+.holderDiv {
+  width: 1000px;
+  align-self: center;
+  display: flex;
+  justify-content: space-around;
+}
+
+#marketButtonHolderArea {
+  margin-bottom: 8px !important;
+  height: 60px;
+  border-radius: 10px;
+  background-color: #ededed;
+  display: none;
+  justify-content: center;  
+  opacity: 0.95;
+}
+
+#marketbuttonHolderDiv {
+  width: 1000px;
+  align-self: center;
+  display: flex;
+  justify-content: space-around;
+}
+
+#monkeyDisplayArea {
+  color: #4f3222 !important;
+  margin-right: 0px !important;
+  margin-left: 0px !important;
+  justify-content: space-around;
+}
+
+#offerButtonHolderArea {
+  margin-bottom: 8px !important;  
+  height: 60px;
+  border-radius: 10px;
+  background-color: #ededed;
+  display: none;
+  justify-content: center;  
+  opacity: 0.95;
+}
+
+#offerbuttonHolderDiv {
+  width: 1100px;
+  align-self: center;
+  display: flex;
+  justify-content: space-around;
+}
+
+#buyButtonHolderArea {
+  margin-bottom: 8px !important;  
+  height: 60px;
+  border-radius: 10px;
+  background-color: #ededed;
+  display: none;
+  justify-content: center;  
+  opacity: 0.95;
+}
+
+#buyButtonHolderDiv {
+  width: 1100px;
+  align-self: center;
+  display: flex;
+  justify-content: space-around;
+}
+
+#removeOffButtonHolderArea {
+  margin-bottom: 8px !important;  
+  height: 60px;
+  border-radius: 10px;
+  background-color: #ededed;
+  display: none;
+  justify-content: center;  
+  opacity: 0.95;
+}
+
+#removeOffbuttonHolderDiv {
+  width: 1100px;
+  align-self: center;
+  display: flex;
+  justify-content: space-around;
+}
+
+#multiplyButtonHolderArea {
+  margin-top: 0px !important;
+  margin-left: 0px !important;
+  margin-right: 0px !important;
+  margin-bottom: 8px !important;  
+  height: 60px;
+  border-radius: 10px;
+  background-color: #ededed;
+  display: none;
+  justify-content: center;  
+  opacity: 0.95;
+}
+
+#multiplybuttonHolderDiv {
+  width: 1000px;
+  align-self: center;
+  display: flex;
+  justify-content: space-around; 
+}
+
+.multiplyAreaBackground {    
+  margin-bottom: 8px !important;
+  padding: 5px;  
+  background-color: #ededed;
+  border-radius: 10px;
+  z-index: 0; 
+}
+
+#monkeyMultipliedSuccessArea {
+  justify-content: center;
+  display: flex;
+  margin-left: 0px !important;
+  margin-right: 0px !important; 
+}
+
+#monkeyCreatedDiv {
+  display: none;
+  position:absolute;
+  width: 90%;
+  justify-content: center;
+  border-radius: 10px;
+  font-size: 16px !important;
+  font-weight: bold !important;    
+  margin-bottom: 0px !important; 
+  bottom: 20px; 
+}
+
+#monkeyCreatedDivUnorderedList { 
+  margin-bottom: 0px !important; 
+}
+
+.monkeyAlertBox {
+  display: none;  
+  width: 100%;
+  justify-content: center;
+  border-radius: 10px;
+  font-size: 16px !important;
+  font-weight: bold !important;    
+  margin-bottom: 8px !important;   
+}
+
+#breedingSuccessfulDivUnorderedList { 
+  margin-top: 16px !important; 
+  margin-bottom: 16px !important; 
+}
+
+#monkeyMultipliedSuccessDiv {
+  display: none;
+  width: 100% !important;
+  justify-content: center;
+  border-radius: 10px;
+  font-size: 16px !important;
+  font-weight: bold !important; 
+  position: relative;  
+  border: 1px solid transparent;  
+  margin-bottom: 8px;
+}
+
 #jungleIslandFooter {
-  height: 80px !important;
-  margin-top: 8px;
+  height: 40px !important;
   margin-bottom: 8px;
   border-radius: 10px;
   background-color: #ededed;
   text-align: center;
-  padding-top: 30px;
-  padding-bottom: 30px;
+  padding-top: 12px;  
   margin-right: 0px !important;
   margin-left: 0px !important;
   opacity: 0.95;
@@ -166,4 +389,18 @@ body {
 #jungleIslandFooter p {
   font-size: 16px;
   font-weight: bold;
+}
+
+.offerHoldCol{
+  width: 160px;
+}
+
+.offerBox {
+  position: relative;
+  height: 720px !important;
+  width: 400px !important;
+  /*background-color: #93fc7c;*/
+  background-image: url("https://i.ibb.co/k5qGZ8w/mock-Background-Bigger.jpg") !important;
+  border-radius: 10px;
+  z-index: 1;
 }
