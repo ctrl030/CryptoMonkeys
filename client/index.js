@@ -14,12 +14,19 @@ let user1;
 let user1MarketAllowed = false;
 
 // Contract address for main contract "MonkeyContract", has to be updated when migrating => i.e. contract address is changing
-const contractAddress = "0x1d77d64bb14BEdD9de53789bAe62A6a63F3C0114";
+const contractAddress = "0x80452f64761452A115248Aa5b006af5fED379Ccb";
 
 // Contract address for marketplace contract "MonkeyMarketplace", has to be updated when migrating => i.e. contract address is changing
-const marketContractAddress = "0xA13eDA1E5E680681EE0bFd7A1198f3cFE438804A";
+const marketContractAddress = "0xce34ad055BB978001eb8b6376AE5f50FF1cD051a";
 
 let accounts;
+
+// for API throttling, prevent events from triggering reactions more than once
+let monkeyCreatedThrottler;
+let breedThrottler;
+let operatorThrottler; 
+let marketTransactionThrottler;
+let monkeySoldThrottler;
 
 // When ready, during page load 
 $(document).ready(async function () {
@@ -42,11 +49,6 @@ $(document).ready(async function () {
 
   // To check in console if user is correct (shown in Metamask to be the same, for ex.)
   // console.log("user1: " + user1); 
-
-  // for API throttling, prevent events from triggering reactions more than once
-  let monkeyCreatedThrottler;
-  let breedThrottler;
-  let operatorThrottler;  
 
   // on pageload we subscribe to the MonkeyCreated event. From now on, whenever it is emitted, 
   // a notification is created and the css of the monkeyCreatedDiv will be emptied and then appended with the info
@@ -179,21 +181,6 @@ $(document).ready(async function () {
 
 })
 
-async function hideAndEmptyAlerts(alertBoxToHide) {
-  await fadeOutAlerts(alertBoxToHide); 
-  setTimeout(emptyAlerts, 3000, alertBoxToHide); 
-}
-
-//passing on parameter and fadeying out that div
-async function fadeOutAlerts(alertBoxToFadeOut) {  
-  $(alertBoxToFadeOut).fadeOut();  
-}
-
-//passing on parameter and emptying that div
-async function emptyAlerts(alertBoxToHide) {  
-  $(alertBoxToHide).empty();  
-}
-
 $("#switchToMarketButton").click( async () => { 
   // hides breeding functionalities
   hideBreedingElements();  
@@ -224,49 +211,54 @@ $("#switchToMarketButton").click( async () => {
   marketInstance.events
     .MarketTransaction()
     .on("data", function (marketTransactionEvent) {
-      console.log('marketTransactionEvent: ');
-      console.log(marketTransactionEvent);   
-      let eventType = marketTransactionEvent.returnValues["TxType"].toString();
-      console.log('eventType: ');
-      console.log(eventType);   
-      let owner = marketTransactionEvent.returnValues['owner'];
-      let tokenId = marketTransactionEvent.returnValues['tokenId'];   
-      $("#marketActivityDiv").css("display", "flex");
-      $("#marketActivityDiv").empty();
-      $("#marketActivityDiv").append(
-        `
-          <span id="marketActivityApprovedText">        
-            Market activity registered. Click "Market" again to refresh the offers. 
-          </span>
-         `
-      );
-      setTimeout(hideAndEmptyAlerts, 6000, "#marketActivityDiv")
-      if (eventType == 'Remove offer') {
-        console.log('TxType: "Remove offer" registered')
-        $("#removeOfferAlertDiv").empty();
-        $("#removeOfferAlertDiv").css("display", "flex");
-        $("#removeOfferAlertDiv").append(
-          `        
-          TxType: "Remove offer" registered
-          `
-        );
-        setTimeout(hideAndEmptyAlerts, 6000, "#removeOfferAlertDiv");
-      }  
-      if (eventType == 'Create offer') {
-        console.log('TxType: "Create offer" registered');
-        $("#newOfferCreatedAlertDiv").css("display", "flex");
-        $("#newOfferCreatedAlertDiv").empty();
-        $("#newOfferCreatedAlertDiv").append(
+      console.log('marketTransactionThrottler is at the start and set to: ' + marketTransactionThrottler);
+      if (marketTransactionThrottler != marketTransactionEvent.transactionHash){
+        console.log('marketTransactionEvent: ');
+        console.log(marketTransactionEvent);
+          
+        let eventType = marketTransactionEvent.returnValues["TxType"].toString();
+        console.log('eventType: ');
+        console.log(eventType); 
+        let tokenId = marketTransactionEvent.returnValues['tokenId'];   
+        $("#marketActivityDiv").css("display", "flex");
+        $("#marketActivityDiv").empty();
+        $("#marketActivityDiv").append(
           `
             <span id="marketActivityApprovedText">        
-              New offer created for your Crypto Monkey NFT with Token ID ${tokenId}!  
+              Market activity registered. Click "Market" again to refresh the offers. 
             </span>
           `
         );
-        setTimeout(hideAndEmptyAlerts, 6000, "#newOfferCreatedAlertDiv");
-      }
-      if (eventType == 'Buy') {
-        console.log('TxType: "Buy" registered');        
+        setTimeout(hideAndEmptyAlerts, 6000, "#marketActivityDiv")
+        if (eventType == 'Remove offer') {
+          console.log('TxType: "Remove offer" registered')
+          $("#removeOfferAlertDiv").empty();
+          $("#removeOfferAlertDiv").css("display", "flex");
+          $("#removeOfferAlertDiv").append(
+            `        
+            TxType: "Remove offer" registered
+            `
+          );
+          setTimeout(hideAndEmptyAlerts, 6000, "#removeOfferAlertDiv");
+        }  
+        if (eventType == 'Create offer') {
+          console.log('TxType: "Create offer" registered');
+          $("#newOfferCreatedAlertDiv").css("display", "flex");
+          $("#newOfferCreatedAlertDiv").empty();
+          $("#newOfferCreatedAlertDiv").append(
+            `
+              <span id="marketActivityApprovedText">        
+                New offer created for your Crypto Monkey NFT with Token ID ${tokenId}!  
+              </span>
+            `
+          );
+          setTimeout(hideAndEmptyAlerts, 6000, "#newOfferCreatedAlertDiv");
+        }
+        if (eventType == 'Buy') {
+          console.log('TxType: "Buy" registered');        
+        }
+        // setting marketTransactionThrottler to transaction hash, so event only triggers once
+        marketTransactionThrottler = marketTransactionEvent.transactionHash;
       }
     })
     .on("error", function (error) {
@@ -277,40 +269,49 @@ $("#switchToMarketButton").click( async () => {
   marketInstance.events
   .monkeySold ()
   .on("data", function (monkeySoldEvent) {
-    console.log('monkeySoldEvent: ');
-    console.log(monkeySoldEvent);   
-    let monkeySeller = monkeySoldEvent.returnValues.seller;
-    let monkeybuyer = monkeySoldEvent.returnValues.buyer;
-    let tokenId = monkeySoldEvent.returnValues.tokenId;
-    let paidPriceInEth = monkeySoldEvent.returnValues.priceInGwei/ 1000000000;
-    $("#monkeySoldAlertDiv").css("display", "flex");
-    $("#monkeySoldAlertDiv").empty();
-    $("#monkeySoldAlertDiv").append(
-      `
-        <ul id="monkeySoldList">
-          <li>Crypto Monkey NFT ${tokenId} was sold for ${paidPriceInEth} Ether.</li>
-          <li>New owner: ${monkeybuyer}</li>
-          <li>Seller: ${monkeySeller}</li>               
-        </ul>        
-      `
-    );
-    // setTimeout(hideAndEmptyAlerts, 6000, "#monkeySoldAlertDiv")
+    console.log('monkeySoldThrottler is at the start and set to: ' + monkeySoldThrottler);     
+    if (monkeySoldThrottler != monkeySoldEvent.transactionHash){    
+      console.log('monkeySoldEvent: ');
+      console.log(monkeySoldEvent);   
+      let monkeySeller = monkeySoldEvent.returnValues.seller;
+      let monkeybuyer = monkeySoldEvent.returnValues.buyer;
+      let tokenId = monkeySoldEvent.returnValues.tokenId;
+      let paidPriceInEth = monkeySoldEvent.returnValues.priceInGwei/ 1000000000;
+      $("#monkeySoldAlertDiv").css("display", "flex");
+      $("#monkeySoldAlertDiv").empty();
+      $("#monkeySoldAlertDiv").append(
+        `
+          <ul id="monkeySoldList">
+            <li>Crypto Monkey NFT ${tokenId} was sold for ${paidPriceInEth} Ether.</li>
+            <li>New owner: ${monkeybuyer}</li>
+            <li>Seller: ${monkeySeller}</li>               
+          </ul>        
+        `
+      );
+      setTimeout(hideAndEmptyAlerts, 6000, "#monkeySoldAlertDiv")
+      monkeySoldThrottler = monkeySoldEvent.transactionHash;
+    }  
   })
   .on("error", function (error) {
     console.log(error);
-  })  
-
- /* marketInstance.events
-  .MarketTransaction()
-  .on("data", function (testEvent) {
-    console.log('testEvent: ');
-    console.log(testEvent);       
-  })
-  .on("error", function (error) {
-    console.log(error);
-  })  */
+  })   
   
 });
+
+async function hideAndEmptyAlerts(alertBoxToHide) {
+  await fadeOutAlerts(alertBoxToHide); 
+  setTimeout(emptyAlerts, 3000, alertBoxToHide); 
+}
+
+//passing on parameter and fadeying out that div
+async function fadeOutAlerts(alertBoxToFadeOut) {  
+  $(alertBoxToFadeOut).fadeOut();  
+}
+
+//passing on parameter and emptying that div
+async function emptyAlerts(alertBoxToHide) {  
+  $(alertBoxToHide).empty();  
+}
 
 $("#removeOfferButton").click( async () => {
 tokenIdToRemoveOffer = $("#removeOffTokenIdInputField").val(); 
@@ -484,12 +485,9 @@ $("#showBuyAreaButton").click( async () => {
   // empty display area
   $("#monkeyDisplayArea").empty(); 
 
-  // Reset and show buttons to buy
+  // Reset buy input fields
   $("#buyMonkeyTokenIdInputField").val("");
   $("#confirmPriceInputField").val("");
-  $("#buyButtonHolderArea").css("display", "flex");
-  $("#buyButtonHolderArea").show(); 
-  
   
   // buying functionality - all active offers, without user's
   // offersArrayRaw still includes old/deleted offers, set to 0
@@ -503,6 +501,7 @@ $("#showBuyAreaButton").click( async () => {
   // Array of the complete offers
   var completeOffersArray = [];
 
+  
   for (let index = 0; index < offersArrayRaw.length; index++) {
     const tokenId = offersArrayRaw[index];
     // filtering out inactive offers (old/deleted offers, set to 0)
@@ -535,7 +534,7 @@ $("#showBuyAreaButton").click( async () => {
         const boxtype = "offerBox";
 
         // Call to create and append HTML for each offer, marks built monkeyboxes with class boxtype, i.e. "offerBox"
-        $("#monkeyDisplayArea").append(buildMonkeyBoxes(tokenId, boxtype)); 
+        $("#monkeyDisplayArea").append(buildMonkeyBoxes(tokenId, boxtype));
             
         // console.log("tokenIdDNA: ");
         // console.log(dnaObject);   
@@ -549,15 +548,23 @@ $("#showBuyAreaButton").click( async () => {
         
         // Call to apply CSS on the HTML structure, effect is styling and showing the next monkey
         // needs a set of DNA, if no tokenId is given, reverts to "Creation" in the receiving functions
-        renderMonkey(dnaObject, tokenId);
-        
+        renderMonkey(dnaObject, tokenId);        
         showPrices(tokenId);
-      }
+      }      
     }    
   }
 
   console.log("Active offers exist for these tokenIds: ");
   console.log(offerTokenIdsArray);
+
+  // checking if NFT offers are displayed, if not, don't show buttons
+  if($("#monkeyDisplayArea").children().length > 0){
+    // show buttons to buy
+    $("#buyButtonHolderArea").css("display", "flex");
+    $("#buyButtonHolderArea").show();         
+  } else {
+    console.log("no open offers to buy from")
+  }
 
 }); 
 
