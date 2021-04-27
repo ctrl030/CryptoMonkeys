@@ -110,7 +110,7 @@ contract MonkeyMarketplace is Ownable, IMonkeyMarketplace  {
       // delete mapping entry
       delete tokenIdToOfferMapping[_tokenId];
 
-      emit MarketTransaction("Remove offer", msg.sender, _tokenId);
+      // emit MarketTransaction("Remove offer", msg.sender, _tokenId);
     }
     
     // Creating a new offer from the Offer struct "blueprint"

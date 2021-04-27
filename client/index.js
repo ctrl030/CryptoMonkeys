@@ -14,10 +14,10 @@ let user1;
 let user1MarketAllowed = false;
 
 // Contract address for main contract "MonkeyContract", has to be updated when migrating => i.e. contract address is changing
-const contractAddress = "0x92FFF2acc9067A6B43c3eCb943E6Cf41e449a569";
+const contractAddress = "0x1d77d64bb14BEdD9de53789bAe62A6a63F3C0114";
 
 // Contract address for marketplace contract "MonkeyMarketplace", has to be updated when migrating => i.e. contract address is changing
-const marketContractAddress = "0x6Daa192520308B25C0f7eB9db2c7F8Ac5CDe1DcA";
+const marketContractAddress = "0xA13eDA1E5E680681EE0bFd7A1198f3cFE438804A";
 
 let accounts;
 
@@ -43,7 +43,7 @@ $(document).ready(async function () {
   // To check in console if user is correct (shown in Metamask to be the same, for ex.)
   // console.log("user1: " + user1); 
 
-
+  // for API throttling, prevent events from triggering reactions more than once
   let monkeyCreatedThrottler;
   let breedThrottler;
   let operatorThrottler;  
@@ -136,13 +136,14 @@ $(document).ready(async function () {
     })
     .on("error", function (error) {
       console.log(error);
-  });
+    })
+  ;
 
   instance.events
     .ApprovalForAll()
     .on("data", async function (operatorEvent) {
       console.log("operatorThrottler is now at the start, set to: " + operatorThrottler);
-      console.log("operatorEvent.returnValues._approved is now at the start, set to: " + operatorEvent.returnValues._approved);
+      // console.log("operatorEvent.returnValues._approved is now at the start, set to: " + operatorEvent.returnValues._approved);
       if (operatorThrottler != operatorEvent.returnValues._approved){        
         console.log('operatorEvent: ');
         console.log(operatorEvent);
@@ -172,8 +173,11 @@ $(document).ready(async function () {
     })
     .on("error", function (error) {
       console.log(error);
-  });
-});
+  })
+
+  
+
+})
 
 async function hideAndEmptyAlerts(alertBoxToHide) {
   await fadeOutAlerts(alertBoxToHide); 
@@ -214,14 +218,19 @@ $("#switchToMarketButton").click( async () => {
   console.log("marketInstance is");
   console.log(marketInstance);  
   console.log('marketInstance.events: ');  
-  console.log(marketInstance.events);  
+  console.log(marketInstance.events);    
 
   // XXX check and finish
   marketInstance.events
     .MarketTransaction()
-    .on("data", function (marketActivityEvent) {
-      console.log('marketActivityEvent: ');
-      console.log(marketActivityEvent);      
+    .on("data", function (marketTransactionEvent) {
+      console.log('marketTransactionEvent: ');
+      console.log(marketTransactionEvent);   
+      let eventType = marketTransactionEvent.returnValues["TxType"].toString();
+      console.log('eventType: ');
+      console.log(eventType);   
+      let owner = marketTransactionEvent.returnValues['owner'];
+      let tokenId = marketTransactionEvent.returnValues['tokenId'];   
       $("#marketActivityDiv").css("display", "flex");
       $("#marketActivityDiv").empty();
       $("#marketActivityDiv").append(
@@ -232,66 +241,76 @@ $("#switchToMarketButton").click( async () => {
          `
       );
       setTimeout(hideAndEmptyAlerts, 6000, "#marketActivityDiv")
+      if (eventType == 'Remove offer') {
+        console.log('TxType: "Remove offer" registered')
+        $("#removeOfferAlertDiv").empty();
+        $("#removeOfferAlertDiv").css("display", "flex");
+        $("#removeOfferAlertDiv").append(
+          `        
+          TxType: "Remove offer" registered
+          `
+        );
+        setTimeout(hideAndEmptyAlerts, 6000, "#removeOfferAlertDiv");
+      }  
+      if (eventType == 'Create offer') {
+        console.log('TxType: "Create offer" registered');
+        $("#newOfferCreatedAlertDiv").css("display", "flex");
+        $("#newOfferCreatedAlertDiv").empty();
+        $("#newOfferCreatedAlertDiv").append(
+          `
+            <span id="marketActivityApprovedText">        
+              New offer created for your Crypto Monkey NFT with Token ID ${tokenId}!  
+            </span>
+          `
+        );
+        setTimeout(hideAndEmptyAlerts, 6000, "#newOfferCreatedAlertDiv");
+      }
+      if (eventType == 'Buy') {
+        console.log('TxType: "Buy" registered');        
+      }
     })
     .on("error", function (error) {
       console.log(error);
-  });  
+  }); 
 
-  //xxxx
-  /*marketInstance.events.MarketTransaction({
-    filter: {TxType: 'Remove offer'}})
-    .on("data", function (RemoveOfferEvent) {
-      console.log('TxType: "Remove offer" registered')
-      console.log(RemoveOfferEvent);         
-      $("#removeOfferAlertDiv").empty();
-      $("#removeOfferAlertDiv").css("display", "flex");
-      $("#removeOfferAlertDiv").append(
-        `        
-        TxType: "Remove offer" registered
-        `
-      );
-      setTimeout(hideAndEmptyAlerts, 6000, "#removeOfferAlertDiv");
-    })
-    .on("error", function (error) {
-      console.log(error);
-    })    
-  ;*/
-  
-  /* needs to become filtered via TxType
-  marketInstance.events.NewOfferCreated()
-  .on("data", function (newOfferCreatedEvent) {
-    console.log('newOfferCreatedEvent: ');
-    console.log(newOfferCreatedEvent);    
-    //let messageSender = newOfferCreatedEvent.returnValues.msgsender;
-    $("#newOfferCreatedAlertDiv").css("display", "flex");
-    $("#newOfferCreatedAlertDiv").empty();
-    $("#newOfferCreatedAlertDiv").append(
+
+  marketInstance.events
+  .monkeySold ()
+  .on("data", function (monkeySoldEvent) {
+    console.log('monkeySoldEvent: ');
+    console.log(monkeySoldEvent);   
+    let monkeySeller = monkeySoldEvent.returnValues.seller;
+    let monkeybuyer = monkeySoldEvent.returnValues.buyer;
+    let tokenId = monkeySoldEvent.returnValues.tokenId;
+    let paidPriceInEth = monkeySoldEvent.returnValues.priceInGwei/ 1000000000;
+    $("#monkeySoldAlertDiv").css("display", "flex");
+    $("#monkeySoldAlertDiv").empty();
+    $("#monkeySoldAlertDiv").append(
       `
-        <span id="marketActivityApprovedText">        
-          New offer created!  
-        </span>
-       `
+        <ul id="monkeySoldList">
+          <li>Crypto Monkey NFT ${tokenId} was sold for ${paidPriceInEth} Ether.</li>
+          <li>New owner: ${monkeybuyer}</li>
+          <li>Seller: ${monkeySeller}</li>               
+        </ul>        
+      `
     );
-    setTimeout(hideAndEmptyAlerts, 6000, "#newOfferCreatedAlertDiv");
+    // setTimeout(hideAndEmptyAlerts, 6000, "#monkeySoldAlertDiv")
   })
   .on("error", function (error) {
     console.log(error);
-  });  */
+  })  
 
-
-
-
-
-
-
-
-
-  /*
-  user2 = accounts[1];
-  console.log("user2 is " + user2);
-  */  
+ /* marketInstance.events
+  .MarketTransaction()
+  .on("data", function (testEvent) {
+    console.log('testEvent: ');
+    console.log(testEvent);       
+  })
+  .on("error", function (error) {
+    console.log(error);
+  })  */
+  
 });
-
 
 $("#removeOfferButton").click( async () => {
 tokenIdToRemoveOffer = $("#removeOffTokenIdInputField").val(); 
@@ -1043,9 +1062,4 @@ function buildMonkeyBoxes(tokenId, boxtype="") {
     </div>
   </div>   
   `     
-} 
-
-
-
-
-
+};
