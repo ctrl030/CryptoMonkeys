@@ -49,26 +49,34 @@ $(document).ready(async function () {
   // I.e. only this user's created monkeys will trigger it.
   instance.events
     .MonkeyCreated()
+    // when triggered, will receive incoming event as createdEvent
     .on("data", function (createdEvent) {
       // for API throttling
       console.log("monkeyCreatedThrottler is now at the start, set to: " + monkeyCreatedThrottler);
       if (monkeyCreatedThrottler != createdEvent.returnValues.tokenId){
-        console.log('createdEvent: ');
-        console.log(createdEvent);
-        let owner = createdEvent.returnValues.owner;
+        
         // left for later, multi-user version: 
         // check if both addresses are the same (also use checksum because of format),      
-        // if not same, don't show to this user (CMO created by other user)  
+        // if not same, don't show to this user (NFT created by other user)  
         /*
           if (web3.utils.toChecksumAddress(owner) != web3.utils.toChecksumAddress(user1)) {
             console.log('createdEvent not for this address');
             return;
           }
         */
+
+        // whenever the event triggers the listener, the incoming event will be console logged
+        console.log('createdEvent: ');
+        console.log(createdEvent);
+
+        // extracting information from incoming event
+        let owner = createdEvent.returnValues.owner;
         let tokenId = createdEvent.returnValues.tokenId;
         let parent1Id = createdEvent.returnValues.parent1Id;
         let parent2Id = createdEvent.returnValues.parent2Id;
         let genes = createdEvent.returnValues.genes;
+
+        // making the relevant div visible, emptying and appending it with the success alert
         $("#monkeyCreatedDiv").css("display", "flex");
         $("#monkeyCreatedDiv").empty();
         $("#monkeyCreatedDiv").append(
@@ -84,27 +92,29 @@ $(document).ready(async function () {
             </ul>
           `      
         );
+
         // for API throttling        
         monkeyCreatedThrottler = tokenId;
-        // take out alert after some time       
-        setTimeout(hideAndEmptyAlerts, 10000, "#monkeyCreatedDiv");
-      }
-      
 
+        // taking out alert after some time       
+        setTimeout(hideAndEmptyAlerts, 10000, "#monkeyCreatedDiv");        
+      }   
     })
+
+    // eventual errors will be console logged
     .on("error", function (error) {
       console.log(error);
-  });
-  
-  
+    })
+  ;   
 
+  // incoming BreedingSuccessful events trigger alert
+  // same logic as listening to MonkeyCreated event decription above (search " .MonkeyCreated()" )
   instance.events
     .BreedingSuccessful()
     .on("data", function (breedEvent) {
       // for API throttling
       console.log("breedThrottler is now at the start, set to: " + breedThrottler);
       if (breedThrottler != breedEvent.returnValues.tokenId){
-
         console.log('breedEvent: ');  
         console.log(breedEvent);      
         let tokenId = breedEvent.returnValues.tokenId;      
@@ -141,6 +151,8 @@ $(document).ready(async function () {
     })
   ;
 
+  // incoming ApprovalForAll events trigger alert
+  // same logic as listening to MonkeyCreated event decription above (search " .MonkeyCreated()" )
   instance.events
     .ApprovalForAll()
     .on("data", async function (operatorEvent) {
@@ -155,7 +167,7 @@ $(document).ready(async function () {
         // let operatorAddress =operatorEvent.returnValues.operator;
         // console.log('operatorEvent messageSender: ' + messageSender);      
         // console.log('operatorEvent user1: ' + user1);
-        // check if both addresses are the same (also use checksum because of format), if not same, don't show to this user (CMO created by other user)
+        // check if both addresses are the same (also use checksum because of format), if not same, don't show to this user (NFT created by other user)
         if (web3.utils.toChecksumAddress(messageSender) != web3.utils.toChecksumAddress(user1)) {
           return;
         }      
@@ -176,12 +188,11 @@ $(document).ready(async function () {
     })
     .on("error", function (error) {
       console.log(error);
-  })
-
-  
+  })  
 
 })
 
+// button switches to market
 $("#switchToMarketButton").click( async () => { 
   // hides breeding functionalities
   hideBreedingElements();  
@@ -204,11 +215,11 @@ $("#switchToMarketButton").click( async () => {
     from: accounts[0],
   });  
   console.log("marketInstance is");
-  console.log(marketInstance);  
-  console.log('marketInstance.events: ');  
-  console.log(marketInstance.events);    
+  console.log(marketInstance);     
 
-  // XXX check and finish
+  // incoming MarketTransaction events trigger alert
+  // very similar logic as listening to MonkeyCreated event decription above (search " .MonkeyCreated()" )
+  // MarketTransaction has different types, attribute is TxType 
   marketInstance.events
     .MarketTransaction()
     .on("data", function (marketTransactionEvent) {
@@ -217,11 +228,14 @@ $("#switchToMarketButton").click( async () => {
       if (marketTransactionThrottler != marketTransactionEvent.transactionHash){
         console.log('marketTransactionEvent: ');
         console.log(marketTransactionEvent);
-          
+
+        // identifying TxType, so different actions can be taken 
         let eventType = marketTransactionEvent.returnValues["TxType"].toString();
         console.log('eventType: ');
         console.log(eventType); 
-        let tokenId = marketTransactionEvent.returnValues['tokenId'];   
+        let tokenId = marketTransactionEvent.returnValues['tokenId'];
+
+        // for all types, an additional market activity alert is displayed
         $("#marketActivityDiv").css("display", "flex");
         $("#marketActivityDiv").empty();
         $("#marketActivityDiv").append(
@@ -233,6 +247,8 @@ $("#switchToMarketButton").click( async () => {
         );
         // take out alert after some time
         setTimeout(hideAndEmptyAlerts, 6000, "#marketActivityDiv")
+
+        // Handling TxType 'Remove offer'
         if (eventType == 'Remove offer') {
           console.log('TxType: "Remove offer" registered')
           $("#removeOfferAlertDiv").empty();
@@ -245,6 +261,8 @@ $("#switchToMarketButton").click( async () => {
           // take out alert after some time
           setTimeout(hideAndEmptyAlerts, 6000, "#removeOfferAlertDiv");
         }  
+
+        // Handling TxType 'Create offer'
         if (eventType == 'Create offer') {
           console.log('TxType: "Create offer" registered');
           $("#newOfferCreatedAlertDiv").css("display", "flex");
@@ -259,6 +277,9 @@ $("#switchToMarketButton").click( async () => {
           // take out alert after some time
           setTimeout(hideAndEmptyAlerts, 6000, "#newOfferCreatedAlertDiv");
         }
+
+        // Handling TxType 'Buy', used just as control mechanism,
+        // more information is coming in via monkeySold event
         if (eventType == 'Buy') {
           console.log('TxType: "Buy" registered');        
         }
@@ -270,7 +291,7 @@ $("#switchToMarketButton").click( async () => {
       console.log(error);
   }); 
 
-
+  // same logic as listening to MonkeyCreated event decription above (search " .MonkeyCreated()" )
   marketInstance.events
   .monkeySold ()
   .on("data", function (monkeySoldEvent) {
@@ -306,48 +327,46 @@ $("#switchToMarketButton").click( async () => {
   
 });
 
-// taking out alerts after some time
+// function to take out alerts after some time
 async function hideAndEmptyAlerts(alertBoxToHide) {
   await fadeOutAlerts(alertBoxToHide); 
   setTimeout(emptyAlerts, 3000, alertBoxToHide); 
 }
 
-//passing on parameter and fadeying out that div
+// passing on parameter and fadeying out that div
 async function fadeOutAlerts(alertBoxToFadeOut) {  
   $(alertBoxToFadeOut).fadeOut();  
 }
 
-//passing on parameter and emptying that div
+// passing on parameter and emptying that div
 async function emptyAlerts(alertBoxToHide) {  
   $(alertBoxToHide).empty();  
 }
 
-$("#removeOfferButton").click( async () => {
+// Button for user to remove one of his sell offers, calls smart contract
+$("#removeOfferButton").click( async () => {  
 tokenIdToRemoveOffer = $("#removeOffTokenIdInputField").val(); 
-console.log(tokenIdToRemoveOffer);
-
+console.log("user selected to remove the offor for tokenId: " + tokenIdToRemoveOffer );
 await marketInstance.methods.removeOffer(tokenIdToRemoveOffer).send();
 $("#removeOffTokenIdInputField").val("");
 showUsersOffersButtonFunct();
 });
 
-// XXX make only for user: if...
+// Button for user to see his own NFTs on sale
 $("#showUsersOffersButton").click( async () => { 
   showUsersOffersButtonFunct();  
 });
 
-
+// selling functionality - shows user's active offers
 async function showUsersOffersButtonFunct () {
+
   // clean up navbar
   $("#offerButtonHolderArea").hide(); 
   $("#buyButtonHolderArea").hide();
 
   // empty display area
-  $("#monkeyDisplayArea").empty(); 
-
- 
+  $("#monkeyDisplayArea").empty();   
   
-  // selling functionality - user's active offers
   // offersArrayRaw still includes old/deleted offers, set to 0
   var offersArrayRaw = await marketInstance.methods.getAllTokenOnSale().call();
   // console.log("offersArrayRaw, unfiltered yet: ");
@@ -359,10 +378,13 @@ async function showUsersOffersButtonFunct () {
   // Array of the complete offers
   var completeOffersArray = [];
 
+  // refining offersArrayRaw into offerTokenIdsArray and completeOffersArray to only show correct offers
   for (let index = 0; index < offersArrayRaw.length; index++) {
     const tokenId = offersArrayRaw[index];
+
     // filtering out inactive offers (old/deleted offers, set to 0)
     if (tokenId != 0) {
+
       // adding active offers to offerTokenIdsArray
       offerTokenIdsArray.push(tokenId);
 
@@ -371,31 +393,37 @@ async function showUsersOffersButtonFunct () {
 
       var offerOwner = completeOffer.seller;     
 
+      // comparing if the offer's owner is the logged in user
       if ( web3.utils.toChecksumAddress(offerOwner) == web3.utils.toChecksumAddress(user1) ) {
 
         // adding all active, complete offers to completeOffersArray
         completeOffersArray.push(completeOffer);
 
+        // converting offer price from WEI into ether
         var offerPrice = web3.utils.fromWei(completeOffer.price);
 
+        // only show first 18 digits of owner address
         if (offerOwner.length > 18) {
           offerOwner = offerOwner.substring(0, 17) + "...";
         }
 
+        // querying NFT data/DNA string from main contract
         var monkeyInOffer = await instance.methods.getMonkeyDetails(tokenId).call();
 
+        // creating DNA object from genes string of numbers
         const dnaObject = await decipherDNAtoObject(monkeyInOffer);   
 
+        // generation variable
         const tokenGeneration = monkeyInOffer.generation;
 
-        const boxtype = "offerBox";
-
         // Call to create and append HTML for each offer, marks built monkeyboxes with class boxtype, i.e. "offerBox"
+        const boxtype = "offerBox";        
         $("#monkeyDisplayArea").append(buildMonkeyBoxes(tokenId, boxtype)); 
             
         // console.log("tokenIdDNA: ");
         // console.log(dnaObject);   
 
+        // adding generation, offer's price and current owner to HTML of display boxes
         $(`#generationDisplayLine${tokenId}`).html(tokenGeneration);
         $(`#offerPriceDisplayLine${tokenId}`).html(offerPrice);
         $(`#offerOwnerDisplayLine${tokenId}`).html(offerOwner); 
@@ -404,20 +432,23 @@ async function showUsersOffersButtonFunct () {
         // needs a set of DNA, if no tokenId is given, reverts to "Creation" in the receiving functions
         renderMonkey(dnaObject, tokenId);
         
+        // retrieving and showing price of offer
         showPrices(tokenId);
       }
     }    
   }
 
+  // checking if the monkeyDisplayArea is already displaying any monkeys at this point
+  // if not, alert is displayed
   if($("#monkeyDisplayArea").children().length > 0){
     // show buttons to remove offer
     $("#removeOffButtonHolderArea").css("display", "flex");
     $("#removeOffButtonHolderArea").show(); 
   } else {
     console.log("user has no monkeys on sale")
-    $("#noOwnedCMOsOnSaleDiv").css("display", "flex");
-    $("#noOwnedCMOsOnSaleDiv").empty();
-    $("#noOwnedCMOsOnSaleDiv").append(
+    $("#noOwnedNFTsOnSaleDiv").css("display", "flex");
+    $("#noOwnedNFTsOnSaleDiv").empty();
+    $("#noOwnedNFTsOnSaleDiv").append(
       `
         <span>
           You have no Crypto Monkeys on sale at the moment. Click on "Market" and "Sell Monkeys" to change that.                        
@@ -425,18 +456,17 @@ async function showUsersOffersButtonFunct () {
       `
     );
     // take out alert after some time
-    setTimeout(hideAndEmptyAlerts, 6000, "#noOwnedCMOsOnSaleDiv")
+    setTimeout(hideAndEmptyAlerts, 6000, "#noOwnedNFTsOnSaleDiv")
   }
   $("#removeOffTokenIdInputField").val("");
 }
 
-
+// button to show the sell area
 $("#showSellAreaButton").click( async () => { 
   showSellAreaButtonFunct();
   $(`#monkeyDisplayArea`).empty();
   galleryLogic(`#monkeyDisplayArea`);
 });
-
 
 async function showSellAreaButtonFunct () {
   $("#removeOffButtonHolderArea").hide();
@@ -466,35 +496,27 @@ async function showSellAreaButtonFunct () {
   
 }
 
-// XXXX
+// function for adapting visual of offer boxes, adding in prices
 function showPrices(tokenId) {
   $(`#monkeyBox${tokenId}.monkey`).css("top", "29%");  
-
   $(`#monkeyTokenIdDiv${tokenId}`).css("bottom", "130px");
-
   $(`#monkeyGenerationDiv${tokenId}`).css("bottom", "100px");
-
   $(`#monkeyDNALine${tokenId}`).css("bottom", "70px");  
-
   $(`#offerPriceDiv${tokenId}`).css("display", "flex"); 
-
   $(`#offerOwnerDiv${tokenId}`).css("display", "flex"); 
 }
 
+// function for adapting visual of offer boxes, taking out prices
 function withoutPrices() {
   $(`.monkey`).css("top", "32%");  
-
   $(`.monkeyTokenIdDiv`).css("bottom", "70px");
-
   $(`#monkeyGenerationDiv`).css("bottom", "40px");
-
-  $(`#monkeyDNALine`).css("bottom", "10px");  
-
-  $(`#offerPriceDiv`).css("display", "none"); 
-
+  $(`#monkeyDNALine`).css("bottom", "10px"); 
+  $(`#offerPriceDiv`).css("display", "none");
   $(`#offerOwnerDiv`).css("display", "none");
 }
 
+// button to show the buy area, shows all offers minus the user's own ones
 $("#showBuyAreaButton").click( async () => { 
 
   //resetting market
@@ -522,11 +544,13 @@ $("#showBuyAreaButton").click( async () => {
   // Array of the complete offers
   var completeOffersArray = [];
 
-  
+  // filtering offers and showing the remaining ones
   for (let index = 0; index < offersArrayRaw.length; index++) {
     const tokenId = offersArrayRaw[index];
+
     // filtering out inactive offers (old/deleted offers, set to 0)
     if (tokenId != 0) {
+
       // adding active offers to offerTokenIdsArray
       offerTokenIdsArray.push(tokenId);
 
@@ -535,41 +559,44 @@ $("#showBuyAreaButton").click( async () => {
 
       var offerOwner = completeOffer.seller;
 
+      // only using the offers that aren't from the logged in user
       if ( web3.utils.toChecksumAddress(offerOwner) != web3.utils.toChecksumAddress(user1) ) {
 
+        // converting offer price from WEI into ether
         var offerPrice = web3.utils.fromWei(completeOffer.price);
 
         // adding all active, complete offers to completeOffersArray
         completeOffersArray.push(completeOffer);
 
+        // showing only first 18 characters of owner address
         if (offerOwner.length > 18) {
           offerOwner = offerOwner.substring(0, 17) + "...";
         }
 
+        // querying smart contract for NFT details
         var monkeyInOffer = await instance.methods.getMonkeyDetails(tokenId).call();
 
-        const dnaObject = await decipherDNAtoObject(monkeyInOffer);   
-
-        const tokenGeneration = monkeyInOffer.generation;
-
-        const boxtype = "offerBox";
+        // creating DNA object from genes string of numbers
+        const dnaObject = await decipherDNAtoObject(monkeyInOffer);
 
         // Call to create and append HTML for each offer, marks built monkeyboxes with class boxtype, i.e. "offerBox"
+        const boxtype = "offerBox";
         $("#monkeyDisplayArea").append(buildMonkeyBoxes(tokenId, boxtype));
             
         // console.log("tokenIdDNA: ");
         // console.log(dnaObject);   
 
-
+        // adding offer boxes info
+        const tokenGeneration = monkeyInOffer.generation;
         $(`#generationDisplayLine${tokenId}`).html(tokenGeneration);
-
         $(`#offerPriceDisplayLine${tokenId}`).html(offerPrice);
-
         $(`#offerOwnerDisplayLine${tokenId}`).html(offerOwner); 
         
         // Call to apply CSS on the HTML structure, effect is styling and showing the next monkey
         // needs a set of DNA, if no tokenId is given, reverts to "Creation" in the receiving functions
         renderMonkey(dnaObject, tokenId);        
+
+        // adapting CSS to show prices
         showPrices(tokenId);
       }      
     }    
@@ -600,38 +627,40 @@ $("#showBuyAreaButton").click( async () => {
 
 }); 
 
+// button to buy a Crypto Monkey NFT
+// takes in user's inputs and compares them to offer details on-chain
 $("#buyMonkeyButton").click( async () => {  
 
+  // this is the tokenId the user enters to buy
   let tokenIdToBuy = $("#buyMonkeyTokenIdInputField").val();
   console.log("tokenIdToBuy:"); 
   console.log(tokenIdToBuy);
 
+  // this is the offer price the user confirmed by entering it
   let buyersConfirmedPriceToPay = $("#confirmPriceInputField").val();  
   console.log("buyersConfirmedPriceToPay:"); 
   console.log(buyersConfirmedPriceToPay);
 
+  // converting ETH to WEI
   let confirmedInWEI = web3.utils.toWei(buyersConfirmedPriceToPay);
 
-  // find offer
+  // querying offer details from market contract
   let offerDetails = await marketInstance.methods.getOffer(tokenIdToBuy).call();
   console.log("offerDetails:");
   console.log(offerDetails);      
-
+  
+  // querying the offerDetails and converting that price from WEI into ether
   let correctPrice = web3.utils.fromWei(offerDetails.price);
   console.log("correctPrice:");
   console.log(correctPrice);
   
-
+  // if the price the user confirmed and the offer details on-chain match up, 
+  // the buyMonkey function is called and the matching amount transfered
   if (buyersConfirmedPriceToPay == correctPrice) {
     await marketInstance.methods.buyMonkey(tokenIdToBuy).send({value: `${confirmedInWEI}` });
-
   }
 
 }); 
-
-
-
-
 
 // Listens to button click, then creates dnsStr (16 digits number string, same format as genes) 
 // from concatting all the already set css values
@@ -649,6 +678,7 @@ $("#mintMonkey").click(() => {
   });  
 });
 
+// CSS cleanup to hide breeding functionality
 function hideBreedingElements() {
   $("#parentsArea").empty();
   $("#parentsArea").css("display", "none");
@@ -659,6 +689,7 @@ function hideBreedingElements() {
   $("#monkeyRowMultiply").hide();  
 }
 
+// CSS cleanup to hide market functionality
 function hideMarketElements() {  
   $("#marketRow").css("display", "none"); 
   $("#marketButtonHolderArea").css("display", "none"); 
@@ -669,17 +700,21 @@ function hideMarketElements() {
   $("#choosePriceForOfferInputField").val("");  
 }
 
-
 // User must first give market contract address operator status, to put a monkey up for sale 
-$("#makeMarketOperatorButton").click(async () => {  
+$("#makeMarketOperatorButton").click(async () => {
+  
+  // user calls main smart contract and gives operator status to market to handle NFTs
   let setOperatorRequest = await instance.methods.setApprovalForAll(marketContractAddress, true).send();
   // console.log("setOperatorRequest: ");
   // console.log(setOperatorRequest);
 
+  // verifying, i.e. querying main smart contract, to find out if operator status was given to market
   let isMarketOperator = await instance.methods.isApprovedForAll(user1, marketContractAddress).call();
   // console.log('isMarketOperator: ');
   // console.log(isMarketOperator);
 
+  // if isMarketOperator is true, this will set user1MarketAllowed to also true,
+  // user1MarketAllowed is the global variable saving whether operator status was already given
   user1MarketAllowed = isMarketOperator;
   showSellAreaButtonFunct();
 });
@@ -690,12 +725,16 @@ let priceToCreateOfferInWEI;
 // Create offer button
 $("#createOfferButton").click(async () => {  
 
+  // taking in the NFT tokenId that the user wants to set up for offer
   tokenIdToCreateOffer = $("#offerTokenIdInputField").val(); 
   console.log(tokenIdToCreateOffer);
 
+  // taking in the price in ether, that the user wants to put in the offer
+  // then transforming price into WEI
   priceToCreateOfferInWEI = web3.utils.toWei($("#offerPriceInputField").val());   
   console.log(priceToCreateOfferInWEI);
 
+  // calling market smart contract to create offer
   await marketInstance.methods.setOffer(priceToCreateOfferInWEI, tokenIdToCreateOffer).send();
 
 
@@ -727,8 +766,6 @@ $("#backToMultiplyButton").click(() => {
   switchToMultiply()
 });
 
-
-
 function switchToMultiply() {
   hideBreedingElements();  
   // shows breeding functionalities
@@ -758,11 +795,8 @@ function switchToMultiply() {
   $("#monkeyRowGallery").empty();
 }
 
-
-
 var parent1Input;
 var parent2Input;
-
 
 $("#makeMoreMonkeysButton").click(async () => { 
   await instance.methods.breed(parent1Input, parent2Input).send();
@@ -779,6 +813,7 @@ async function showLastBornChildMonkey(tokenId) {
 
   let myCryptoMonkey = await instance.methods.getMonkeyDetails(tokenId).call();
 
+  // creating DNA object from genes string of numbers
   const dnaObject = await decipherDNAtoObject(myCryptoMonkey); 
 
   const tokenGeneration = myCryptoMonkey.generation; 
@@ -795,14 +830,8 @@ async function showLastBornChildMonkey(tokenId) {
 
   // Call to apply CSS on the HTML structure, effect is styling and showing the next monkey
   // needs a set of DNA, if no tokenId is given, reverts to "Creation" in the receiving functions
-  renderMonkey(dnaObject, tokenId);         
-
-  
+  renderMonkey(dnaObject, tokenId);  
 }
-
-
-
-
 
 $("#showParentsButton").click(async () => {
   
@@ -822,23 +851,21 @@ $("#showParentsButton").click(async () => {
  var parent2IsOwnedBool = false;
 
  for (let index = 0; index < myMonkeyIdsArray.length; index++) {
+    const monkeyToCheckAgainst = myMonkeyIdsArray[index];  
 
-  const monkeyToCheckAgainst = myMonkeyIdsArray[index];  
+    if (monkeyToCheckAgainst == parent1Input) {
+      parent1IsOwnedBool = true;
+    }
 
-  if (monkeyToCheckAgainst == parent1Input) {
-    parent1IsOwnedBool = true;
+    if (monkeyToCheckAgainst == parent2Input) {
+      parent2IsOwnedBool = true;
+    }       
   }
 
-  if (monkeyToCheckAgainst == parent2Input) {
-    parent2IsOwnedBool = true;
-  }
-   
- }
-
- if (parent1Input == 0 || parent2Input == 0) { 
+  if (parent1Input == 0 || parent2Input == 0) { 
    alert("Put in both parents' Token IDs")   
   } 
- else if (parent1IsOwnedBool == false || parent2IsOwnedBool == false) {
+  else if (parent1IsOwnedBool == false || parent2IsOwnedBool == false) {
     alert("You must own both parent monkeys, check gallery")
   } 
   else if (parent1Input == parent2Input) { 
@@ -866,6 +893,7 @@ $("#showParentsButton").click(async () => {
 
       let myCryptoMonkey = await instance.methods.getMonkeyDetails(tokenId).call();
 
+      // creating DNA object from genes string of numbers
       const dnaObject = await decipherDNAtoObject(myCryptoMonkey); 
 
       const tokenGeneration = myCryptoMonkey.generation;
@@ -884,18 +912,17 @@ $("#showParentsButton").click(async () => {
       
       
     };
-
-  };
-  
-
+  }; 
 });
 
-async function decipherDNAtoObject(myCryptoMonkey) {    
-      
-  // The 16 digit "DNA string" is turned into a string, then from the digit's position,
-  // the correct CSS variables are created  
+// The 16 digit DNA genes number is received from the incoming myCryptoMonkey.genes,
+// then turned into a string, then from the digit's position,
+// the correct CSS variables are created and a tokenIdDNA object is returned 
+async function decipherDNAtoObject(myCryptoMonkey) {  
+
   let tokenIdGenes = myCryptoMonkey.genes.toString();  
   // console.log("tokenIdGenes " + tokenIdGenes);
+
   var tokenIdHeadcolor = Number(tokenIdGenes.charAt(0)+tokenIdGenes.charAt(1));
   var tokenIdmouthcolor = Number(tokenIdGenes.charAt(2)+tokenIdGenes.charAt(3));
   var tokenIdeyescolor = Number(tokenIdGenes.charAt(4)+tokenIdGenes.charAt(5));
@@ -925,14 +952,9 @@ async function decipherDNAtoObject(myCryptoMonkey) {
     lastNum: tokenIdlastNum,
   };      
 
+  // returning the created tokenIdDNA object
   return tokenIdDNA;
 }
-
-
-
-
-
-
 
 // Button to gallery 
 // the creation part is hidden 
@@ -973,6 +995,7 @@ async function galleryLogic(divToAppendTo) {
   for (let j = 0; j < userBalance; j++) {
     const tokenId = myMonkeyIdsArray[j];
     let myCryptoMonkey = await instance.methods.getMonkeyDetails(tokenId).call();
+    // creating DNA object from genes string of numbers
     const dnaObject = await decipherDNAtoObject(myCryptoMonkey);   
 
     const tokenGeneration = myCryptoMonkey.generation;

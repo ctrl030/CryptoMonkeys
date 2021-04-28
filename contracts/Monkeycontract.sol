@@ -36,13 +36,13 @@ contract MonkeyContract is IERC721, Ownable {
     // name will be set to "Crypto Monkeys"
     string private _name;
 
-    // ticker symbol will be set to "CMO"
+    // ticker symbol will be set to "NFT"
     string private _symbol;
 
-    // amount of CMOs total in existence - can be queried by totalSupply function    
+    // amount of NFTs total in existence - can be queried by totalSupply function    
     uint256 public totalSupply;
 
-    // this struct is the blueprint for new CMOs, they will be created from it
+    // this struct is the blueprint for new NFTs, they will be created from it
     struct CryptoMonkey {        
         uint256 parent1Id;
         uint256 parent2Id;
@@ -53,14 +53,14 @@ contract MonkeyContract is IERC721, Ownable {
 
     // a mapping to store each address's number of Crypto Monkeys 
     // can be queried by balanceOf function
-    mapping(address => uint256) private _numberOfCMOsOfAddressMapping;
+    mapping(address => uint256) private _numberOfNFTsOfAddressMapping;
 
     // mapping of all the tokenIds and their ownerssss 
     // can be queried by ownerOf function 
     mapping(uint256 => address) private _monkeyIdsAndTheirOwnersMapping;
 
     // mapping of the allowed addresses for a piece 
-    mapping(uint256 => address) private _CMO2AllowedAddressMapping;
+    mapping(uint256 => address) private _NFT2AllowedAddressMapping;
 
     // This is an array that holds all CryptoMonkeys. 
     // Their position in that array IS their tokenId.
@@ -68,7 +68,7 @@ contract MonkeyContract is IERC721, Ownable {
     CryptoMonkey[] public allMonkeysArray;
 
     // mapping owner address to 
-    // operator address (who has approval over all of owner's CMOs) to
+    // operator address (who has approval over all of owner's NFTs) to
     // boolean that shows if the operator address actually is operator or not
     mapping (address => mapping (address => bool)) private operatorApprovalsMapping;  
 
@@ -109,7 +109,7 @@ contract MonkeyContract is IERC721, Ownable {
     // Operator status event
     event ApprovalForAll (address msgsender, address operator, bool _approved);
 
-    // Creation event, emitted after successful CMO creation with these parameters
+    // Creation event, emitted after successful NFT creation with these parameters
     event MonkeyCreated(
         address owner,
         uint256 tokenId,
@@ -120,7 +120,7 @@ contract MonkeyContract is IERC721, Ownable {
 
     event BreedingSuccessful (uint256 tokenId, uint256 genes, uint256 birthtime, uint256 parent1Id, uint256 parent2Id, uint256 generation, address owner);
 
-    // After transfer of CMO, emitting useful data regarding new owner
+    // After transfer of NFT, emitting useful data regarding new owner
     event NewOwnerArrayUpdated( 
         address transferringAddress,       
         address oldOwner,
@@ -131,7 +131,7 @@ contract MonkeyContract is IERC721, Ownable {
     );
 
 
-    // After transfer of CMO, emitting useful data regarding old owner
+    // After transfer of NFT, emitting useful data regarding old owner
     event OldOwnerArrayUpdated(        
         uint256 tokenId,
         address oldOwner,
@@ -140,14 +140,14 @@ contract MonkeyContract is IERC721, Ownable {
 
 
     // Constructor function
-    // is setting _name, and _symbol, as well as creating a couple of test CMOs,
+    // is setting _name, and _symbol, as well as creating a couple of test NFTs,
     // and for them setting _parent1Id, _parent2Id and _generation to 0, 
     // the _genes to the biggest possible uint256 number (overflow on purpose)
     // and _owner to contract address
 
     constructor() public {
         _name = "Crypto Monkeys";
-        _symbol = "CMO";
+        _symbol = "NFT";
         _monkeyContractAddress = address(this);      
         
         _createMonkey(0, 0, 0, 1214131177989271, address(0));
@@ -309,7 +309,7 @@ contract MonkeyContract is IERC721, Ownable {
         return newGeneSequence;        
     }
 
-    //- gives back an array with the CMO tokenIds that the provided sender address owns
+    //- gives back an array with the NFT tokenIds that the provided sender address owns
     function findMonkeyIdsOfAddress(address sender) public view returns (uint256[] memory) {  
         return _owners2tokenIdArrayMapping[sender];
     }
@@ -368,7 +368,7 @@ contract MonkeyContract is IERC721, Ownable {
     /// @return The approved address for this NFT, or the zero address if there is none
     // function getApproved(uint256 _tokenId) external view returns (address);
     function getApproved(uint256 _tokenId) external view returns (address){
-        return _CMO2AllowedAddressMapping[_tokenId];
+        return _NFT2AllowedAddressMapping[_tokenId];
     }  
 
     /// @notice Query if an address is an authorized operator for another address
@@ -381,7 +381,7 @@ contract MonkeyContract is IERC721, Ownable {
 
 
 
-    // gives back all the main details on a CMO
+    // gives back all the main details on a NFT
     function getMonkeyDetails(uint256 tokenId)
         public
         view
@@ -402,20 +402,20 @@ contract MonkeyContract is IERC721, Ownable {
             allMonkeysArray[tokenId].parent2Id,
             allMonkeysArray[tokenId].generation,
             _monkeyIdsAndTheirOwnersMapping[tokenId],
-            _CMO2AllowedAddressMapping[tokenId]
+            _NFT2AllowedAddressMapping[tokenId]
         );
     }
 
 
 
-    // The approve function allows another address to take / move your CMO
+    // The approve function allows another address to take / move your NFT
     function approve(address _approved, uint256 _tokenId) public {
 
         address monkeyOwner = _monkeyIdsAndTheirOwnersMapping[_tokenId];
 
         bool senderHasOperatorStatus = operatorApprovalsMapping[monkeyOwner][msg.sender];
 
-        // requires that the msg.sender is the owner or operator of the CMO to be moved
+        // requires that the msg.sender is the owner or operator of the NFT to be moved
         require(monkeyOwner == msg.sender || senderHasOperatorStatus);
 
         // emitting before the action
@@ -423,12 +423,12 @@ contract MonkeyContract is IERC721, Ownable {
 
         // stores the allowed address into the mapping for it, with the monkey being the key
         // before this, allowedAddress is 0, meaning nobody can take it
-        _CMO2AllowedAddressMapping[_tokenId] = _approved;
+        _NFT2AllowedAddressMapping[_tokenId] = _approved;
     }
 
 
 
-    // allows or revokes an address to get "operator" status, being allowed to take or move all of msg.sender 's CMOs
+    // allows or revokes an address to get "operator" status, being allowed to take or move all of msg.sender 's NFTs
     function setApprovalForAll(address _operator, bool _approved) external {
 
         // msg.sender can set entry in his own mapping for _operator address to true or false
@@ -459,7 +459,7 @@ contract MonkeyContract is IERC721, Ownable {
 
     // Returns the amount of tokens in an address' account
     function balanceOf(address owner) external view returns (uint256) {
-        return _numberOfCMOsOfAddressMapping[owner];
+        return _numberOfNFTsOfAddressMapping[owner];
     }
 
     // returns the owner of given tokenId, which is stored in the _monkeyIdsAndTheirOwnersMapping at the [tokenId] position
@@ -480,9 +480,9 @@ contract MonkeyContract is IERC721, Ownable {
 
         bool senderHasOperatorStatus = operatorApprovalsMapping[monkeyOwner][msg.sender];
 
-        address allowedAddress = _CMO2AllowedAddressMapping[_tokenId];
+        address allowedAddress = _NFT2AllowedAddressMapping[_tokenId];
 
-        // _tokenId must be a valid CMO tokenId, 
+        // _tokenId must be a valid NFT tokenId, 
         // i.e. 0 or larger, and smaller than the length of allMonkeysArray
         require(_tokenId >= 0 && _tokenId < allMonkeysArray.length);    
 
@@ -566,7 +566,7 @@ contract MonkeyContract is IERC721, Ownable {
         // _to` can not be the contract address.
         require(_to != address(this));
 
-        // _tokenId must be a valid CMO tokenId, 
+        // _tokenId must be a valid NFT tokenId, 
         // i.e. 0 or larger, and smaller than the length of allMonkeysArray
         require(_tokenId >= 0 && _tokenId < allMonkeysArray.length);        
 
@@ -577,9 +577,9 @@ contract MonkeyContract is IERC721, Ownable {
 
         bool senderHasOperatorStatus = operatorApprovalsMapping[monkeyOwner][msg.sender];
 
-        address allowedAddress = _CMO2AllowedAddressMapping[_tokenId];
+        address allowedAddress = _NFT2AllowedAddressMapping[_tokenId];
 
-        // sender of transfer is owner, or has operator status, or has allowance to move this particular CMO
+        // sender of transfer is owner, or has operator status, or has allowance to move this particular NFT
         require(monkeyOwner == msg.sender || senderHasOperatorStatus == true || allowedAddress == msg.sender);
 
         return true;
@@ -593,20 +593,20 @@ contract MonkeyContract is IERC721, Ownable {
         address _to, // i.e. new owner 
         uint256 _tokenId
     ) internal {
-        // deleting any allowed address for the transfered CMO
-        delete _CMO2AllowedAddressMapping[_tokenId];
+        // deleting any allowed address for the transfered NFT
+        delete _NFT2AllowedAddressMapping[_tokenId];
 
         // transferring, i.e. changing ownership entry in the _monkeyIdsAndTheirOwnersMapping for the tokenId
         _monkeyIdsAndTheirOwnersMapping[_tokenId] = _to;
 
-        // updating "balance" of address in _numberOfCMOsOfAddressMapping, so that the "to" address has 1 CMO more
-        _numberOfCMOsOfAddressMapping[_to] = _numberOfCMOsOfAddressMapping[_to].add(1);
+        // updating "balance" of address in _numberOfNFTsOfAddressMapping, so that the "to" address has 1 NFT more
+        _numberOfNFTsOfAddressMapping[_to] = _numberOfNFTsOfAddressMapping[_to].add(1);
 
 
-        // if CMO owner at this point is NOT 0 address (happens during gen0 monkey creation),
-        // updating "balance" of address in _numberOfCMOsOfAddressMapping,  so that the previous monkey owner has 1 CMO less      
+        // if NFT owner at this point is NOT 0 address (happens during gen0 monkey creation),
+        // updating "balance" of address in _numberOfNFTsOfAddressMapping,  so that the previous monkey owner has 1 NFT less      
         if (_monkeyOwner != address(0)) {
-            _numberOfCMOsOfAddressMapping[_monkeyOwner] = _numberOfCMOsOfAddressMapping[_monkeyOwner].sub(1);
+            _numberOfNFTsOfAddressMapping[_monkeyOwner] = _numberOfNFTsOfAddressMapping[_monkeyOwner].sub(1);
         }
 
         // saving tokenId to new owner's array in the mapping for all owners, 
@@ -615,11 +615,11 @@ contract MonkeyContract is IERC721, Ownable {
 
         // inside the global mapping for positions, under the new owner, under the tokenId, 
         // saving the position that this tokenId has in the other array (_owners2tokenIdArrayMapping), 
-        // by measuring that arrays length, after pushing the CMO to it, then subtracting 1
+        // by measuring that arrays length, after pushing the NFT to it, then subtracting 1
         // that means owner's first monkey will be in position 0
         MonkeyIdPositionsMapping[_to][_tokenId] = _owners2tokenIdArrayMapping[_to].length - 1;
 
-        // emitting useful data regarding new owner after transfer of CMO
+        // emitting useful data regarding new owner after transfer of NFT
         emit NewOwnerArrayUpdated(
             _transferSender,            
             _monkeyOwner,
@@ -637,7 +637,7 @@ contract MonkeyContract is IERC721, Ownable {
         // deleting the saved index position, since old address is not longer owner
         delete MonkeyIdPositionsMapping[_monkeyOwner][_tokenId];
 
-        // emitting useful data regarding old owner after transfer of CMO
+        // emitting useful data regarding old owner after transfer of NFT
         emit OldOwnerArrayUpdated(            
             _tokenId,
             _monkeyOwner,
