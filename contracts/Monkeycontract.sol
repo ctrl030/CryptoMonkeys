@@ -649,9 +649,7 @@ contract MonkeyContract is IERC721, Ownable {
     }
 
     // Wrapper function to avaliate if receiving address is a smart contract or just a wallet address
-    // Returns true if contract, false if wallet or does not accept ERC721s
-    
-    
+    // Returns true if contract, false if wallet or does not accept ERC721s   
     function _checkERC721Support(address _from, address _to, uint256 _tokenId, bytes  memory _data) internal returns(bool) {
         // First checks if codesize of receiving address is not larger than 0. If it is not, returns true 
         if (!_isContract(_to)){
@@ -674,5 +672,3 @@ contract MonkeyContract is IERC721, Ownable {
     }
 
 }
-
-

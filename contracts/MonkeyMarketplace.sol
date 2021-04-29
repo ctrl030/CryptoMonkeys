@@ -28,7 +28,7 @@ contract MonkeyMarketplace is Ownable, IMonkeyMarketplace  {
   event monkeySold (address seller, address buyer, uint256 priceInGwei, uint256 tokenId);  
   
   /** 
-  * Set the current MonkeyContract address and initialize the instance of Monkeycontract.
+  * Sets the current MonkeyContract address and initializes the instance of Monkeycontract.
   * Requirement: Only the contract owner can call.
   */
   function setMonkeyContract(address _newMonkeyContractAddress) public onlyOwner {
@@ -152,10 +152,6 @@ contract MonkeyMarketplace is Ownable, IMonkeyMarketplace  {
     emit MarketTransaction("Remove offer", msg.sender, _tokenId);
     
   }
-
- 
-
-
 
   /**
   * Executes the purchase of _tokenId.
