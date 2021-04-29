@@ -411,10 +411,7 @@ async function showUsersOffersButtonFunct () {
         var monkeyInOffer = await instance.methods.getMonkeyDetails(tokenId).call();
 
         // creating DNA object from genes string of numbers
-        const dnaObject = await decipherDNAtoObject(monkeyInOffer);   
-
-        // generation variable
-        const tokenGeneration = monkeyInOffer.generation;
+        const dnaObject = await decipherDNAtoObject(monkeyInOffer);           
 
         // Call to create and append HTML for each offer, marks built monkeyboxes with class boxtype, i.e. "offerBox"
         const boxtype = "offerBox";        
@@ -422,6 +419,9 @@ async function showUsersOffersButtonFunct () {
             
         // console.log("tokenIdDNA: ");
         // console.log(dnaObject);   
+
+        // generation variable
+        const tokenGeneration = monkeyInOffer.generation;
 
         // adding generation, offer's price and current owner to HTML of display boxes
         $(`#generationDisplayLine${tokenId}`).html(tokenGeneration);
@@ -586,8 +586,10 @@ $("#showBuyAreaButton").click( async () => {
         // console.log("tokenIdDNA: ");
         // console.log(dnaObject);   
 
-        // adding offer boxes info
+        // generation variable
         const tokenGeneration = monkeyInOffer.generation;
+
+        // adding generation, offer's price and current owner to HTML of display boxes
         $(`#generationDisplayLine${tokenId}`).html(tokenGeneration);
         $(`#offerPriceDisplayLine${tokenId}`).html(offerPrice);
         $(`#offerOwnerDisplayLine${tokenId}`).html(offerOwner); 
@@ -736,12 +738,9 @@ $("#createOfferButton").click(async () => {
 
   // calling market smart contract to create offer
   await marketInstance.methods.setOffer(priceToCreateOfferInWEI, tokenIdToCreateOffer).send();
-
-
 });
 
-
-// Button to monkey creation
+// Button to monkey creation (starting page)
 $("#switchToCreationButton").click(() => {  
 
   $("#monkeyRowCreation").show();
@@ -762,27 +761,33 @@ $("#switchToMultiplyButton").click(() => {
   switchToMultiply()   
 });
 
+// Button back to breeding area start
 $("#backToMultiplyButton").click(() => {
   switchToMultiply()
 });
 
+// function for breeding area
 function switchToMultiply() {
+
+  // resetting breeding functionalities
   hideBreedingElements();  
-  // shows breeding functionalities
+
+  // showing breeding functionalities
   $("#multiplyButtonHolderArea").css("display", "flex");  
   $("#multiplyButtonHolderArea").show(); 
   $("#makeMoreMonkeysButton").hide();   
   $("#showParentsButton").show();  
 
+  // resetting input fields and showing them
   $("#parent1InputField").val("");
   $("#parent2InputField").val("");
   $("#parent1InputField").show(); 
   $("#parent2InputField").show(); 
 
+  // adapting UI
   $("#backToMultiplyButton").hide(); 
   $("#parentsArea").empty();
-  $("#childArea").empty();  
-    
+  $("#childArea").empty();      
 
   // hides creation functionalities
   $("#monkeyRowCreation").hide();
@@ -795,37 +800,43 @@ function switchToMultiply() {
   $("#monkeyRowGallery").empty();
 }
 
+// global variables to store NFT parent IDs
 var parent1Input;
 var parent2Input;
 
+// button to multiply NFT monkeys
 $("#makeMoreMonkeysButton").click(async () => { 
+
+  //calling breed function in main smart contract
   await instance.methods.breed(parent1Input, parent2Input).send();
  
   // let newDetails = await instance.methods.getMonkeyDetails(newMonkeyTokenId).call();
-
   // console.log(newDetails);
 
 });
 
+// function to show the NFT that the user just created via breed function
 async function showLastBornChildMonkey(tokenId) {
+
+  // resetting childArea
   $("#childArea").empty(); 
   $("#childArea").show();  
 
+  //querying NFT details for the incoming token ID from the main smart contract
   let myCryptoMonkey = await instance.methods.getMonkeyDetails(tokenId).call();
 
   // creating DNA object from genes string of numbers
-  const dnaObject = await decipherDNAtoObject(myCryptoMonkey); 
+  const dnaObject = await decipherDNAtoObject(myCryptoMonkey);   
 
-  const tokenGeneration = myCryptoMonkey.generation; 
-
+  // Call to create and append HTML for each offer, marks built monkeyboxes with class boxtype, i.e. "childBox"
   const boxtype = "childBox";
-
-  // Call to create and append HTML 
   await $("#childArea").append(buildMonkeyBoxes(tokenId, boxtype));    
                        
   // console.log("tokenIdDNA: ");
   // console.log(dnaObject);   
 
+  // adding generation to HTML of display boxes
+  const tokenGeneration = myCryptoMonkey.generation; 
   $(`#generationDisplayLine${tokenId}`).html(tokenGeneration);
 
   // Call to apply CSS on the HTML structure, effect is styling and showing the next monkey
@@ -833,24 +844,28 @@ async function showLastBornChildMonkey(tokenId) {
   renderMonkey(dnaObject, tokenId);  
 }
 
+// button to show the both NFTs that were selected as parents
 $("#showParentsButton").click(async () => {
   
- parent1Input = $("#parent1InputField").val();
- parent2Input = $("#parent2InputField").val();
+  // taking in user inputs from input fields
+  parent1Input = $("#parent1InputField").val();
+  parent2Input = $("#parent2InputField").val();
 
- // userBalance will be the number of monkeys the user has
- var userBalance = await instance.methods.balanceOf(user1).call();
- console.log(`user1 has ${userBalance} Crypto Monkeys`);
+  // userBalance will be the number of monkeys the user has
+  var userBalance = await instance.methods.balanceOf(user1).call();
+  console.log(`user1 has ${userBalance} Crypto Monkeys`);
 
- // An array that holds all of the user's tokenIds
- let myMonkeyIdsArray = await instance.methods.findMonkeyIdsOfAddress(user1).call();       
- // console.log("myMonkeyIdsArray: ");
- // console.log(myMonkeyIdsArray);
+  // An array that holds all of the user's tokenIds
+  let myMonkeyIdsArray = await instance.methods.findMonkeyIdsOfAddress(user1).call();       
+  // console.log("myMonkeyIdsArray: ");
+  // console.log(myMonkeyIdsArray);
 
- var parent1IsOwnedBool = false;
- var parent2IsOwnedBool = false;
+  // booleans to check whether the user owns the NFTs (token IDs) they entered 
+  var parent1IsOwnedBool = false;
+  var parent2IsOwnedBool = false;
 
- for (let index = 0; index < myMonkeyIdsArray.length; index++) {
+  // checking user's myMonkeyIdsArray and comparing esch NFT in there to both user inputs
+  for (let index = 0; index < myMonkeyIdsArray.length; index++) {
     const monkeyToCheckAgainst = myMonkeyIdsArray[index];  
 
     if (monkeyToCheckAgainst == parent1Input) {
@@ -862,22 +877,29 @@ $("#showParentsButton").click(async () => {
     }       
   }
 
+  // if at least one of the NFT IDs is 0, throw alert
   if (parent1Input == 0 || parent2Input == 0) { 
    alert("Put in both parents' Token IDs")   
   } 
+  // if at least one of the NFT IDs isn't owned, throw alert
   else if (parent1IsOwnedBool == false || parent2IsOwnedBool == false) {
     alert("You must own both parent monkeys, check gallery")
-  } 
+  }
+  // if both NFT IDs are the same, throw alert 
   else if (parent1Input == parent2Input) { 
     alert("Must be 2 different monkeys you own")   
   }
+  // if none of these, display them as valid parents
   else {      
+
+    // adapting CSS
     $("#monkeyRowMultiply").css("display", "flex");    
     $("#childArea").hide(); 
     $("#backToMultiplyButton").show();    
     $("#makeMoreMonkeysButton").show();
     $("#showParentsButton").hide();
 
+    // adapting CSS
     $("#parentsArea").empty();
     $("#parentsArea").css("display", "flex");   
     $("#parent1InputField").hide();  
@@ -886,21 +908,22 @@ $("#showParentsButton").click(async () => {
     console.log(parent1Input);
     console.log(parent2Input);   
 
+    // getting the details for both parent NFTs
     var myIncomingmonkeyIdsArray = [parent1Input, parent2Input];
-
     for (let j = 0; j < 2; j++) {
       const tokenId = myIncomingmonkeyIdsArray[j];
 
+      // for each NFT, querying main smart contract
       let myCryptoMonkey = await instance.methods.getMonkeyDetails(tokenId).call();
 
       // creating DNA object from genes string of numbers
-      const dnaObject = await decipherDNAtoObject(myCryptoMonkey); 
-
-      const tokenGeneration = myCryptoMonkey.generation;
+      const dnaObject = await decipherDNAtoObject(myCryptoMonkey);       
       
       // Call to create and append HTML for each cryptomonkey of the connected user
       $("#parentsArea").append(buildMonkeyBoxes(tokenId));  
 
+      // adding generation to HTML of display boxes
+      const tokenGeneration = myCryptoMonkey.generation;
       $(`#generationDisplayLine${tokenId}`).html(tokenGeneration);
 
       // console.log("tokenIdDNA: ");
@@ -909,8 +932,6 @@ $("#showParentsButton").click(async () => {
       // Call to apply CSS on the HTML structure, effect is styling and showing the next monkey
       // needs a set of DNA, if no tokenId is given, reverts to "Creation" in the receiving functions
       renderMonkey(dnaObject, tokenId);         
-      
-      
     };
   }; 
 });
@@ -972,10 +993,13 @@ $("#switchToGalleryButton").click(async () => {
   $("#monkeyRowCreation").hide();
   $("#buttonHolderArea").hide();  
 
+  // calling gallery logic, showing the correct type of NFT display
   galleryLogic(`#monkeyRowGallery`);
 
 });
 
+// function to display several NFT monkeys
+// incoming variable determines where they will be shown, i.e. in the gallery vs market, etc.
 async function galleryLogic(divToAppendTo) {
   // userBalance will be the number of monkeys the user has
   var userBalance = await instance.methods.balanceOf(user1).call();
@@ -991,18 +1015,17 @@ async function galleryLogic(divToAppendTo) {
   // creating the correct CSS data from it
   // creating an unique HTML structure in the gallery 
   // applying the CSS to it
-
   for (let j = 0; j < userBalance; j++) {
     const tokenId = myMonkeyIdsArray[j];
     let myCryptoMonkey = await instance.methods.getMonkeyDetails(tokenId).call();
     // creating DNA object from genes string of numbers
-    const dnaObject = await decipherDNAtoObject(myCryptoMonkey);   
-
-    const tokenGeneration = myCryptoMonkey.generation;
+    const dnaObject = await decipherDNAtoObject(myCryptoMonkey); 
 
     // Call to create and append HTML for each cryptomonkey of the connected user
     $(`${divToAppendTo}`).append(buildMonkeyBoxes(tokenId));
 
+    // adding generation to HTML of display boxes
+    const tokenGeneration = myCryptoMonkey.generation;
     $(`#generationDisplayLine${tokenId}`).html(tokenGeneration);
 
     // console.log("tokenIdDNA: ");
@@ -1011,7 +1034,6 @@ async function galleryLogic(divToAppendTo) {
     // Call to apply CSS on the HTML structure, effect is styling and showing the next monkey
     // needs a set of DNA, if no tokenId is given, reverts to "Creation" in the receiving functions
     renderMonkey(dnaObject, tokenId);  
-
   }; 
 }
 
