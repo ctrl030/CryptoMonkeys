@@ -299,20 +299,20 @@ contract MonkeyContract is IERC721, Ownable {
         newGeneSequence = newGeneSequence / 100;
 
         newGeneSequence = newGeneSequence *100;
-        */
-
-        
-        
-
-
-
+        */    
         return newGeneSequence;        
     }
 
-    //- gives back an array with the NFT tokenIds that the provided sender address owns
+    // gives back an array with the NFT tokenIds that the provided sender address owns
     function findMonkeyIdsOfAddress(address sender) public view returns (uint256[] memory) {  
         return _owners2tokenIdArrayMapping[sender];
     }
+
+    // gives back an array with the NFT tokenIds that are owned by the calling msg.sender 
+    function showMyMonkeyNFTs() public view returns (uint256[] memory) {  
+        return _owners2tokenIdArrayMapping[msg.sender];
+    }
+
 
     // used for creating gen0 monkeys 
     function createGen0Monkey(uint256 _genes) public onlyOwner {
