@@ -630,7 +630,7 @@ contract MonkeyContract is IERC721, Ownable {
         );  
         
         // deleting the tokenId from the old owners array of monkeys
-        if ((_owners2tokenIdArrayMapping[_monkeyOwner]).length <0 ){
+        if ((_owners2tokenIdArrayMapping[_monkeyOwner]).length > 0 ){
             delete _owners2tokenIdArrayMapping[_monkeyOwner][MonkeyIdPositionsMapping[_monkeyOwner][_tokenId]];
         }                
 
