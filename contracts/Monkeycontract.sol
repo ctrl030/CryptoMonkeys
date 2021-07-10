@@ -271,7 +271,7 @@ contract MonkeyContract is IERC721, Ownable {
             index = index -1;             
         }
 
-        uint256 newGeneSequence; 
+        
 
         // Taken out, only for selectng random pair
         //uint256 randomPairSelector = uint256(uint256(pseudoRandom8bits) % 8); 
@@ -283,6 +283,8 @@ contract MonkeyContract is IERC721, Ownable {
 
         // setting first 2 digits in DNA string to random numbers
         geneArray[0] = pseudoRandomAdv;
+
+        uint256 newGeneSequence; 
         
         // puts in last positioned array entry (2 digits) as first numbers, then adds 00, then adds again,
         // therefore reversing the backwards information in the array again to correct order 
