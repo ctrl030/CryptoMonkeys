@@ -22,8 +22,6 @@ CryptoMonkeys is an ERC721 token platform, where you can mint, breed, buy and se
     - [Generation](#generation)
     - [Randomness](#randomness)  
 
-Using the NFT platform
-
 ## Ethereum
 
 Contracts are written in Solidity.
