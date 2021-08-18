@@ -374,23 +374,6 @@ body {
   margin-bottom: 8px;
 }
 
-#jungleIslandFooter {
-  height: 40px !important;
-  margin-bottom: 8px;
-  border-radius: 10px;
-  background-color: #ededed;
-  text-align: center;
-  padding-top: 12px;  
-  margin-right: 0px !important;
-  margin-left: 0px !important;
-  opacity: 0.95;
-}
-
-#jungleIslandFooter p {
-  font-size: 16px;
-  font-weight: bold;
-}
-
 .offerHoldCol{
   width: 160px;
 }
