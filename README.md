@@ -69,7 +69,7 @@ You can follow these links to install the needed software:
 
 - [Node.js](https://nodejs.org/en/)
 - [Metamask](https://metamask.io/)
-- [Hardhat](https://hardhat.org/getting-started/#installation)
+- [Truffle](https://www.trufflesuite.com/docs/truffle/quickstart)
 - [Ganache](https://www.trufflesuite.com/docs/ganache/quickstart)
 
 ### Deploy locally 
