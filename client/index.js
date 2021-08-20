@@ -1,6 +1,9 @@
 // Connecting with Web3.js functionalities
 const web3 = new Web3(Web3.givenProvider);
 
+// Representation of the ERC20 Token smart contract
+let tokenInstance;
+
 // Representation of the main smart contract
 let instance;
 
@@ -13,11 +16,14 @@ let user1;
 // variable to check if user has approved market as operator yet
 let user1MarketAllowed = false;
 
+// Contract address for ERC20 contract "BananaToken", has to be updated when migrating => i.e. contract address is changing
+const tokenAddress = "0xE06B5b2826aEAff21838d7344Dec545B2f4De3C5";
+
 // Contract address for main contract "MonkeyContract", has to be updated when migrating => i.e. contract address is changing
-const contractAddress = "0x826b79862c4672A20ad7b21548a1a1bd0eE2cF1f";
+const contractAddress = "0xA785B678910FfBddA0A8Cd00EA82eE3479629963";
 
 // Contract address for marketplace contract "MonkeyMarketplace", has to be updated when migrating => i.e. contract address is changing
-const marketContractAddress = "0xaAA1bb49F6D2319fcf46B60cD57B09581024f8dC";
+const marketContractAddress = "0xEcF6cadCFCE86AF906e3E05e3C33968F0e7988d8";
 
 // preparing accounts variable
 let accounts;
@@ -34,6 +40,11 @@ $(document).ready(async function () {
 
   // Enabling / connecting with Ganache accounts
   accounts = await window.ethereum.enable();
+
+  // Setting the representation of the token smart contract, specifying abi, contractAddress and first account from Ganache's list at this moment
+  tokenInstance = new web3.eth.Contract(tokenAbi, tokenAddress, {
+    from: accounts[0],
+  });
 
   // Setting the representation of the main smart contract, specifying abi, contractAddress and first account from Ganache's list at this moment
   instance = new web3.eth.Contract(abi, contractAddress, {
@@ -192,6 +203,16 @@ $(document).ready(async function () {
 
 })
 
+$("#getBananasButton").click( async () => {
+  let bananasOwned = await tokenInstance.methods.balanceOf(user1).call();
+  console.log("you've got", bananasOwned , "bananas");
+  console.log("will now get your bananas... ");
+  await tokenInstance.methods.getBananas().send();  
+});
+
+
+
+
 // button switches to market
 $("#switchToMarketButton").click( async () => { 
   // hides breeding functionalities
@@ -293,7 +314,7 @@ $("#switchToMarketButton").click( async () => {
 
   // same logic as listening to MonkeyCreated event decription above (search " .MonkeyCreated()" )
   marketInstance.events
-  .monkeySold ()
+  .MonkeySold ()
   .on("data", function (monkeySoldEvent) {
     // for API throttling
     console.log('monkeySoldThrottler is at the start and set to: ' + monkeySoldThrottler);     
@@ -807,6 +828,8 @@ var parent2Input;
 // button to multiply NFT monkeys
 $("#makeMoreMonkeysButton").click(async () => { 
 
+  // xxxxxx giving allowance not in same button ------------------------------------------<=====
+  await tokenInstance.methods.approve(contractAddress, 1000).send();
   //calling breed function in main smart contract
   await instance.methods.breed(parent1Input, parent2Input).send();
  
