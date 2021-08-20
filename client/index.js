@@ -16,14 +16,20 @@ let user1;
 // variable to check if user has approved market as operator yet
 let user1MarketAllowed = false;
 
+// variable to check if user has gotten their BananaToken from the faucet yet
+let bananasGotten = false;
+
+// variable to check if user has approved main contract to use his BananaToken yet
+let mainContractBananasAllowed = false;
+
 // Contract address for ERC20 contract "BananaToken", has to be updated when migrating => i.e. contract address is changing
-const tokenAddress = "0xE06B5b2826aEAff21838d7344Dec545B2f4De3C5";
+const tokenAddress = "0x4bd3a1e175e7b17d5521034d53aC77345B96dAfF";
 
 // Contract address for main contract "MonkeyContract", has to be updated when migrating => i.e. contract address is changing
-const contractAddress = "0xA785B678910FfBddA0A8Cd00EA82eE3479629963";
+const contractAddress = "0xA6b1f2ccBe04a225EB182b08d48e794D91b4842a";
 
 // Contract address for marketplace contract "MonkeyMarketplace", has to be updated when migrating => i.e. contract address is changing
-const marketContractAddress = "0xEcF6cadCFCE86AF906e3E05e3C33968F0e7988d8";
+const marketContractAddress = "0x71e60D66b69453F2ae0c22C81E99FFcAa6dA26e2";
 
 // preparing accounts variable
 let accounts;
@@ -54,6 +60,9 @@ $(document).ready(async function () {
   // Setting user to first account from Ganache's list at this moment
   user1 = accounts[0];
   
+  // checking BananaToken status (faucet and allowance) and adapting buttons
+  adaptBananaStatus();
+
   // on pageload we subscribe to the MonkeyCreated event. From now on, whenever it is emitted, 
   // a notification is created and the css of the monkeyCreatedDiv will be emptied and then appended with the info
   // This only reacts to MonkeyCreated events triggered by "instance", which is specified to "from: accounts[0]"
@@ -197,17 +206,48 @@ $(document).ready(async function () {
         setTimeout(hideAndEmptyAlerts, 10000, "#marketOperatorApprovedArea");
       }
     })
-    .on("error", function (error) {
-      console.log(error);
+  .on("error", function (error) {
+    console.log(error);
   })  
 
+  
 })
 
+
+// checks if user has already gotten BananaTokens and allowed main contract to spend them
+// depending on results, shows buttons
+function adaptBananaStatus(){    
+  if ( bananasGotten == false) {
+    $("#allowMainSpendBananasButton").hide();  
+    $("#getBananasButton").show();  
+  }
+  else if (bananasGotten == true) {
+    $("#getBananasButton").hide(); 
+    if (mainContractBananasAllowed == false)
+    {
+      $("#allowMainSpendBananasButton").show();
+    } 
+    else if (mainContractBananasAllowed == false){
+      $("#allowMainSpendBananasButton").hide();
+    }    
+  }
+};
+
 $("#getBananasButton").click( async () => {
-  let bananasOwned = await tokenInstance.methods.balanceOf(user1).call();
-  console.log("you've got", bananasOwned , "bananas");
+  //let bananasOwned = await tokenInstance.methods.balanceOf(user1).call();
+ // console.log("you've got", bananasOwned , "bananas");
   console.log("will now get your bananas... ");
-  await tokenInstance.methods.getBananas().send();  
+  await tokenInstance.methods.getBananas().send();
+  bananasGotten = true;
+  adaptBananaStatus();
+});
+
+$("#allowMainSpendBananasButton").click( async () => { 
+  await tokenInstance.methods.approve(contractAddress, 1000).send();
+  let spendBananasAllowed = await tokenInstance.methods.allowance(user1, contractAddress).call();
+  console.log("you have allowed the main contract to spend this many BananaToken: ", spendBananasAllowed);
+  mainContractBananasAllowed = true;
+  adaptBananaStatus();
 });
 
 
@@ -687,15 +727,15 @@ $("#buyMonkeyButton").click( async () => {
 
 // Listens to button click, then creates dnsStr (16 digits number string, same format as genes) 
 // from concatting all the already set css values
-// then calls the contract's createGen0Monkey function and mints a Crypto Monkey that contains this string 
+// then calls the contract's createDemoMonkey function and mints a demo Crypto Monkey that contains this string 
 $("#mintMonkey").click(() => {
   let dnaStr = getDna();
 
-  instance.methods.createGen0Monkey(dnaStr).send({}, function (error, txHash) {
+  instance.methods.createDemoMonkey(dnaStr).send({}, function (error, txHash) {
     if (error) {
       console.log(error);
     } else {
-      console.log('createGen0Monkey txHash: ');
+      console.log('createDemoMonkey txHash: ');
       console.log(txHash);
     }
   });  
@@ -828,8 +868,6 @@ var parent2Input;
 // button to multiply NFT monkeys
 $("#makeMoreMonkeysButton").click(async () => { 
 
-  // xxxxxx giving allowance not in same button ------------------------------------------<=====
-  await tokenInstance.methods.approve(contractAddress, 1000).send();
   //calling breed function in main smart contract
   await instance.methods.breed(parent1Input, parent2Input).send();
  

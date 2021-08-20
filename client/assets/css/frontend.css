@@ -179,7 +179,11 @@ footer {
 	}
 }
 
-/* Banana Button */
+/* Banana Buttons */
+
+#allowMainSpendBananasButton {
+  font-size: 14pt;
+}
 
 .btn-21 {
     cursor: pointer;
