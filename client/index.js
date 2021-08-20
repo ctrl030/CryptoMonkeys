@@ -234,8 +234,8 @@ function adaptBananaStatus(){
 };
 
 $("#getBananasButton").click( async () => {
-  //let bananasOwned = await tokenInstance.methods.balanceOf(user1).call();
- // console.log("you've got", bananasOwned , "bananas");
+  let bananasOwned = await tokenInstance.methods.balanceOf(user1).call();
+  console.log("you've got", bananasOwned , "bananas");
   console.log("will now get your bananas... ");
   await tokenInstance.methods.getBananas().send();
   bananasGotten = true;
@@ -731,7 +731,7 @@ $("#buyMonkeyButton").click( async () => {
 $("#mintMonkey").click(() => {
   let dnaStr = getDna();
 
-  instance.methods.createDemoMonkey(dnaStr).send({}, function (error, txHash) {
+  instance.methods.createDemoMonkey(dnaStr, user1).send({}, function (error, txHash) {
     if (error) {
       console.log(error);
     } else {
