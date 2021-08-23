@@ -14082,12 +14082,12 @@
         }
       },
       "links": {},
-      "address": "0x71e60D66b69453F2ae0c22C81E99FFcAa6dA26e2",
-      "transactionHash": "0x678e5b9c41a2ca9d4fea7d9714acfe82c08e219647e503852705eb13443b87d4"
+      "address": "0xB9c1f6c2f66d269cf2d8d7D6B2d5991767Da6a4C",
+      "transactionHash": "0x69a249a8ab3dffa8d7655663a939963ee4a05220e6ca83e4cca15beeabc84fcb"
     }
   },
   "schemaVersion": "3.2.0",
-  "updatedAt": "2021-08-20T15:29:24.526Z",
+  "updatedAt": "2021-08-23T13:25:04.576Z",
   "networkType": "ethereum",
   "devdoc": {
     "kind": "dev",

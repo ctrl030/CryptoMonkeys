@@ -7929,7 +7929,7 @@
   },
   "networks": {},
   "schemaVersion": "3.2.0",
-  "updatedAt": "2021-08-20T15:29:10.375Z",
+  "updatedAt": "2021-08-23T13:24:50.451Z",
   "devdoc": {
     "details": "Collection of functions related to the address type",
     "kind": "dev",

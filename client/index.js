@@ -23,13 +23,13 @@ let bananasGotten = false;
 let mainContractBananasAllowed = false;
 
 // Contract address for ERC20 contract "BananaToken", has to be updated when migrating => i.e. contract address is changing
-const tokenAddress = "0x4bd3a1e175e7b17d5521034d53aC77345B96dAfF";
+const tokenAddress = "0x1AF750Ea264cf6721773eC52Bd73ed9442BEDe52";
 
 // Contract address for main contract "MonkeyContract", has to be updated when migrating => i.e. contract address is changing
-const contractAddress = "0xA6b1f2ccBe04a225EB182b08d48e794D91b4842a";
+const contractAddress = "0x89c8d53b0cF164894CAd8ee45f072663222ae1F1";
 
 // Contract address for marketplace contract "MonkeyMarketplace", has to be updated when migrating => i.e. contract address is changing
-const marketContractAddress = "0x71e60D66b69453F2ae0c22C81E99FFcAa6dA26e2";
+const marketContractAddress = "0xB9c1f6c2f66d269cf2d8d7D6B2d5991767Da6a4C";
 
 // preparing accounts variable
 let accounts;
@@ -227,31 +227,35 @@ function adaptBananaStatus(){
     {
       $("#allowMainSpendBananasButton").show();
     } 
-    else if (mainContractBananasAllowed == false){
+    else if (mainContractBananasAllowed == true){
       $("#allowMainSpendBananasButton").hide();
     }    
   }
 };
 
 $("#getBananasButton").click( async () => {
-  let bananasOwned = await tokenInstance.methods.balanceOf(user1).call();
-  console.log("you've got", bananasOwned , "bananas");
+  let bananasOwnedbefore = await tokenInstance.methods.balanceOf(user1).call();
+  console.log("you've already got", bananasOwnedbefore , "bananas at the moment");
   console.log("will now get your bananas... ");
   await tokenInstance.methods.getBananas().send();
   bananasGotten = true;
+  let bananasOwnedafter = await tokenInstance.methods.balanceOf(user1).call();
+  console.log("you've now got", bananasOwnedafter , "bananas");
   adaptBananaStatus();
 });
 
 $("#allowMainSpendBananasButton").click( async () => { 
+  console.log("will now approve the main contract to handle your bananas... ");
   await tokenInstance.methods.approve(contractAddress, 1000).send();
-  let spendBananasAllowed = await tokenInstance.methods.allowance(user1, contractAddress).call();
-  console.log("you have allowed the main contract to spend this many BananaToken: ", spendBananasAllowed);
   mainContractBananasAllowed = true;
+  checkBananaSpendAllowed();    
   adaptBananaStatus();
 });
 
-
-
+async function checkBananaSpendAllowed() {
+  let spendBananasAllowed = await tokenInstance.methods.allowance(user1, contractAddress).call();
+  console.log("you have allowed the main contract to spend this many BananaToken: ", spendBananasAllowed);
+}
 
 // button switches to market
 $("#switchToMarketButton").click( async () => { 
