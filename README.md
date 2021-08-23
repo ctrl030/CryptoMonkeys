@@ -92,7 +92,8 @@ Everything below the navigation bar relates to the part of the page that the use
 ### NFT Creation
 
 This is where the user starts. This section let’s you configure a CryptoMonkey NFT via the sliders, organized into the two subsections “Main Colors” and “Attributes”. Each change in the NFTs characteristics is saved into its “DNA string” that you can see underneath the CryptoMonkey to the left. Users can also use the “Default CryptoMonkey”, “Random CryptoMonkey” and “It’s over 9000” buttons to access some pre-defined ones. Once the user is happy with their creation, they can click the blue “Mint CryptoMonkey” button, to mint the NFT to the (in this case local) blockchain. Metamask will open and upon confirmation, the user now own’s this NFT on this blockchain, which is identified by a unique Token ID number. 
-Note: The user will need the ERC20 BananaToken to pay for the NFT creation. To get some of these, they can use the free faucet through the button “Get Bananas” and confirm via Metamask.
+
+**Note:** The user will need the ERC20 BananaToken to pay for the NFT creation and allow the main smart contract to handle them. To get some of these, users can use the free faucet through the button “Get Bananas” in the top right and confirm via Metamask. Afterwards, in place of the "Get Bananas" button, a "Allow Bananas" button will appear. Use this to approve the main smart contract to handle the BananaToken. Now you can mint and breed.
 
 ### Gallery
 To check out all their CryptoMonkey NFTs, the user can navigate to the gallery, where they are displayed.
@@ -101,7 +102,7 @@ To check out all their CryptoMonkey NFTs, the user can navigate to the gallery, 
 
 Here a user can combine two CryptoMonkey NFTs that they own to create a third “child” CryptoMonkey NFT. The new NFT’s DNA will consist of randomly combined traits from their “parents”, as well as one randomly generated trait, that is new and different. Their generation will depend on their parents’ generations. (To find out more about this mechanism you can check the [_calcGeneration function](https://github.com/ctrl030/CryptoMonkeys-V2/blob/main/contracts/MonkeyContract.sol))
 
-Note: The user will need the ERC20 BananaToken to pay for the breeding of NFTs. To get some of these, they can use the free faucet through the button “Get Bananas” and confirm via Metamask.
+**Note:** The user will need the ERC20 BananaToken and allow the main smart contract to handle them, so that they can pay for the breeding of NFTs. Check the [NFT Creation](#nft-creation) section to see how to do this.
 
 ### Market
 
