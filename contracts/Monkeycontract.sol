@@ -5,8 +5,6 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts/access/Ownable.sol";
 // preparing safemath to rule out over- and underflow  
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
-// importing openzeppelin counters contract to manage counters 
-import "@openzeppelin/contracts/utils/Counters.sol";
 // importing ERC721Enumerable token standard interface
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 // importing openzeppelin script to guard against re-entrancy
@@ -23,15 +21,14 @@ contract MonkeyContract is ERC721Enumerable, Ownable, ReentrancyGuard, Pausable 
     // using safemath for all uint256 numbers, 
     // use uint256 and (.add) and (.sub)
     using SafeMath for uint256;    
-
-    using Counters for Counters.Counter;
+   
     // STATE VARIABLES
 
     // MonkeyContract address
     address _monkeyContractAddress;   
     // Only 12 monkeys can be created from scratch (generation 0)
     uint256 public GEN0_Limit = 12;
-    Counters.Counter public gen0amountTotal;  
+    uint256 public gen0amountTotal;  
 
     // MonkeyMarketplace interface
     IMonkeyMarketplace private _monkeyMarketInterface;
@@ -179,10 +176,10 @@ contract MonkeyContract is ERC721Enumerable, Ownable, ReentrancyGuard, Pausable 
     // used for creating generation 0 monkeys 
     function createGen0Monkey(uint256 _genes) public onlyOwner {
         // making sure that no more than 12 monkeys will exist in gen0
-        require(gen0amountTotal.current() < GEN0_Limit, "Maximum amount of gen 0 monkeys reached");
+        require(gen0amountTotal < GEN0_Limit, "Maximum amount of gen 0 monkeys reached");
 
         // increasing counter of gen0 monkeys 
-        gen0amountTotal.increment();        
+        gen0amountTotal++;        
 
         // minting new monkey NFT to msg.sender, generation and parents gen set to 0
         _createMonkey(0, 0, 0, _genes, _msgSender());        
