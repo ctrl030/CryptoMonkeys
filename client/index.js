@@ -23,13 +23,13 @@ let bananasGotten = false;
 let mainContractBananasAllowed = false;
 
 // Contract address for ERC20 contract "BananaToken", has to be updated when migrating => i.e. contract address is changing
-const tokenAddress = "0xc768D4735B628EF0950F2147258267aF494753F3";
+const tokenAddress = "0x40C69328F260cF1Cf4EF5d33412094A6CAA61c4A";
 
 // Contract address for main contract "MonkeyContract", has to be updated when migrating => i.e. contract address is changing
-const contractAddress = "0x89c8d53b0cF164894CAd8ee45f072663222ae1F1";
+const contractAddress = "0x99396836a1BA1e999e478E6bb48991F878F89912";
 
 // Contract address for marketplace contract "MonkeyMarketplace", has to be updated when migrating => i.e. contract address is changing
-const marketContractAddress = "0xB9c1f6c2f66d269cf2d8d7D6B2d5991767Da6a4C";
+const marketContractAddress = "0x982E2611E14A234f6EA5A4Af2e774cbc32Aae5CC";
 
 // preparing accounts variable
 let accounts;
@@ -61,7 +61,7 @@ $(document).ready(async function () {
   user1 = accounts[0];
   
   // checking BananaToken status (faucet and allowance) and adapting buttons
-  adaptBananaStatus();
+  adaptBananaStatus();  
 
   // on pageload we subscribe to the MonkeyCreated event. From now on, whenever it is emitted, 
   // a notification is created and the css of the monkeyCreatedDiv will be emptied and then appended with the info
@@ -208,13 +208,13 @@ $(document).ready(async function () {
     })
   .on("error", function (error) {
     console.log(error);
-  })  
+  });  
 
-  
+  await refreshBananasOwned();
 })
 
 
-// checks if user has already gotten BananaTokens and allowed main contract to spend them
+// checks if user has already gotten BananaToken and allowed main contract to spend them
 // depending on results, shows buttons
 function adaptBananaStatus(){    
   if ( bananasGotten == false) {
@@ -242,6 +242,7 @@ $("#getBananasButton").click( async () => {
   let bananasOwnedafter = await tokenInstance.methods.balanceOf(user1).call();
   console.log("you've now got", bananasOwnedafter , "bananas");
   adaptBananaStatus();
+  await refreshBananasOwned();
 });
 
 $("#allowMainSpendBananasButton").click( async () => { 
@@ -256,6 +257,13 @@ async function checkBananaSpendAllowed() {
   let spendBananasAllowed = await tokenInstance.methods.allowance(user1, contractAddress).call();
   console.log("you have allowed the main contract to spend this many BananaToken: ", spendBananasAllowed);
 }
+
+async function refreshBananasOwned() {
+  let bananasOwnedNow = await tokenInstance.methods.balanceOf(user1).call();
+  console.log("bananasOwnedNow: ", bananasOwnedNow);
+  $("#bananaDisplay").html(`Bananas: ${bananasOwnedNow}`);
+}
+
 
 // button switches to market
 $("#switchToMarketButton").click( async () => { 
@@ -732,17 +740,20 @@ $("#buyMonkeyButton").click( async () => {
 // Listens to button click, then creates dnsStr (16 digits number string, same format as genes) 
 // from concatting all the already set css values
 // then calls the contract's createDemoMonkey function and mints a demo Crypto Monkey that contains this string 
-$("#mintMonkey").click(() => {
+$("#mintMonkey").click(async () => {
   let dnaStr = getDna();
 
-  instance.methods.createDemoMonkey(dnaStr, user1).send({}, function (error, txHash) {
+  await instance.methods.createDemoMonkey(dnaStr, user1).send({}, function (error, txHash) {
     if (error) {
       console.log(error);
     } else {
       console.log('createDemoMonkey txHash: ');
       console.log(txHash);
-    }
-  });  
+    }   
+  }); 
+
+  await refreshBananasOwned();
+  
 });
 
 // CSS cleanup to hide breeding functionality

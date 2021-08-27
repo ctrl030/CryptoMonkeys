@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.0;
-import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
+import "@openzeppelin/contracts/token/ERC721/extensions/IERC721Enumerable.sol";
 
-interface IMonkeyContract is IERC721{
+interface IMonkeyContract is IERC721Enumerable{
   
   // Creation event, emitted after successful NFT creation with these parameters
   event MonkeyCreated(
