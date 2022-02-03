@@ -173,27 +173,29 @@
       "type": "function"
     }
   ],
-  "metadata": "{\"compiler\":{\"version\":\"0.8.0+commit.c7dfd78e\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"string\",\"name\":\"TxType\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"MarketTransaction\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"seller\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"buyer\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"price\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"MonkeySold\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_tokenId\",\"type\":\"uint256\"}],\"name\":\"buyMonkey\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getAllTokenOnSale\",\"outputs\":[{\"internalType\":\"uint256[]\",\"name\":\"listOfOffers\",\"type\":\"uint256[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_tokenId\",\"type\":\"uint256\"}],\"name\":\"getOffer\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"seller\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"price\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"index\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"internalType\":\"bool\",\"name\":\"active\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_tokenId\",\"type\":\"uint256\"}],\"name\":\"isTokenOnSale\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"tokenIsOnSale\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_tokenId\",\"type\":\"uint256\"}],\"name\":\"removeOffer\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_price\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_tokenId\",\"type\":\"uint256\"}],\"name\":\"setOffer\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{\"buyMonkey(uint256)\":{\"notice\":\"Executes the purchase of _tokenId. Sends the funds to the seller and transfers the token using transferNFT in Monkeycontract. Emits the MarketTransaction event with txType \\\"Buy\\\". Emits the event MonkeySold Requirement: The msg.value needs to equal the price of _tokenId Requirement: There must be an active offer for _tokenId\"},\"getAllTokenOnSale()\":{\"notice\":\"Get all tokenId's that are currently for sale. Returns an empty array if none exist.\"},\"getOffer(uint256)\":{\"notice\":\"Get the details about an offer for _tokenId. Throws an error if there is no active offer for _tokenId.\"},\"removeOffer(uint256)\":{\"notice\":\"Removes an existing offer. Emits the MarketTransaction event with txType \\\"Remove offer\\\" Requirement: Only the seller of _tokenId can remove an offer.\"},\"setOffer(uint256,uint256)\":{\"notice\":\"Creates a new offer for _tokenId for the price _price. Emits the MarketTransaction event with txType \\\"Create offer\\\" Requirement: Only the owner of _tokenId can create an offer. Requirement: There can only be one active offer for a token at a time. Requirement: Marketplace contract (this) needs to be an approved operator when the offer is created.\"}},\"version\":1}},\"settings\":{\"compilationTarget\":{\"/C/github/CryptoMonkeys/contracts/IMonkeyMarketplace.sol\":\"IMonkeyMarketplace\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"/C/github/CryptoMonkeys/contracts/IMonkeyMarketplace.sol\":{\"keccak256\":\"0x931a1fe5dac34da27dbcfe9e21760063e3adfa95c9154bf0f7e39da79c9adadc\",\"license\":\"UNLICENSED\",\"urls\":[\"bzz-raw://70d8eeec42fe3e9a287f04714c0dc08b2802e0f6ab3d673fd07c9d4be1a35e33\",\"dweb:/ipfs/QmdR76iREJNzUvBbHkdceXbkdZ2JzZkjwUnvERiJALYrQ3\"]}},\"version\":1}",
+  "metadata": "{\"compiler\":{\"version\":\"0.8.0+commit.c7dfd78e\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"string\",\"name\":\"TxType\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"MarketTransaction\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"seller\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"buyer\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"price\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"MonkeySold\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_tokenId\",\"type\":\"uint256\"}],\"name\":\"buyMonkey\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getAllTokenOnSale\",\"outputs\":[{\"internalType\":\"uint256[]\",\"name\":\"listOfOffers\",\"type\":\"uint256[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_tokenId\",\"type\":\"uint256\"}],\"name\":\"getOffer\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"seller\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"price\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"index\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"internalType\":\"bool\",\"name\":\"active\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_tokenId\",\"type\":\"uint256\"}],\"name\":\"isTokenOnSale\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"tokenIsOnSale\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_tokenId\",\"type\":\"uint256\"}],\"name\":\"removeOffer\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_price\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_tokenId\",\"type\":\"uint256\"}],\"name\":\"setOffer\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{\"buyMonkey(uint256)\":{\"notice\":\"Executes the purchase of _tokenId. Sends the funds to the seller and transfers the token using transferNFT in Monkeycontract. Emits the MarketTransaction event with txType \\\"Buy\\\". Emits the event MonkeySold Requirement: The msg.value needs to equal the price of _tokenId Requirement: There must be an active offer for _tokenId\"},\"getAllTokenOnSale()\":{\"notice\":\"Get all tokenId's that are currently for sale. Returns an empty array if none exist.\"},\"getOffer(uint256)\":{\"notice\":\"Get the details about an offer for _tokenId. Throws an error if there is no active offer for _tokenId.\"},\"removeOffer(uint256)\":{\"notice\":\"Removes an existing offer. Emits the MarketTransaction event with txType \\\"Remove offer\\\" Requirement: Only the seller of _tokenId can remove an offer.\"},\"setOffer(uint256,uint256)\":{\"notice\":\"Creates a new offer for _tokenId for the price _price. Emits the MarketTransaction event with txType \\\"Create offer\\\" Requirement: Only the owner of _tokenId can create an offer. Requirement: There can only be one active offer for a token at a time. Requirement: Marketplace contract (this) needs to be an approved operator when the offer is created.\"}},\"version\":1}},\"settings\":{\"compilationTarget\":{\"project:/contracts/IMonkeyMarketplace.sol\":\"IMonkeyMarketplace\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"project:/contracts/IMonkeyMarketplace.sol\":{\"keccak256\":\"0x931a1fe5dac34da27dbcfe9e21760063e3adfa95c9154bf0f7e39da79c9adadc\",\"license\":\"UNLICENSED\",\"urls\":[\"bzz-raw://70d8eeec42fe3e9a287f04714c0dc08b2802e0f6ab3d673fd07c9d4be1a35e33\",\"dweb:/ipfs/QmdR76iREJNzUvBbHkdceXbkdZ2JzZkjwUnvERiJALYrQ3\"]}},\"version\":1}",
   "bytecode": "0x",
   "deployedBytecode": "0x",
   "immutableReferences": {},
+  "generatedSources": [],
+  "deployedGeneratedSources": [],
   "sourceMap": "",
   "deployedSourceMap": "",
   "source": "// SPDX-License-Identifier: UNLICENSED\r\npragma solidity ^0.8.0;\r\n\r\n/*\r\n * Market place to trade monkeys (should be adapted to be used for any ERC721 token)\r\n * It needs an existing monkey contract to interact with\r\n * Note: it does not inherit from the main monkey contract\r\n * Note: everyone who wants to sell via this contract has to give it operator status in the main contract using the imported ERC721 setApprovalForAll function\r\n*/\r\ninterface IMonkeyMarketplace {\r\n\r\n    event MarketTransaction(string TxType, address owner, uint256 tokenId);\r\n\r\n    event MonkeySold (address seller, address buyer, uint256 price, uint256 tokenId);     \r\n\r\n    /*\r\n    * shows if an NFT is on sale in this contract. \r\n    * Note: Tokens that are on sale in this contract cannot be transferred via main contract\r\n    * Note: To transfer an token via main contract that is on sale here, first use removeOffer for the Token ID\r\n    */\r\n    function isTokenOnSale(uint256 _tokenId) external view returns (bool tokenIsOnSale);\r\n\r\n    /**\r\n    * Get the details about an offer for _tokenId. Throws an error if there is no active offer for _tokenId.\r\n    */\r\n    function getOffer(uint256 _tokenId) external view returns ( address seller, uint256 price, uint256 index, uint256 tokenId, bool active);\r\n\r\n    /**\r\n    * Get all tokenId's that are currently for sale. Returns an empty array if none exist.\r\n    */\r\n    function getAllTokenOnSale() external view  returns(uint256[] memory listOfOffers);\r\n\r\n    /** \r\n    * Creates a new offer for _tokenId for the price _price.\r\n    * Emits the MarketTransaction event with txType \"Create offer\"\r\n    * Requirement: Only the owner of _tokenId can create an offer.\r\n    * Requirement: There can only be one active offer for a token at a time.\r\n    * Requirement: Marketplace contract (this) needs to be an approved operator when the offer is created.\r\n    */\r\n    function setOffer(uint256 _price, uint256 _tokenId) external;\r\n\r\n    /** \r\n    * Removes an existing offer.\r\n    * Emits the MarketTransaction event with txType \"Remove offer\"\r\n    * Requirement: Only the seller of _tokenId can remove an offer.\r\n    */\r\n    function removeOffer(uint256 _tokenId) external;\r\n\r\n    /**\r\n    * Executes the purchase of _tokenId.\r\n    * Sends the funds to the seller and transfers the token using transferNFT in Monkeycontract.\r\n    * Emits the MarketTransaction event with txType \"Buy\".\r\n    * Emits the event MonkeySold\r\n    * Requirement: The msg.value needs to equal the price of _tokenId\r\n    * Requirement: There must be an active offer for _tokenId\r\n     */\r\n    function buyMonkey(uint256 _tokenId) external payable;\r\n    \r\n}\r\n",
-  "sourcePath": "C:\\github\\CryptoMonkeys\\contracts\\IMonkeyMarketplace.sol",
+  "sourcePath": "C:\\code\\github\\CryptoMonkeys\\contracts\\IMonkeyMarketplace.sol",
   "ast": {
-    "absolutePath": "/C/github/CryptoMonkeys/contracts/IMonkeyMarketplace.sol",
+    "absolutePath": "project:/contracts/IMonkeyMarketplace.sol",
     "exportedSymbols": {
       "IMonkeyMarketplace": [
-        263
+        3364
       ]
     },
-    "id": 264,
+    "id": 3365,
     "license": "UNLICENSED",
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 194,
+        "id": 3295,
         "literals": [
           "solidity",
           "^",
@@ -201,7 +203,7 @@
           ".0"
         ],
         "nodeType": "PragmaDirective",
-        "src": "40:23:2"
+        "src": "40:23:20"
       },
       {
         "abstract": false,
@@ -209,31 +211,31 @@
         "contractDependencies": [],
         "contractKind": "interface",
         "fullyImplemented": false,
-        "id": 263,
+        "id": 3364,
         "linearizedBaseContracts": [
-          263
+          3364
         ],
         "name": "IMonkeyMarketplace",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "anonymous": false,
-            "id": 202,
+            "id": 3303,
             "name": "MarketTransaction",
             "nodeType": "EventDefinition",
             "parameters": {
-              "id": 201,
+              "id": 3302,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 196,
+                  "id": 3297,
                   "indexed": false,
                   "mutability": "mutable",
                   "name": "TxType",
                   "nodeType": "VariableDeclaration",
-                  "scope": 202,
-                  "src": "501:13:2",
+                  "scope": 3303,
+                  "src": "501:13:20",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -241,10 +243,10 @@
                     "typeString": "string"
                   },
                   "typeName": {
-                    "id": 195,
+                    "id": 3296,
                     "name": "string",
                     "nodeType": "ElementaryTypeName",
-                    "src": "501:6:2",
+                    "src": "501:6:20",
                     "typeDescriptions": {
                       "typeIdentifier": "t_string_storage_ptr",
                       "typeString": "string"
@@ -254,13 +256,13 @@
                 },
                 {
                   "constant": false,
-                  "id": 198,
+                  "id": 3299,
                   "indexed": false,
                   "mutability": "mutable",
                   "name": "owner",
                   "nodeType": "VariableDeclaration",
-                  "scope": 202,
-                  "src": "516:13:2",
+                  "scope": 3303,
+                  "src": "516:13:20",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -268,10 +270,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 197,
+                    "id": 3298,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "516:7:2",
+                    "src": "516:7:20",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -282,13 +284,13 @@
                 },
                 {
                   "constant": false,
-                  "id": 200,
+                  "id": 3301,
                   "indexed": false,
                   "mutability": "mutable",
                   "name": "tokenId",
                   "nodeType": "VariableDeclaration",
-                  "scope": 202,
-                  "src": "531:15:2",
+                  "scope": 3303,
+                  "src": "531:15:20",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -296,10 +298,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 199,
+                    "id": 3300,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "531:7:2",
+                    "src": "531:7:20",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -308,28 +310,28 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "500:47:2"
+              "src": "500:47:20"
             },
-            "src": "477:71:2"
+            "src": "477:71:20"
           },
           {
             "anonymous": false,
-            "id": 212,
+            "id": 3313,
             "name": "MonkeySold",
             "nodeType": "EventDefinition",
             "parameters": {
-              "id": 211,
+              "id": 3312,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 204,
+                  "id": 3305,
                   "indexed": false,
                   "mutability": "mutable",
                   "name": "seller",
                   "nodeType": "VariableDeclaration",
-                  "scope": 212,
-                  "src": "574:14:2",
+                  "scope": 3313,
+                  "src": "574:14:20",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -337,10 +339,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 203,
+                    "id": 3304,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "574:7:2",
+                    "src": "574:7:20",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -351,13 +353,13 @@
                 },
                 {
                   "constant": false,
-                  "id": 206,
+                  "id": 3307,
                   "indexed": false,
                   "mutability": "mutable",
                   "name": "buyer",
                   "nodeType": "VariableDeclaration",
-                  "scope": 212,
-                  "src": "590:13:2",
+                  "scope": 3313,
+                  "src": "590:13:20",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -365,10 +367,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 205,
+                    "id": 3306,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "590:7:2",
+                    "src": "590:7:20",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -379,13 +381,13 @@
                 },
                 {
                   "constant": false,
-                  "id": 208,
+                  "id": 3309,
                   "indexed": false,
                   "mutability": "mutable",
                   "name": "price",
                   "nodeType": "VariableDeclaration",
-                  "scope": 212,
-                  "src": "605:13:2",
+                  "scope": 3313,
+                  "src": "605:13:20",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -393,10 +395,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 207,
+                    "id": 3308,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "605:7:2",
+                    "src": "605:7:20",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -406,13 +408,13 @@
                 },
                 {
                   "constant": false,
-                  "id": 210,
+                  "id": 3311,
                   "indexed": false,
                   "mutability": "mutable",
                   "name": "tokenId",
                   "nodeType": "VariableDeclaration",
-                  "scope": 212,
-                  "src": "620:15:2",
+                  "scope": 3313,
+                  "src": "620:15:20",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -420,10 +422,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 209,
+                    "id": 3310,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "620:7:2",
+                    "src": "620:7:20",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -432,30 +434,30 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "573:63:2"
+              "src": "573:63:20"
             },
-            "src": "556:81:2"
+            "src": "556:81:20"
           },
           {
             "functionSelector": "951fbdf0",
-            "id": 219,
+            "id": 3320,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "isTokenOnSale",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 215,
+              "id": 3316,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 214,
+                  "id": 3315,
                   "mutability": "mutable",
                   "name": "_tokenId",
                   "nodeType": "VariableDeclaration",
-                  "scope": 219,
-                  "src": "949:16:2",
+                  "scope": 3320,
+                  "src": "949:16:20",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -463,10 +465,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 213,
+                    "id": 3314,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "949:7:2",
+                    "src": "949:7:20",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -475,20 +477,20 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "948:18:2"
+              "src": "948:18:20"
             },
             "returnParameters": {
-              "id": 218,
+              "id": 3319,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 217,
+                  "id": 3318,
                   "mutability": "mutable",
                   "name": "tokenIsOnSale",
                   "nodeType": "VariableDeclaration",
-                  "scope": 219,
-                  "src": "990:18:2",
+                  "scope": 3320,
+                  "src": "990:18:20",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -496,10 +498,10 @@
                     "typeString": "bool"
                   },
                   "typeName": {
-                    "id": 216,
+                    "id": 3317,
                     "name": "bool",
                     "nodeType": "ElementaryTypeName",
-                    "src": "990:4:2",
+                    "src": "990:4:20",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
@@ -508,40 +510,40 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "989:20:2"
+              "src": "989:20:20"
             },
-            "scope": 263,
-            "src": "926:84:2",
+            "scope": 3364,
+            "src": "926:84:20",
             "stateMutability": "view",
             "virtual": false,
             "visibility": "external"
           },
           {
             "documentation": {
-              "id": 220,
+              "id": 3321,
               "nodeType": "StructuredDocumentation",
-              "src": "1018:121:2",
+              "src": "1018:121:20",
               "text": " Get the details about an offer for _tokenId. Throws an error if there is no active offer for _tokenId."
             },
             "functionSelector": "4579268a",
-            "id": 235,
+            "id": 3336,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "getOffer",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 223,
+              "id": 3324,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 222,
+                  "id": 3323,
                   "mutability": "mutable",
                   "name": "_tokenId",
                   "nodeType": "VariableDeclaration",
-                  "scope": 235,
-                  "src": "1163:16:2",
+                  "scope": 3336,
+                  "src": "1163:16:20",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -549,10 +551,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 221,
+                    "id": 3322,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1163:7:2",
+                    "src": "1163:7:20",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -561,20 +563,20 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "1162:18:2"
+              "src": "1162:18:20"
             },
             "returnParameters": {
-              "id": 234,
+              "id": 3335,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 225,
+                  "id": 3326,
                   "mutability": "mutable",
                   "name": "seller",
                   "nodeType": "VariableDeclaration",
-                  "scope": 235,
-                  "src": "1205:14:2",
+                  "scope": 3336,
+                  "src": "1205:14:20",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -582,10 +584,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 224,
+                    "id": 3325,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1205:7:2",
+                    "src": "1205:7:20",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -596,12 +598,12 @@
                 },
                 {
                   "constant": false,
-                  "id": 227,
+                  "id": 3328,
                   "mutability": "mutable",
                   "name": "price",
                   "nodeType": "VariableDeclaration",
-                  "scope": 235,
-                  "src": "1221:13:2",
+                  "scope": 3336,
+                  "src": "1221:13:20",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -609,10 +611,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 226,
+                    "id": 3327,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1221:7:2",
+                    "src": "1221:7:20",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -622,12 +624,12 @@
                 },
                 {
                   "constant": false,
-                  "id": 229,
+                  "id": 3330,
                   "mutability": "mutable",
                   "name": "index",
                   "nodeType": "VariableDeclaration",
-                  "scope": 235,
-                  "src": "1236:13:2",
+                  "scope": 3336,
+                  "src": "1236:13:20",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -635,10 +637,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 228,
+                    "id": 3329,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1236:7:2",
+                    "src": "1236:7:20",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -648,12 +650,12 @@
                 },
                 {
                   "constant": false,
-                  "id": 231,
+                  "id": 3332,
                   "mutability": "mutable",
                   "name": "tokenId",
                   "nodeType": "VariableDeclaration",
-                  "scope": 235,
-                  "src": "1251:15:2",
+                  "scope": 3336,
+                  "src": "1251:15:20",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -661,10 +663,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 230,
+                    "id": 3331,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1251:7:2",
+                    "src": "1251:7:20",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -674,12 +676,12 @@
                 },
                 {
                   "constant": false,
-                  "id": 233,
+                  "id": 3334,
                   "mutability": "mutable",
                   "name": "active",
                   "nodeType": "VariableDeclaration",
-                  "scope": 235,
-                  "src": "1268:11:2",
+                  "scope": 3336,
+                  "src": "1268:11:20",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -687,10 +689,10 @@
                     "typeString": "bool"
                   },
                   "typeName": {
-                    "id": 232,
+                    "id": 3333,
                     "name": "bool",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1268:4:2",
+                    "src": "1268:4:20",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
@@ -699,46 +701,46 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "1203:77:2"
+              "src": "1203:77:20"
             },
-            "scope": 263,
-            "src": "1145:136:2",
+            "scope": 3364,
+            "src": "1145:136:20",
             "stateMutability": "view",
             "virtual": false,
             "visibility": "external"
           },
           {
             "documentation": {
-              "id": 236,
+              "id": 3337,
               "nodeType": "StructuredDocumentation",
-              "src": "1289:103:2",
+              "src": "1289:103:20",
               "text": " Get all tokenId's that are currently for sale. Returns an empty array if none exist."
             },
             "functionSelector": "49b3709f",
-            "id": 242,
+            "id": 3343,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "getAllTokenOnSale",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 237,
+              "id": 3338,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "1424:2:2"
+              "src": "1424:2:20"
             },
             "returnParameters": {
-              "id": 241,
+              "id": 3342,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 240,
+                  "id": 3341,
                   "mutability": "mutable",
                   "name": "listOfOffers",
                   "nodeType": "VariableDeclaration",
-                  "scope": 242,
-                  "src": "1450:29:2",
+                  "scope": 3343,
+                  "src": "1450:29:20",
                   "stateVariable": false,
                   "storageLocation": "memory",
                   "typeDescriptions": {
@@ -747,18 +749,18 @@
                   },
                   "typeName": {
                     "baseType": {
-                      "id": 238,
+                      "id": 3339,
                       "name": "uint256",
                       "nodeType": "ElementaryTypeName",
-                      "src": "1450:7:2",
+                      "src": "1450:7:20",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
                         "typeString": "uint256"
                       }
                     },
-                    "id": 239,
+                    "id": 3340,
                     "nodeType": "ArrayTypeName",
-                    "src": "1450:9:2",
+                    "src": "1450:9:20",
                     "typeDescriptions": {
                       "typeIdentifier": "t_array$_t_uint256_$dyn_storage_ptr",
                       "typeString": "uint256[]"
@@ -767,40 +769,40 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "1449:31:2"
+              "src": "1449:31:20"
             },
-            "scope": 263,
-            "src": "1398:83:2",
+            "scope": 3364,
+            "src": "1398:83:20",
             "stateMutability": "view",
             "virtual": false,
             "visibility": "external"
           },
           {
             "documentation": {
-              "id": 243,
+              "id": 3344,
               "nodeType": "StructuredDocumentation",
-              "src": "1489:396:2",
+              "src": "1489:396:20",
               "text": " Creates a new offer for _tokenId for the price _price.\n Emits the MarketTransaction event with txType \"Create offer\"\n Requirement: Only the owner of _tokenId can create an offer.\n Requirement: There can only be one active offer for a token at a time.\n Requirement: Marketplace contract (this) needs to be an approved operator when the offer is created."
             },
             "functionSelector": "941b055b",
-            "id": 250,
+            "id": 3351,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "setOffer",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 248,
+              "id": 3349,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 245,
+                  "id": 3346,
                   "mutability": "mutable",
                   "name": "_price",
                   "nodeType": "VariableDeclaration",
-                  "scope": 250,
-                  "src": "1909:14:2",
+                  "scope": 3351,
+                  "src": "1909:14:20",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -808,10 +810,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 244,
+                    "id": 3345,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1909:7:2",
+                    "src": "1909:7:20",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -821,12 +823,12 @@
                 },
                 {
                   "constant": false,
-                  "id": 247,
+                  "id": 3348,
                   "mutability": "mutable",
                   "name": "_tokenId",
                   "nodeType": "VariableDeclaration",
-                  "scope": 250,
-                  "src": "1925:16:2",
+                  "scope": 3351,
+                  "src": "1925:16:20",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -834,10 +836,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 246,
+                    "id": 3347,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1925:7:2",
+                    "src": "1925:7:20",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -846,46 +848,46 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "1908:34:2"
+              "src": "1908:34:20"
             },
             "returnParameters": {
-              "id": 249,
+              "id": 3350,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "1951:0:2"
+              "src": "1951:0:20"
             },
-            "scope": 263,
-            "src": "1891:61:2",
+            "scope": 3364,
+            "src": "1891:61:20",
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "external"
           },
           {
             "documentation": {
-              "id": 251,
+              "id": 3352,
               "nodeType": "StructuredDocumentation",
-              "src": "1960:183:2",
+              "src": "1960:183:20",
               "text": " Removes an existing offer.\n Emits the MarketTransaction event with txType \"Remove offer\"\n Requirement: Only the seller of _tokenId can remove an offer."
             },
             "functionSelector": "95a0f9c7",
-            "id": 256,
+            "id": 3357,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "removeOffer",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 254,
+              "id": 3355,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 253,
+                  "id": 3354,
                   "mutability": "mutable",
                   "name": "_tokenId",
                   "nodeType": "VariableDeclaration",
-                  "scope": 256,
-                  "src": "2170:16:2",
+                  "scope": 3357,
+                  "src": "2170:16:20",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -893,10 +895,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 252,
+                    "id": 3353,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "2170:7:2",
+                    "src": "2170:7:20",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -905,46 +907,46 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "2169:18:2"
+              "src": "2169:18:20"
             },
             "returnParameters": {
-              "id": 255,
+              "id": 3356,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "2196:0:2"
+              "src": "2196:0:20"
             },
-            "scope": 263,
-            "src": "2149:48:2",
+            "scope": 3364,
+            "src": "2149:48:20",
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "external"
           },
           {
             "documentation": {
-              "id": 257,
+              "id": 3358,
               "nodeType": "StructuredDocumentation",
-              "src": "2205:380:2",
+              "src": "2205:380:20",
               "text": " Executes the purchase of _tokenId.\n Sends the funds to the seller and transfers the token using transferNFT in Monkeycontract.\n Emits the MarketTransaction event with txType \"Buy\".\n Emits the event MonkeySold\n Requirement: The msg.value needs to equal the price of _tokenId\n Requirement: There must be an active offer for _tokenId"
             },
             "functionSelector": "615fc0e2",
-            "id": 262,
+            "id": 3363,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "buyMonkey",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 260,
+              "id": 3361,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 259,
+                  "id": 3360,
                   "mutability": "mutable",
                   "name": "_tokenId",
                   "nodeType": "VariableDeclaration",
-                  "scope": 262,
-                  "src": "2610:16:2",
+                  "scope": 3363,
+                  "src": "2610:16:20",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -952,10 +954,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 258,
+                    "id": 3359,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "2610:7:2",
+                    "src": "2610:7:20",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -964,40 +966,40 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "2609:18:2"
+              "src": "2609:18:20"
             },
             "returnParameters": {
-              "id": 261,
+              "id": 3362,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "2644:0:2"
+              "src": "2644:0:20"
             },
-            "scope": 263,
-            "src": "2591:54:2",
+            "scope": 3364,
+            "src": "2591:54:20",
             "stateMutability": "payable",
             "virtual": false,
             "visibility": "external"
           }
         ],
-        "scope": 264,
-        "src": "439:2215:2"
+        "scope": 3365,
+        "src": "439:2215:20"
       }
     ],
-    "src": "40:2616:2"
+    "src": "40:2616:20"
   },
   "legacyAST": {
-    "absolutePath": "/C/github/CryptoMonkeys/contracts/IMonkeyMarketplace.sol",
+    "absolutePath": "project:/contracts/IMonkeyMarketplace.sol",
     "exportedSymbols": {
       "IMonkeyMarketplace": [
-        263
+        3364
       ]
     },
-    "id": 264,
+    "id": 3365,
     "license": "UNLICENSED",
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 194,
+        "id": 3295,
         "literals": [
           "solidity",
           "^",
@@ -1005,7 +1007,7 @@
           ".0"
         ],
         "nodeType": "PragmaDirective",
-        "src": "40:23:2"
+        "src": "40:23:20"
       },
       {
         "abstract": false,
@@ -1013,31 +1015,31 @@
         "contractDependencies": [],
         "contractKind": "interface",
         "fullyImplemented": false,
-        "id": 263,
+        "id": 3364,
         "linearizedBaseContracts": [
-          263
+          3364
         ],
         "name": "IMonkeyMarketplace",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "anonymous": false,
-            "id": 202,
+            "id": 3303,
             "name": "MarketTransaction",
             "nodeType": "EventDefinition",
             "parameters": {
-              "id": 201,
+              "id": 3302,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 196,
+                  "id": 3297,
                   "indexed": false,
                   "mutability": "mutable",
                   "name": "TxType",
                   "nodeType": "VariableDeclaration",
-                  "scope": 202,
-                  "src": "501:13:2",
+                  "scope": 3303,
+                  "src": "501:13:20",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1045,10 +1047,10 @@
                     "typeString": "string"
                   },
                   "typeName": {
-                    "id": 195,
+                    "id": 3296,
                     "name": "string",
                     "nodeType": "ElementaryTypeName",
-                    "src": "501:6:2",
+                    "src": "501:6:20",
                     "typeDescriptions": {
                       "typeIdentifier": "t_string_storage_ptr",
                       "typeString": "string"
@@ -1058,13 +1060,13 @@
                 },
                 {
                   "constant": false,
-                  "id": 198,
+                  "id": 3299,
                   "indexed": false,
                   "mutability": "mutable",
                   "name": "owner",
                   "nodeType": "VariableDeclaration",
-                  "scope": 202,
-                  "src": "516:13:2",
+                  "scope": 3303,
+                  "src": "516:13:20",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1072,10 +1074,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 197,
+                    "id": 3298,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "516:7:2",
+                    "src": "516:7:20",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -1086,13 +1088,13 @@
                 },
                 {
                   "constant": false,
-                  "id": 200,
+                  "id": 3301,
                   "indexed": false,
                   "mutability": "mutable",
                   "name": "tokenId",
                   "nodeType": "VariableDeclaration",
-                  "scope": 202,
-                  "src": "531:15:2",
+                  "scope": 3303,
+                  "src": "531:15:20",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1100,10 +1102,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 199,
+                    "id": 3300,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "531:7:2",
+                    "src": "531:7:20",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -1112,28 +1114,28 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "500:47:2"
+              "src": "500:47:20"
             },
-            "src": "477:71:2"
+            "src": "477:71:20"
           },
           {
             "anonymous": false,
-            "id": 212,
+            "id": 3313,
             "name": "MonkeySold",
             "nodeType": "EventDefinition",
             "parameters": {
-              "id": 211,
+              "id": 3312,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 204,
+                  "id": 3305,
                   "indexed": false,
                   "mutability": "mutable",
                   "name": "seller",
                   "nodeType": "VariableDeclaration",
-                  "scope": 212,
-                  "src": "574:14:2",
+                  "scope": 3313,
+                  "src": "574:14:20",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1141,10 +1143,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 203,
+                    "id": 3304,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "574:7:2",
+                    "src": "574:7:20",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -1155,13 +1157,13 @@
                 },
                 {
                   "constant": false,
-                  "id": 206,
+                  "id": 3307,
                   "indexed": false,
                   "mutability": "mutable",
                   "name": "buyer",
                   "nodeType": "VariableDeclaration",
-                  "scope": 212,
-                  "src": "590:13:2",
+                  "scope": 3313,
+                  "src": "590:13:20",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1169,10 +1171,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 205,
+                    "id": 3306,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "590:7:2",
+                    "src": "590:7:20",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -1183,13 +1185,13 @@
                 },
                 {
                   "constant": false,
-                  "id": 208,
+                  "id": 3309,
                   "indexed": false,
                   "mutability": "mutable",
                   "name": "price",
                   "nodeType": "VariableDeclaration",
-                  "scope": 212,
-                  "src": "605:13:2",
+                  "scope": 3313,
+                  "src": "605:13:20",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1197,10 +1199,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 207,
+                    "id": 3308,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "605:7:2",
+                    "src": "605:7:20",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -1210,13 +1212,13 @@
                 },
                 {
                   "constant": false,
-                  "id": 210,
+                  "id": 3311,
                   "indexed": false,
                   "mutability": "mutable",
                   "name": "tokenId",
                   "nodeType": "VariableDeclaration",
-                  "scope": 212,
-                  "src": "620:15:2",
+                  "scope": 3313,
+                  "src": "620:15:20",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1224,10 +1226,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 209,
+                    "id": 3310,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "620:7:2",
+                    "src": "620:7:20",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -1236,30 +1238,30 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "573:63:2"
+              "src": "573:63:20"
             },
-            "src": "556:81:2"
+            "src": "556:81:20"
           },
           {
             "functionSelector": "951fbdf0",
-            "id": 219,
+            "id": 3320,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "isTokenOnSale",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 215,
+              "id": 3316,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 214,
+                  "id": 3315,
                   "mutability": "mutable",
                   "name": "_tokenId",
                   "nodeType": "VariableDeclaration",
-                  "scope": 219,
-                  "src": "949:16:2",
+                  "scope": 3320,
+                  "src": "949:16:20",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1267,10 +1269,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 213,
+                    "id": 3314,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "949:7:2",
+                    "src": "949:7:20",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -1279,20 +1281,20 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "948:18:2"
+              "src": "948:18:20"
             },
             "returnParameters": {
-              "id": 218,
+              "id": 3319,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 217,
+                  "id": 3318,
                   "mutability": "mutable",
                   "name": "tokenIsOnSale",
                   "nodeType": "VariableDeclaration",
-                  "scope": 219,
-                  "src": "990:18:2",
+                  "scope": 3320,
+                  "src": "990:18:20",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1300,10 +1302,10 @@
                     "typeString": "bool"
                   },
                   "typeName": {
-                    "id": 216,
+                    "id": 3317,
                     "name": "bool",
                     "nodeType": "ElementaryTypeName",
-                    "src": "990:4:2",
+                    "src": "990:4:20",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
@@ -1312,40 +1314,40 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "989:20:2"
+              "src": "989:20:20"
             },
-            "scope": 263,
-            "src": "926:84:2",
+            "scope": 3364,
+            "src": "926:84:20",
             "stateMutability": "view",
             "virtual": false,
             "visibility": "external"
           },
           {
             "documentation": {
-              "id": 220,
+              "id": 3321,
               "nodeType": "StructuredDocumentation",
-              "src": "1018:121:2",
+              "src": "1018:121:20",
               "text": " Get the details about an offer for _tokenId. Throws an error if there is no active offer for _tokenId."
             },
             "functionSelector": "4579268a",
-            "id": 235,
+            "id": 3336,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "getOffer",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 223,
+              "id": 3324,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 222,
+                  "id": 3323,
                   "mutability": "mutable",
                   "name": "_tokenId",
                   "nodeType": "VariableDeclaration",
-                  "scope": 235,
-                  "src": "1163:16:2",
+                  "scope": 3336,
+                  "src": "1163:16:20",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1353,10 +1355,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 221,
+                    "id": 3322,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1163:7:2",
+                    "src": "1163:7:20",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -1365,20 +1367,20 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "1162:18:2"
+              "src": "1162:18:20"
             },
             "returnParameters": {
-              "id": 234,
+              "id": 3335,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 225,
+                  "id": 3326,
                   "mutability": "mutable",
                   "name": "seller",
                   "nodeType": "VariableDeclaration",
-                  "scope": 235,
-                  "src": "1205:14:2",
+                  "scope": 3336,
+                  "src": "1205:14:20",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1386,10 +1388,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 224,
+                    "id": 3325,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1205:7:2",
+                    "src": "1205:7:20",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -1400,12 +1402,12 @@
                 },
                 {
                   "constant": false,
-                  "id": 227,
+                  "id": 3328,
                   "mutability": "mutable",
                   "name": "price",
                   "nodeType": "VariableDeclaration",
-                  "scope": 235,
-                  "src": "1221:13:2",
+                  "scope": 3336,
+                  "src": "1221:13:20",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1413,10 +1415,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 226,
+                    "id": 3327,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1221:7:2",
+                    "src": "1221:7:20",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -1426,12 +1428,12 @@
                 },
                 {
                   "constant": false,
-                  "id": 229,
+                  "id": 3330,
                   "mutability": "mutable",
                   "name": "index",
                   "nodeType": "VariableDeclaration",
-                  "scope": 235,
-                  "src": "1236:13:2",
+                  "scope": 3336,
+                  "src": "1236:13:20",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1439,10 +1441,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 228,
+                    "id": 3329,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1236:7:2",
+                    "src": "1236:7:20",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -1452,12 +1454,12 @@
                 },
                 {
                   "constant": false,
-                  "id": 231,
+                  "id": 3332,
                   "mutability": "mutable",
                   "name": "tokenId",
                   "nodeType": "VariableDeclaration",
-                  "scope": 235,
-                  "src": "1251:15:2",
+                  "scope": 3336,
+                  "src": "1251:15:20",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1465,10 +1467,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 230,
+                    "id": 3331,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1251:7:2",
+                    "src": "1251:7:20",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -1478,12 +1480,12 @@
                 },
                 {
                   "constant": false,
-                  "id": 233,
+                  "id": 3334,
                   "mutability": "mutable",
                   "name": "active",
                   "nodeType": "VariableDeclaration",
-                  "scope": 235,
-                  "src": "1268:11:2",
+                  "scope": 3336,
+                  "src": "1268:11:20",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1491,10 +1493,10 @@
                     "typeString": "bool"
                   },
                   "typeName": {
-                    "id": 232,
+                    "id": 3333,
                     "name": "bool",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1268:4:2",
+                    "src": "1268:4:20",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
@@ -1503,46 +1505,46 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "1203:77:2"
+              "src": "1203:77:20"
             },
-            "scope": 263,
-            "src": "1145:136:2",
+            "scope": 3364,
+            "src": "1145:136:20",
             "stateMutability": "view",
             "virtual": false,
             "visibility": "external"
           },
           {
             "documentation": {
-              "id": 236,
+              "id": 3337,
               "nodeType": "StructuredDocumentation",
-              "src": "1289:103:2",
+              "src": "1289:103:20",
               "text": " Get all tokenId's that are currently for sale. Returns an empty array if none exist."
             },
             "functionSelector": "49b3709f",
-            "id": 242,
+            "id": 3343,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "getAllTokenOnSale",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 237,
+              "id": 3338,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "1424:2:2"
+              "src": "1424:2:20"
             },
             "returnParameters": {
-              "id": 241,
+              "id": 3342,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 240,
+                  "id": 3341,
                   "mutability": "mutable",
                   "name": "listOfOffers",
                   "nodeType": "VariableDeclaration",
-                  "scope": 242,
-                  "src": "1450:29:2",
+                  "scope": 3343,
+                  "src": "1450:29:20",
                   "stateVariable": false,
                   "storageLocation": "memory",
                   "typeDescriptions": {
@@ -1551,18 +1553,18 @@
                   },
                   "typeName": {
                     "baseType": {
-                      "id": 238,
+                      "id": 3339,
                       "name": "uint256",
                       "nodeType": "ElementaryTypeName",
-                      "src": "1450:7:2",
+                      "src": "1450:7:20",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
                         "typeString": "uint256"
                       }
                     },
-                    "id": 239,
+                    "id": 3340,
                     "nodeType": "ArrayTypeName",
-                    "src": "1450:9:2",
+                    "src": "1450:9:20",
                     "typeDescriptions": {
                       "typeIdentifier": "t_array$_t_uint256_$dyn_storage_ptr",
                       "typeString": "uint256[]"
@@ -1571,40 +1573,40 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "1449:31:2"
+              "src": "1449:31:20"
             },
-            "scope": 263,
-            "src": "1398:83:2",
+            "scope": 3364,
+            "src": "1398:83:20",
             "stateMutability": "view",
             "virtual": false,
             "visibility": "external"
           },
           {
             "documentation": {
-              "id": 243,
+              "id": 3344,
               "nodeType": "StructuredDocumentation",
-              "src": "1489:396:2",
+              "src": "1489:396:20",
               "text": " Creates a new offer for _tokenId for the price _price.\n Emits the MarketTransaction event with txType \"Create offer\"\n Requirement: Only the owner of _tokenId can create an offer.\n Requirement: There can only be one active offer for a token at a time.\n Requirement: Marketplace contract (this) needs to be an approved operator when the offer is created."
             },
             "functionSelector": "941b055b",
-            "id": 250,
+            "id": 3351,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "setOffer",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 248,
+              "id": 3349,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 245,
+                  "id": 3346,
                   "mutability": "mutable",
                   "name": "_price",
                   "nodeType": "VariableDeclaration",
-                  "scope": 250,
-                  "src": "1909:14:2",
+                  "scope": 3351,
+                  "src": "1909:14:20",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1612,10 +1614,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 244,
+                    "id": 3345,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1909:7:2",
+                    "src": "1909:7:20",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -1625,12 +1627,12 @@
                 },
                 {
                   "constant": false,
-                  "id": 247,
+                  "id": 3348,
                   "mutability": "mutable",
                   "name": "_tokenId",
                   "nodeType": "VariableDeclaration",
-                  "scope": 250,
-                  "src": "1925:16:2",
+                  "scope": 3351,
+                  "src": "1925:16:20",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1638,10 +1640,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 246,
+                    "id": 3347,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1925:7:2",
+                    "src": "1925:7:20",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -1650,46 +1652,46 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "1908:34:2"
+              "src": "1908:34:20"
             },
             "returnParameters": {
-              "id": 249,
+              "id": 3350,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "1951:0:2"
+              "src": "1951:0:20"
             },
-            "scope": 263,
-            "src": "1891:61:2",
+            "scope": 3364,
+            "src": "1891:61:20",
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "external"
           },
           {
             "documentation": {
-              "id": 251,
+              "id": 3352,
               "nodeType": "StructuredDocumentation",
-              "src": "1960:183:2",
+              "src": "1960:183:20",
               "text": " Removes an existing offer.\n Emits the MarketTransaction event with txType \"Remove offer\"\n Requirement: Only the seller of _tokenId can remove an offer."
             },
             "functionSelector": "95a0f9c7",
-            "id": 256,
+            "id": 3357,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "removeOffer",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 254,
+              "id": 3355,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 253,
+                  "id": 3354,
                   "mutability": "mutable",
                   "name": "_tokenId",
                   "nodeType": "VariableDeclaration",
-                  "scope": 256,
-                  "src": "2170:16:2",
+                  "scope": 3357,
+                  "src": "2170:16:20",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1697,10 +1699,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 252,
+                    "id": 3353,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "2170:7:2",
+                    "src": "2170:7:20",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -1709,46 +1711,46 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "2169:18:2"
+              "src": "2169:18:20"
             },
             "returnParameters": {
-              "id": 255,
+              "id": 3356,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "2196:0:2"
+              "src": "2196:0:20"
             },
-            "scope": 263,
-            "src": "2149:48:2",
+            "scope": 3364,
+            "src": "2149:48:20",
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "external"
           },
           {
             "documentation": {
-              "id": 257,
+              "id": 3358,
               "nodeType": "StructuredDocumentation",
-              "src": "2205:380:2",
+              "src": "2205:380:20",
               "text": " Executes the purchase of _tokenId.\n Sends the funds to the seller and transfers the token using transferNFT in Monkeycontract.\n Emits the MarketTransaction event with txType \"Buy\".\n Emits the event MonkeySold\n Requirement: The msg.value needs to equal the price of _tokenId\n Requirement: There must be an active offer for _tokenId"
             },
             "functionSelector": "615fc0e2",
-            "id": 262,
+            "id": 3363,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "buyMonkey",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 260,
+              "id": 3361,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 259,
+                  "id": 3360,
                   "mutability": "mutable",
                   "name": "_tokenId",
                   "nodeType": "VariableDeclaration",
-                  "scope": 262,
-                  "src": "2610:16:2",
+                  "scope": 3363,
+                  "src": "2610:16:20",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1756,10 +1758,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 258,
+                    "id": 3359,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "2610:7:2",
+                    "src": "2610:7:20",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -1768,34 +1770,34 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "2609:18:2"
+              "src": "2609:18:20"
             },
             "returnParameters": {
-              "id": 261,
+              "id": 3362,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "2644:0:2"
+              "src": "2644:0:20"
             },
-            "scope": 263,
-            "src": "2591:54:2",
+            "scope": 3364,
+            "src": "2591:54:20",
             "stateMutability": "payable",
             "virtual": false,
             "visibility": "external"
           }
         ],
-        "scope": 264,
-        "src": "439:2215:2"
+        "scope": 3365,
+        "src": "439:2215:20"
       }
     ],
-    "src": "40:2616:2"
+    "src": "40:2616:20"
   },
   "compiler": {
     "name": "solc",
     "version": "0.8.0+commit.c7dfd78e.Emscripten.clang"
   },
   "networks": {},
-  "schemaVersion": "3.2.0",
-  "updatedAt": "2021-08-26T19:32:58.485Z",
+  "schemaVersion": "3.4.4",
+  "updatedAt": "2022-02-03T20:26:01.342Z",
   "devdoc": {
     "kind": "dev",
     "methods": {},

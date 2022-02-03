@@ -56,10 +56,8 @@ body {
   opacity: 0.95;
 }
 
-#audioButtonHolderDiv {
-  width: 1000px;
-  align-self: center;
-  display: flex;
+#audioButtonHolderDiv {  
+  align-self: center;  
   justify-content: space-around;
 }
 
@@ -72,6 +70,9 @@ body {
   font-size: 1.1rem !important;   
 }
 
+#bananaDisplay{
+  display: inline-block;
+}
 
 #monkeyRowGallery {
   color: #4f3222 !important;
