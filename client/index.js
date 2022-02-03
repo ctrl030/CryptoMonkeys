@@ -44,6 +44,9 @@ let monkeySoldThrottler;
 // When ready, during page load 
 $(document).ready(async function () {
 
+  // checking BananaToken status (faucet and allowance) and adapting buttons
+  adaptBananaStatus();  
+
   // Enabling / connecting with Ganache accounts
   accounts = await window.ethereum.enable();
 
@@ -102,7 +105,7 @@ $(document).ready(async function () {
         $("#monkeyCreatedDiv").append(
           `        
             <ul id="monkeyCreatedDivUnorderedList">
-              <li>Crypto Monkey NFT created successfully!</li>
+              <li>Mango Monkey NFT created successfully!</li>
               <li>Here are the details: </li>
               <li>Owner:  ${owner}</li> 
               <li>Token ID: ${tokenId}</li>  
@@ -149,7 +152,7 @@ $(document).ready(async function () {
         $("#monkeyMultipliedSuccessDiv").append(
           `        
             <ul id="breedingSuccessfulDivUnorderedList">
-              <li>Crypto Monkey breeding successfully!</li>
+              <li>Mango Monkey breeding successfully!</li>
               <li>Here are the details: </li>
               <li>Token ID:  ${tokenId}</li>  
               <li>Generation: ${generation}</li>
@@ -196,7 +199,7 @@ $(document).ready(async function () {
         $("#marketOperatorApprovedArea").append(
           `   
             <span id="marketOperatorApprovedText">
-              Your address ${messageSender} has approved the market contract as operator and you can sell your Crypto Monkey NFTs now.
+              Your address ${messageSender} has approved the market contract as operator and you can sell your Mango Monkey NFTs now.
             </span>
           `     
         )
@@ -228,6 +231,7 @@ function adaptBananaStatus(){
       $("#allowMainSpendBananasButton").show();
     } 
     else if (mainContractBananasAllowed == true){
+      $("#getBananasButton").hide(); 
       $("#allowMainSpendBananasButton").hide();
     }    
   }
@@ -343,7 +347,7 @@ $("#switchToMarketButton").click( async () => {
           $("#newOfferCreatedAlertDiv").append(
             `
               <span id="marketActivityApprovedText">        
-                New offer created for your Crypto Monkey NFT with Token ID ${tokenId}!  
+                New offer created for your Mango Monkey NFT with Token ID ${tokenId}!  
               </span>
             `
           );
@@ -382,7 +386,7 @@ $("#switchToMarketButton").click( async () => {
       $("#monkeySoldAlertDiv").append(
         `
           <ul id="monkeySoldList">
-            <li>Crypto Monkey NFT ${tokenId} was sold for ${paidPriceInEth} Ether.</li>
+            <li>Mango Monkey NFT ${tokenId} was sold for ${paidPriceInEth} Ether.</li>
             <li>New owner: ${monkeybuyer}</li>
             <li>Seller: ${monkeySeller}</li>               
           </ul>        
@@ -524,7 +528,7 @@ async function showUsersOffersButtonFunct () {
     $("#noOwnedNFTsOnSaleDiv").append(
       `
         <span>
-          You have no Crypto Monkeys on sale at the moment. Click on "Market" and "Sell Monkeys" to change that.                        
+          You have no Mango Monkeys on sale at the moment. Click on "Market" and "Sell Monkeys" to change that.                        
         </span>        
       `
     );
@@ -702,7 +706,7 @@ $("#showBuyAreaButton").click( async () => {
 
 }); 
 
-// button to buy a Crypto Monkey NFT
+// button to buy a Mango Monkey NFT
 // takes in user's inputs and compares them to offer details on-chain
 $("#buyMonkeyButton").click( async () => {  
 
@@ -739,7 +743,7 @@ $("#buyMonkeyButton").click( async () => {
 
 // Listens to button click, then creates dnsStr (16 digits number string, same format as genes) 
 // from concatting all the already set css values
-// then calls the contract's createDemoMonkey function and mints a demo Crypto Monkey that contains this string 
+// then calls the contract's createDemoMonkey function and mints a demo Mango Monkey that contains this string 
 $("#mintMonkey").click(async () => {
   let dnaStr = getDna();
 
@@ -929,7 +933,7 @@ $("#showParentsButton").click(async () => {
 
   // userBalance will be the number of monkeys the user has
   var userBalance = await instance.methods.balanceOf(user1).call();
-  console.log(`user1 has ${userBalance} Crypto Monkeys`);
+  console.log(`user1 has ${userBalance} Mango Monkeys`);
 
   // An array that holds all of the user's tokenIds
   let myMonkeyIdsArray = await instance.methods.findMonkeyIdsOfAddress(user1).call();       
@@ -1079,7 +1083,7 @@ $("#switchToGalleryButton").click(async () => {
 async function galleryLogic(divToAppendTo) {
   // userBalance will be the number of monkeys the user has
   var userBalance = await instance.methods.balanceOf(user1).call();
-  console.log(`user1 has ${userBalance} Crypto Monkeys`);
+  console.log(`user1 has ${userBalance} Mango Monkeys`);
 
   // An array that holds all of user1's tokenIds
   let myMonkeyIdsArray = await instance.methods.findMonkeyIdsOfAddress(user1).call();       
