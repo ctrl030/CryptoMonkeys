@@ -11,7 +11,7 @@ html {
 }
 
 body {
-  background-image: url(https://img.elo7.com.br/product/zoom/22381A1/painel-de-festa-praia-por-do-sol-02-banner.jpg);
+  background-image: url("../images/beachBackground_XL.jpg"); 
   background-size: cover;
   background-attachment: fixed;
   min-height: 500px;  
