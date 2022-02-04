@@ -11,7 +11,7 @@ html {
 }
 
 body {
-  background-image: url("../images/beachBackground_XL.jpg"); 
+  background-image: url("../images/beachBackground_cut.png"); 
   background-size: cover;
   background-attachment: fixed;
   min-height: 500px;  
@@ -147,7 +147,7 @@ body {
   height: 640px;
   width: 400px !important;
   /*background-color: #93fc7c;*/
-  background-image: url("https://cdn.pixabay.com/photo/2016/11/28/18/37/the-1865639_960_720.jpg");
+  background-image: url("../images/monkeyBoxBackground_cut.png");;
   border-radius: 10px;
   z-index: 1;
 }
