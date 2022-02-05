@@ -26,10 +26,10 @@ let mainContractBananasAllowed = false;
 const tokenAddress = "0x6F3873039bC201A58d67214C58728cF8e76aBf4F";
 
 // Contract address for main contract "MonkeyContract", has to be updated when migrating => i.e. contract address is changing
-const contractAddress = "0x6b68970717EFDF3EE6fBDAF299f68a3FB5B4A297";
+const contractAddress = "0xb1746fb1F0e5eB09830E9EBf8EA31b3C4E998cc7";
 
 // Contract address for marketplace contract "MonkeyMarketplace", has to be updated when migrating => i.e. contract address is changing
-const marketContractAddress = "0xb1746fb1F0e5eB09830E9EBf8EA31b3C4E998cc7";
+const marketContractAddress = "0x87325f9a7bF058faaB70796bB4A7B353589B527F";
 
 // preparing accounts variable
 let accounts;
