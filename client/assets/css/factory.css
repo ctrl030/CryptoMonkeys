@@ -147,7 +147,7 @@ body {
   height: 640px;
   width: 400px !important;
   /*background-color: #93fc7c;*/
-  background-image: url("../images/monkeyBoxBackground_cut.png");;
+  background-image: url("../images/monkeyBoxBackground_cut.png");
   border-radius: 10px;
   z-index: 1;
 }
@@ -384,7 +384,7 @@ body {
   height: 720px !important;
   width: 400px !important;
   /*background-color: #93fc7c;*/
-  background-image: url("https://i.ibb.co/k5qGZ8w/mock-Background-Bigger.jpg") !important;
+  background-image: url("../images/monkeyBoxBackground_cut.png") !important;
   border-radius: 10px;
   z-index: 1;
 }
