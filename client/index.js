@@ -50,17 +50,17 @@ $(document).ready(async function () {
   // Enabling / connecting with Ganache accounts
   accounts = await window.ethereum.enable();
 
-  // Setting the representation of the token smart contract, specifying abi, contractAddress and first account from Ganache's list at this moment
+  // Setting the representation of the token smart contract, specifying abi, contractAddress and first connected account in the users wallet
   tokenInstance = new web3.eth.Contract(tokenAbi, tokenAddress, {
     from: accounts[0],
   });
 
-  // Setting the representation of the main smart contract, specifying abi, contractAddress and first account from Ganache's list at this moment
+  // Setting the representation of the main smart contract, specifying abi, contractAddress and first connected account in the users wallet
   instance = new web3.eth.Contract(abi, contractAddress, {
     from: accounts[0],
   });
     
-  // Setting user to first account from Ganache's list at this moment
+  // Setting user to first connected account in the users wallet
   user1 = accounts[0];
   
   // checking BananaToken status (faucet and allowance) and adapting buttons
@@ -325,7 +325,7 @@ $("#switchToMarketButton").click( async () => {
         // take out alert after some time
         setTimeout(hideAndEmptyAlerts, 6000, "#marketActivityDiv")
 
-        // Handling TxType 'Remove offer'
+        // Handling TxType 'Remove offer' 
         if (eventType == 'Remove offer') {
           console.log('TxType: "Remove offer" registered')
           $("#removeOfferAlertDiv").empty();
