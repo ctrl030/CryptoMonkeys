@@ -23,13 +23,13 @@ let bananasGotten = false;
 let mainContractBananasAllowed = false;
 
 // Contract address for ERC20 contract "BananaToken", has to be updated when migrating => i.e. contract address is changing
-const tokenAddress = "0x6F3873039bC201A58d67214C58728cF8e76aBf4F";
+const tokenAddress = "0x2E5cDA937Ed1EcA4679f419e06Ae50018559539B";
 
 // Contract address for main contract "MonkeyContract", has to be updated when migrating => i.e. contract address is changing
-const contractAddress = "0xb1746fb1F0e5eB09830E9EBf8EA31b3C4E998cc7";
+const contractAddress = "0x9dd06bD740b5F67b4e100B487fF27E47d9Cd82ae";
 
 // Contract address for marketplace contract "MonkeyMarketplace", has to be updated when migrating => i.e. contract address is changing
-const marketContractAddress = "0x87325f9a7bF058faaB70796bB4A7B353589B527F";
+const marketContractAddress = "0x537c820172966C73E53454C8e2Ee365270dE8a6c";
 
 // preparing accounts variable
 let accounts;
