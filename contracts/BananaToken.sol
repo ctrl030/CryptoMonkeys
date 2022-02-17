@@ -5,10 +5,21 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract BananaToken is ERC20, Ownable{
+
+    // storing BananaToken decimals, set to 0 in constructor 
+    uint8 private _decimals;
+
     // mapping that stores whether an address has already claimed their free tokens
     mapping(address => bool) hasClaimedTokens;
 
-    constructor() ERC20("BananaToken", "BANANA"){
+    // Setting name, symbol and decimals
+    constructor() ERC20("BananaToken", "BANANAS"){
+        _decimals = 0;
+    }
+
+    // Overriding OpenZeppelin's ERC20 decimals() function, returns decimals, hardcoded to 0 in constructor, only full Bananas
+    function decimals() public view override returns (uint8) {
+        return _decimals;
     }
 
     // claim tokens by minting to _msgSender(), limited to 1000 tokens per address, one time use
