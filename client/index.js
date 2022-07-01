@@ -47,7 +47,7 @@ $(document).ready(async function () {
   // checking BananaToken status (faucet and allowance) and adapting buttons
   adaptBananaStatus();  
 
-  // Enabling / connecting with Ganache accounts
+  // Enabling / connecting with Ethereum accounts
   accounts = await window.ethereum.enable();
 
   // Setting the representation of the token smart contract, specifying abi, contractAddress and first connected account in the users wallet
